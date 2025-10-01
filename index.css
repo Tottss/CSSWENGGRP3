@@ -1,0 +1,245 @@
+.login-design-3 {
+  	width: 100%;
+  	position: relative;
+  	background-color: #fff;
+  	height: 982px;
+  	overflow: hidden;
+  	text-align: left;
+  	font-size: 20px;
+  	color: #808080;
+  	font-family: Poppins;
+}
+.background-grp {
+  	position: absolute;
+  	top: -1px;
+  	left: 614px;
+  	width: 898px;
+  	height: 983px;
+}
+.background-gif-icon {
+  	position: absolute;
+  	top: 0px;
+  	left: 142px;
+  	width: 756px;
+  	height: 983px;
+  	object-fit: cover;
+}
+body {
+	height: 100%;
+  	margin: 0;
+  	line-height: normal;
+}
+.navy-darkening-fx {
+  	position: absolute;
+  	top: 1px;
+  	left: 142px;
+  	background-color: rgba(13, 27, 42, 0.8);
+  	width: 756px;
+  	height: 982px;
+}
+.border-design-icon {
+  	position: absolute;
+  	top: 453px;
+  	left: 0px;
+  	width: 898px;
+  	height: 530px;
+  	object-fit: cover;
+}
+.login-grp {
+  	position: absolute;
+  	top: 198px;
+  	left: 114px;
+  	width: 501px;
+  	height: 619px;
+}
+.username-inputbox {
+  	position: absolute;
+  	top: 100px;
+  	left: 0px;
+  	width: 500px;
+  	height: 90px;
+}
+.username-container {
+  	position: absolute;
+  	top: 30px;
+  	left: 0px;
+  	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5);
+  	border-radius: 20px;
+  	background-color: #fff;
+  	border: 1px solid #0d1b2a;
+  	box-sizing: border-box;
+  	width: 500px;
+  	height: 60px;
+}
+.juandelacruzgmailcom {
+  	position: absolute;
+  	top: 45px;
+  	left: 30px;
+  	font-weight: 500;
+}
+.username-label {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	font-weight: 500;
+  	color: #0d1b2a;
+}
+.password-inputbox {
+  	position: absolute;
+  	top: 254px;
+  	left: 1px;
+  	width: 500px;
+  	height: 90px;
+}
+.div {
+  	position: absolute;
+  	top: 47px;
+  	left: 24.17px;
+  	font-weight: 500;
+}
+.remember-me-btn {
+  	position: absolute;
+  	top: 419px;
+  	left: 148px;
+  	width: 188px;
+  	height: 30px;
+  	color: #000;
+}
+.remember-me-btn-child {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	background-color: #d9d9d9;
+  	border: 1px solid #000;
+  	box-sizing: border-box;
+  	width: 30px;
+  	height: 30px;
+}
+.remember-me {
+  	position: absolute;
+  	top: 0px;
+  	left: 38px;
+}
+.login-btn {
+  	position: absolute;
+  	top: 489px;
+  	left: 170px;
+  	width: 170px;
+  	height: 60px;
+  	font-size: 22px;
+  	color: #fff;
+}
+.login-btn-child {
+  	position: absolute;
+  	height: 100%;
+  	width: 100%;
+  	top: 0%;
+  	right: 0%;
+  	bottom: 0%;
+  	left: 0%;
+  	box-shadow: 0px 4px 4px #000;
+  	border-radius: 20px;
+  	background-color: #e94e1b;
+}
+.login {
+  	position: absolute;
+  	top: 21.67%;
+  	left: 28.24%;
+  	font-weight: 800;
+}
+.no-account-register {
+  	position: absolute;
+  	top: 589px;
+  	left: 148px;
+  	width: 214px;
+  	height: 30px;
+  	color: #0d1b2a;
+}
+.no-account-register-container {
+  	position: absolute;
+  	top: 0%;
+  	left: 0%;
+}
+.no-account {
+  	font-weight: 500;
+}
+.span {
+  	color: #fff;
+}
+.register {
+  	text-decoration: underline;
+  	font-weight: 500;
+  	color: #e94e1b;
+}
+.login-parent {
+  	position: absolute;
+  	top: 0px;
+  	left: 136px;
+  	width: 186px;
+  	height: 60px;
+  	font-size: 40px;
+  	color: #000;
+}
+.design-3-login {
+  	position: absolute;
+  	top: 0px;
+  	left: 61px;
+  	font-weight: 800;
+}
+.logo-only-icon {
+  	position: absolute;
+  	top: 1px;
+  	left: 0px;
+  	width: 58px;
+  	height: 58px;
+  	object-fit: cover;
+}
+.page-name {
+  	position: absolute;
+  	top: 203px;
+  	left: 880px;
+  	width: 508px;
+  	height: 429px;
+  	text-align: center;
+  	font-size: 60px;
+  	color: #fff;
+  	font-family: 'PT Serif';
+}
+.official-logo-icon {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	width: 498px;
+  	height: 126px;
+  	object-fit: cover;
+}
+.community-partners-portal {
+  	position: absolute;
+  	top: 76px;
+  	left: 7px;
+  	line-height: 50px;
+  	display: inline-block;
+  	font-weight: 700;
+  	width: 501px;
+  	text-shadow: 0px 4px 4px #000;
+}
+.submit-project-proposals-container {
+  	position: absolute;
+  	top: 229px;
+  	left: 7px;
+  	font-size: 25px;
+  	line-height: 50px;
+  	font-weight: 600;
+  	font-family: Poppins;
+  	text-align: left;
+}
+.submit-project-proposals-monit {
+  	margin: 0;
+  	font-family: inherit;
+  	font-size: inherit;
+  	padding-left: 33px;
+}
+.submit-project-proposals {
+  	margin-bottom: 0px;
+}
+
