@@ -46,7 +46,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 15px;
+  gap: 5px;
   margin-bottom: 20px;
 }
 
@@ -66,15 +66,18 @@ body {
 /* Label and Inputs */
 .username-label {
   font-weight: 600;
-  margin-top: 20px;
+  margin-top: 30px;
   display: block;
   color: #0c1c3d;
 }
 
 .username-container {
-  width: 100%;
+  width: 110%;
   background-color: #f0f2f8;
   border-radius: 8px;
+  box-shadow: #0c1c3d;
+  border-color: #0c1c3d;
+  border: 1px solid #ccc;
   padding: 12px 15px;
   display: flex;
   align-items: center;
@@ -82,7 +85,7 @@ body {
 }
 
 .username-container input {
-  width: 100%;
+  width: 110%;
   border: none;
   background: transparent;
   outline: none;
@@ -99,7 +102,7 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 15px 0;
+  margin: 30px 0;
 }
 
 .remember-me-btn label {
@@ -109,11 +112,11 @@ body {
 
 /* Login Button */
 .login-btn {
-  width: 100%;
+  width: 110%;
   padding: 12px;
   border: none;
   border-radius: 8px;
-  background-color: #0c1c3d;
+  background-color: #E94E1B;
   color: #ffffff;
   font-size: 1rem;
   font-weight: 600;
@@ -122,24 +125,25 @@ body {
 }
 
 .login-btn:hover {
-  background-color: #142b5e;
+  background-color: #FFB400;
   transform: scale(1.02);
 }
 
 /* Register Section */
-.no-account-register {
+.no-account-apply {
   text-align: center;
   margin-top: 18px;
   font-size: 0.95rem;
   color: #0c1c3d;
 }
 
-.no-account-register a {
-  color: #1c44a1;
+.no-account-apply a {
+  color: #E94E1B;
   text-decoration: none;
 }
 
-.no-account-register a:hover {
+.no-account-apply a:hover {
+  color: #FFB400;
   text-decoration: underline;
 }
 
@@ -180,13 +184,14 @@ body {
 }
 
 .official-logo-icon {
-  width: 120px;
+  width: 400px;
   height: auto;
-  margin-bottom: 15px;
+  margin-bottom: -20px;
 }
 
 .community-partners-portal {
   font-family: 'PT Serif', serif;
+  font-style: italic;
   font-size: 1.8rem;
   font-weight: 700;
   margin-bottom: 10px;
@@ -194,6 +199,7 @@ body {
 
 .submit-project-proposals-container {
   font-size: 1rem;
+  text-align: left;
   line-height: 1.8;
 }
 
@@ -216,17 +222,17 @@ body {
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 220px;                /* adjust as needed */
-  height: 220px;               /* adjust as needed */
-  background: url("/ASSETS/border-design.png") no-repeat bottom right;
+  width: 600px;                
+  height: 600px;               
+  background: url("../ASSETS/border-design.png") no-repeat bottom right;
   background-size: contain;
-  z-index: 1;                  /* below text but above overlay if desired */
-  pointer-events: none;        /* keeps it non-interactive */
+  z-index: 1;                  
+  pointer-events: none;
   opacity: 0.9;
   animation: fadeInBorder 1.2s ease forwards;
 }
 
-/* Optional Fade-in Animation */
+/* Fade-in Animation */
 @keyframes fadeInBorder {
   from {
     opacity: 0;
