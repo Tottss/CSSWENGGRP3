@@ -67,8 +67,37 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Otherwise (placeholder for backend)
-    showAlert("✅ Your application has been successfully submitted!", "success");
-    applyForm.reset();
+    // Backend for sending the application
+    showAlert("Sending Application...", "success");
+    const formData = new FormData();
+    formData.append("orgName", orgName);
+    formData.append("contactName", contactName);
+    formData.append("contactPosition", contactPosition);
+    formData.append("contactNumber", contactNumber);
+    formData.append("fullAddress", fullAddress);
+    formData.append("province", province);
+    formData.append("municipality", municipality);
+    formData.append("barangay", barangay);
+    formData.append("partnerType", partnerType);
+    formData.append("advocacy", advocacy);
+    formData.append("mou", mouFile);
+
+    fetch("http://127.0.0.1:3000/request/apply", {
+      method: "POST",
+      body: formData
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          showAlert("Application submitted successfully! We'll email you soon.", "success");
+          applyForm.reset();
+        } else {
+          showAlert("Failed to submit application. Please try again later.", "error");
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        showAlert("Network error. Please try again.", "error");
+      });
   });
 });
