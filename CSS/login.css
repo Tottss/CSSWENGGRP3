@@ -1,5 +1,5 @@
 /* =====================================================
-   GLOBAL STYLES
+   GLOBAL RESET
 ===================================================== */
 * {
   margin: 0;
@@ -8,6 +8,9 @@
   font-family: 'Poppins', sans-serif;
 }
 
+/* =====================================================
+   LOGIN PAGE BASE
+===================================================== */
 body {
   height: 100vh;
   width: 100%;
@@ -20,7 +23,7 @@ body {
 }
 
 /* =====================================================
-   MAIN CONTAINER
+   LAYOUT STRUCTURE
 ===================================================== */
 .login-design-3 {
   display: flex;
@@ -28,9 +31,7 @@ body {
   height: 100vh;
 }
 
-/* =====================================================
-   LEFT SECTION (LOGIN FORM)
-===================================================== */
+/* LEFT: Login Form */
 .login-grp {
   width: 50%;
   background: #ffffff;
@@ -63,7 +64,9 @@ body {
   letter-spacing: 1px;
 }
 
-/* Label and Inputs */
+/* =====================================================
+   FORM ELEMENTS
+===================================================== */
 .username-label {
   font-weight: 600;
   margin-top: 30px;
@@ -74,10 +77,8 @@ body {
 .username-container {
   width: 110%;
   background-color: #f0f2f8;
-  border-radius: 8px;
-  box-shadow: #0c1c3d;
-  border-color: #0c1c3d;
   border: 1px solid #ccc;
+  border-radius: 8px;
   padding: 12px 15px;
   display: flex;
   align-items: center;
@@ -148,7 +149,7 @@ body {
 }
 
 /* =====================================================
-   RIGHT SECTION (BACKGROUND + PAGE NAME)
+   RIGHT SECTION (BACKGROUND + LOGO + TEXT)
 ===================================================== */
 .right-section {
   position: relative;
@@ -214,25 +215,21 @@ body {
   font-weight: bold;
 }
 
-/* =====================================================
-   BORDER DESIGN IMAGE (BOTTOM RIGHT CORNER)
-===================================================== */
+/* Border Design */
 .right-section::after {
   content: "";
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 600px;                
-  height: 600px;               
+  width: 600px;
+  height: 600px;
   background: url("../ASSETS/border-design.png") no-repeat bottom right;
   background-size: contain;
-  z-index: 1;                  
-  pointer-events: none;
+  z-index: 1;
   opacity: 0.9;
   animation: fadeInBorder 1.2s ease forwards;
 }
 
-/* Fade-in Animation */
 @keyframes fadeInBorder {
   from {
     opacity: 0;
@@ -259,11 +256,44 @@ body {
   }
 
   .right-section {
-    display: none; /* Hide right section on small screens */
+    display: none;
   }
 
   .login-grp {
     height: 100vh;
     justify-content: center;
   }
+}
+
+/* =====================================================
+   ALERT BOX (Same Style as Global)
+===================================================== */
+.alert-box {
+  position: fixed;
+  top: 20px;
+  right: -400px;
+  padding: 15px 25px;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 600;
+  opacity: 0;
+  transition: right 0.4s ease-in-out, opacity 0.3s ease;
+  z-index: 9999;
+}
+
+.alert-box.show {
+  right: 20px;
+  opacity: 1;
+}
+
+.alert-box.success {
+  background-color: #28a745;
+}
+
+.alert-box.error {
+  background-color: #e74c3c;
+}
+
+.alert-box.info {
+  background-color: #3498db;
 }
