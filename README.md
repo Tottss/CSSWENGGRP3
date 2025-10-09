@@ -10,12 +10,12 @@ Techstack:
 - CSS
 - JavaScript
 
-CSSWENGGRP3/
-├── Backend/
-│   ├── node_modules/
-│   ├── ...
-├── Frontend/
-└── README.md
+CSSWENGGRP3/             
+├── Backend/                  
+│   ├── node_modules/           
+│   ├── ...              
+├── Frontend/            
+└── README.md          
 
 **NOTE: Use standard HTTP status for responses**
 
