@@ -1,0 +1,135 @@
+/* =====================================================
+   GLOBAL STYLES (used across all pages)
+===================================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Body defaults (fallback gradient) */
+body {
+  margin: 0;
+  background: linear-gradient(120deg, #0d2b56, #1a3e6e);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-top: 100px;
+  padding-left: 80px;
+  padding-right: 80px;
+  padding-bottom: 60px;
+  overflow-x: hidden;
+}
+
+/* =====================================================
+   NAVIGATION BAR (shown on all pages except login)
+===================================================== */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-icon {
+  height: 40px;
+  width: 40px;
+}
+
+.nav-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+/* About link */
+.nav-link {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #FFB400;
+}
+
+/* Login button */
+.login-btn {
+  text-decoration: none;
+  background-color: #e94e1b;
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 25px;
+  font-weight: 500;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.login-btn:hover {
+  background-color: #FFB400;
+  transform: scale(1.05);
+}
+
+/* Responsive navbar */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 12px 25px;
+  }
+
+  .nav-title {
+    font-size: 16px;
+  }
+}
+
+/* =====================================================
+   ALERT BOX (shared across pages)
+===================================================== */
+.alert-box {
+  position: fixed;
+  top: 20px;
+  right: -400px;
+  padding: 15px 25px;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 600;
+  opacity: 0;
+  transition: right 0.4s ease-in-out, opacity 0.3s ease;
+  z-index: 9999;
+}
+
+.alert-box.show {
+  right: 20px;
+  opacity: 1;
+}
+
+.alert-box.success {
+  background-color: #28a745;
+}
+
+.alert-box.error {
+  background-color: #e74c3c;
+}
+
+.alert-box.info {
+  background-color: #3498db;
+}
