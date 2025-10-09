@@ -1,4 +1,4 @@
-# Group 3 Backend Repository [CSSWENG_S13]
+# Group 3 Fullstack Repository [CSSWENG_S13]
 
 This repository contains the backend for Group 3's project.
 
@@ -6,6 +6,9 @@ Techstack:
 
 - NodeJS
 - MongoDB
+- HTML
+- CSS
+- JavaScript
 
 **NOTE: Use standard HTTP status for responses**
 
@@ -15,6 +18,7 @@ Techstack:
 > **NOTE: What to do after `git clone`**
 >
 > ```bash
+> cd Backend
 > npm install
 > ```
 
