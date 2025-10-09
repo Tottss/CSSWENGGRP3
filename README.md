@@ -1,6 +1,6 @@
 # Group 3 Fullstack Repository [CSSWENG_S13]
 
-This repository contains the backend for Group 3's project.
+This repository contains the fullstack code for Group 3's project.
 
 Techstack:
 
