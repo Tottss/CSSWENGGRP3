@@ -16,6 +16,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // Automatically hide after 3s
     setTimeout(() => {
       alertBox.classList.remove("show");
+      setTimeout(() => {
+        alertBox.textContent = "";
+        alertBox.className = "alert-box";
+      }, 400);
     }, 3000);
   }
 
@@ -28,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const contactName = document.getElementById("contactName").value.trim();
     const contactPosition = document.getElementById("contactPosition").value.trim();
     const contactNumber = document.getElementById("contactNumber").value.trim();
+    const email = document.getElementById("email").value.trim();
     const fullAddress = document.getElementById("fullAddress").value.trim();
     const province = document.getElementById("province").value.trim();
     const municipality = document.getElementById("municipality").value.trim();
@@ -42,6 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
       !contactName ||
       !contactPosition ||
       !contactNumber ||
+      !email ||
       !fullAddress ||
       !province ||
       !municipality ||
@@ -74,6 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
     formData.append("contactName", contactName);
     formData.append("contactPosition", contactPosition);
     formData.append("contactNumber", contactNumber);
+    formData.append("email", email);
     formData.append("fullAddress", fullAddress);
     formData.append("province", province);
     formData.append("municipality", municipality);

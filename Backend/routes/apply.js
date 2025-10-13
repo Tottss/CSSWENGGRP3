@@ -15,6 +15,7 @@ router.post("/apply", upload.single("mou"), async (req, res) => {
         "contactName",
         "contactPosition",
         "contactNumber",
+        "email",
         "fullAddress",
         "province",
         "municipality",

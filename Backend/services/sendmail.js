@@ -10,6 +10,7 @@ export async function sendApplicationEmail(formData, mouFile) {
     contactName,
     contactPosition,
     contactNumber,
+    email,
     fullAddress,
     province,
     municipality,
@@ -27,8 +28,8 @@ export async function sendApplicationEmail(formData, mouFile) {
     },
   });
 
-  // Email content
-  const mailOptions = {
+  // The email admin receives
+  const adminMailOptions = {
     from: `"Community Partner Portal" <noreply@cssweng.test>`,
     to: process.env.RECEIVER_EMAIL,
     subject: `New Partner Application - ${orgName}`,
@@ -38,6 +39,7 @@ New community partner application received:
 Organization: ${orgName}
 Contact Person: ${contactName} (${contactPosition})
 Contact Number: ${contactNumber}
+Email: ${email}
 
 Address:
 ${fullAddress}, ${barangay}, ${municipality}, ${province}
@@ -55,6 +57,21 @@ Advocacy Focus: ${advocacy}
       : [],
   };
 
+  // The email applicant receives (edit content of mail later)
+  const applicantMailOptions = {
+    from: `"Community Partner Portal" <${process.env.EMAIL_USER}>`,
+    to: formData.email,
+    subject: "Application Received - Community Partner Portal",
+    text: `
+Dear ${contactName},
+
+Thank you for applying to be a community partner with us. We have received your application and will review it shortly.
+
+Best regards, *****
+`
+  };
+
   // Send the email
-  await transporter.sendMail(mailOptions);
+  await transporter.sendMail(adminMailOptions);
+  await transporter.sendMail(applicantMailOptions);
 }
