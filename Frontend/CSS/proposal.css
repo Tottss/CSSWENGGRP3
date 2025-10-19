@@ -1,0 +1,36 @@
+.timeline-group {
+  display: flex;
+  gap: 10px;
+}
+
+.timeline-group input {
+  flex: 1;
+}
+
+form input[type="number"],
+form input[type="date"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: 0.3s ease;
+}
+
+.proposal-form-box {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  padding: 40px 50px;
+}
+
+.proposal-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 1;
+  margin-right: -78px;
+}

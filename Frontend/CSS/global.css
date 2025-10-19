@@ -133,21 +133,9 @@ body {
 .alert-box.info {
   background-color: #3498db;
 }
-
-/* search box */
-.search-box {
-  width: 100%;
-  max-width: none;
-  max-height: 55px;
-  top: 40px;
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  padding: 40px 50px;
-  border: 2px;
-  border-style: solid;
-  border-color: #0D1B2A;
-}
+/* =====================================================
+   PROFILE DROPDOWN (shared across pages)
+===================================================== */
 
 .profile-menu {
   position: relative;
@@ -193,4 +181,107 @@ body {
 
 .dropdown li a:hover {
   background-color: #f0f0f0;
+}
+
+/* =====================================================
+   SIDEBAR (shared across pages)
+===================================================== */
+.sidebar {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  width: 313px;
+  height: calc(100vh - 70px); /* full height minus navbar */
+  background-color: #29ABE2;
+  color: #fff;
+  padding: 25px 20px;
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  overflow-y: auto;
+}
+
+
+.sidebar ul {
+  list-style: none;
+  padding: 30px;
+}
+
+.sidebar ul li {
+  margin: 15px 0;
+}
+
+.sidebar ul li a {
+  color: #0D1B2A;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: 800;
+  padding: 5px 12px;
+  display: block;
+  border-radius: 6px;
+}
+
+.sidebar ul li a:hover {
+  color: #FFFFFF;
+}
+
+
+/* Main content shifts to make space for sidebar and navbar*/
+.main-content {
+  margin-left: 240px; 
+  margin-top: 20px;
+  padding: 20px;
+}
+
+/* =====================================================
+   SEARCH BAR (shared across pages)
+===================================================== */
+.search-form {
+  display: flex;
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border: 2px solid #0D1B2A;
+  border-radius: 25px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  padding: 5px 15px;
+  align-items: center;
+}
+
+/* Search input field */
+.search-input {
+  border: none;
+  outline: none;
+  box-shadow: none;
+  flex: 1;
+  font-size: 15px;
+  background: transparent;
+  flex: 1;
+}
+/* Search icon */
+.search-icon {
+  position: relative;
+  right: 0px;
+  color: #888;
+  font-size: 20px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.search-input {
+  padding-right: 40px;
+}
+
+.search-form .form-control {
+  border: none;
+  outline: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+.search-form input[type="search"]::placeholder {
+  color: #000000;
+}
+.search-icon {
+  font-size: 1.4rem; /* increase size (default is ~1rem) */
+  color: #0D1B2A;    /* match your theme color */
 }
