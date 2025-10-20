@@ -17,4 +17,42 @@ router.post("/user/createTestUser", createTestUser);
 // apply.js
 router.use("/request", applyRouter);
 
+// login route
+router.get("/", (req, res) => {
+  res.render("login", { 
+    title: "Login Page",
+    layout: false
+  });
+});
+
+router.get("/login", (req, res) => {
+  res.render("login", { 
+    title: "Login Page",
+    layout: false
+  });
+});
+
+// apply route
+router.get("/apply", (req, res) => {
+  res.render("apply", {
+    title: "Application Page",
+    layout: false
+  });
+});
+
+//admin view route
+router.get("/adminView", (req, res) => {
+  res.render("adminView", {
+    title: "Admin View",
+    layout: false
+  });
+});
+//user view route
+router.get("/userView", (req, res) => {
+  res.render("userView", {
+    title: "User View",
+    layout: false
+  });
+});
+
 export default router;
