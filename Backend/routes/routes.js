@@ -47,11 +47,25 @@ router.get("/adminView", (req, res) => {
     layout: false
   });
 });
+
 //user view route
 router.get("/userView", (req, res) => {
   res.render("userView", {
     title: "User View",
-    layout: false
+  });
+});
+
+//dashboard route
+router.get("/dashboard", (req, res) => {
+  res.render("dashboard", {
+    title: "Dashboard",
+    PartnerOrg: "Default(Backend pull from db)",
+    nNotif: 1,
+    Projects: [
+      { ProjectImageURL: "/ASSETS/border-design.png", ProjectName: "Project 1" },
+      { ProjectImageURL: "/ASSETS/border-design.png", ProjectName: "Project 2" },
+      { ProjectImageURL: "/ASSETS/border-design.png", ProjectName: "Project 3" }
+    ]
   });
 });
 

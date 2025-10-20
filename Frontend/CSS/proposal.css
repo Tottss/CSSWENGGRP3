@@ -27,10 +27,7 @@ form input[type="date"] {
 }
 
 .proposal-container {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  z-index: 1;
-  margin-right: -78px;
+    max-height: calc(100vh - 90px - 40px);
+    padding: 20px;
+    overflow-y: auto;
 }

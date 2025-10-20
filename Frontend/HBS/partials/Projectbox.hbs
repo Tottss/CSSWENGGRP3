@@ -1,0 +1,11 @@
+<div class="YourProject">{{title}}</div>
+            <div class="project-list">
+                {{#each Projects}}
+                <div class="Project-box">
+                    <div class="project-item">
+                        <div class="project-image" style="background-image: url('{{this.ProjectImageURL}}');"><input type="button" class="project-btn" value="Update Project"></div>
+                    </div>
+                    <p class="project-name">{{this.ProjectName}}</p>
+                </div>
+                {{/each}}
+            </div>

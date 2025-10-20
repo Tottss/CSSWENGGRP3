@@ -13,13 +13,15 @@ body {
   margin: 0;
   background: linear-gradient(120deg, #0d2b56, #1a3e6e);
   min-height: 100vh;
-  display: flex;
+  height: auto;
+  display: block;
   flex-direction: column;
   padding-top: 100px;
   padding-left: 80px;
   padding-right: 80px;
   padding-bottom: 60px;
   overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* =====================================================
@@ -227,10 +229,11 @@ body {
 
 /* Main content shifts to make space for sidebar and navbar*/
 .main-content {
-  margin-left: 240px; 
-  margin-top: 20px;
-  padding: 20px;
+    margin-left: 240px;
+    margin-top: 70px; 
+    padding: 20px;
 }
+
 
 /* =====================================================
    SEARCH BAR (shared across pages)
@@ -282,6 +285,6 @@ body {
   color: #000000;
 }
 .search-icon {
-  font-size: 1.4rem; /* increase size (default is ~1rem) */
-  color: #0D1B2A;    /* match your theme color */
+  font-size: 1.4rem; 
+  color: #0D1B2A;
 }
