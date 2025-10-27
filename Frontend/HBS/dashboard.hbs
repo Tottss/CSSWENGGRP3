@@ -9,22 +9,22 @@
             </div>
 
             <div class="Green-header">
-                <i class="bi bi-chevron-double-down"></i>
+                <img src="../ASSETS/Vector.png"></img>
                 <h2 class="Notif-white">{{nNotif}} new notification!</h2> 
             </div>
             <br/>
             <br/>
-            {{>Projectbox Projects=Projects title="Your Projects"}}
+            {{>Projectbox Projects=Projects title="Community Projects" ButtonName="View Project"}}
             <br/>
-            {{>Projectbox Projects=Projects title="Community Projects"}}
+            {{>Projectbox Projects=Projects title="Your Projects" ButtonName="Update Project"}}
             <br/>
             <div class="notification-header">
-                <i class="bi bi-wrench"></i>
-                <h2 class="Notif">Project Management Tools</h2>
+                <img src="../ASSETS/toolbox.png"></img>
+                <h2 class="ProjManage">Project Management Tools</h2>
             </div>
-            <button type="submit" class="apply-btn">Submit Project Proposal</button>
-            <button type="submit" class="apply-btn">Update Impact Tracker</button>
-            <button type="submit" class="apply-btn">Generate Progress Report</button>
+            <button type="submit" class="dashboard-btn">Submit Project Proposal</button>
+            <button type="submit" class="dashboard-btn">Update Impact Tracker</button>
+            <button type="submit" class="dashboard-btn">Generate Progress Report</button>
         </div>
     </div>
 </main>
