@@ -195,3 +195,17 @@
   box-shadow: none;
   overflow: visible;
 }
+
+.yourproject-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.see-more {
+  text-decoration: none;
+  color: #29ABE2;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
