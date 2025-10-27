@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apply as Community Partner</title>
+  <link rel="stylesheet" href="/CSS/global.css">
+  <link rel="stylesheet" href="/CSS/apply.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <img class="logo-icon" src="/ASSETS/logo-only.png" alt="Logo">
+            <span class="nav-title">Community Partners Portal</span>
+        </div>
+        <div class="nav-right">
+            <a href="#about" class="nav-link">About</a>
+            <a href="login" class="login-btn">Login</a>
+        </div>
+    </nav>
+
+    <!-- Background Wrapper -->
+    <div class="background-wrapper">
+        <img class="background-gif-icon" src="/ASSETS/background.gif" alt="Background" />
+        <div class="navy-darkening-fx"></div>
+
+        <!-- Apply Form -->
+        <div class="apply-container">
+            <div class="apply-form-box">
+                <img class="logo-only-icon" src="/ASSETS/logo-only.png" alt="Logo" />
+                <h1 class="apply-title">Community Partner Application</h1>
+                <p class="apply-subtitle">Please fill out the details below to apply as a partner organization.</p>
+
+                <form id="applyForm" enctype="multipart/form-data">
+                    <!-- Organization Name -->
+                    <label for="orgName">Organization / Partner Name</label>
+                    <input type="text" id="orgName" name="orgName" placeholder="Enter organization name" required>
+
+                    <!-- Contact Person -->
+                    <label for="contactPerson">Contact Person</label>
+                    <div class="contact-group">
+                        <input type="text" id="contactName" name="contactName" placeholder="Full Name" required>
+                        <input type="text" id="contactPosition" name="contactPosition" placeholder="Position" required>
+                        <input type="text" id="contactNumber" name="contactNumber" placeholder="Contact Number" required>
+                    </div>
+
+                    <!-- Email Address -->
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter email address" required>
+
+                    <!-- Full Address -->
+                    <label for="address">Full Address & Location</label>
+                    <input type="text" id="fullAddress" name="fullAddress" placeholder="Full Address" required>
+
+                    <div class="address-group">
+                        <input type="text" id="province" name="province" placeholder="Province" required>
+                        <input type="text" id="municipality" name="municipality" placeholder="Municipality" required>
+                        <input type="text" id="barangay" name="barangay" placeholder="Barangay" required>
+                    </div>
+
+                    <!-- Type of Partner -->
+                    <label for="partnerType">Type of Partner</label>
+                    <select id="partnerType" name="partnerType" required>
+                        <option value="">Select partner type</option>
+                        <option value="NGO">NGO</option>
+                        <option value="School">School</option>
+                        <option value="Parish">Parish</option>
+                        <option value="LGU">Local Government Unit (LGU)</option>
+                        <option value="Private Org">Private Organization</option>
+                    </select>
+
+                    <!-- Advocacy Focus -->
+                    <label for="advocacy">Advocacy Focus</label>
+                    <input type="text" id="advocacy" name="advocacy" placeholder="Enter advocacy focus" required>
+
+                    <!-- Upload MOU -->
+                    <label for="mou">Upload Memorandum of Understanding (MOU)</label>
+                    <input type="file" id="mou" name="mou" accept=".pdf" required>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="apply-btn">Submit Application</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="/JAVASCRIPT/apply.js"></script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submit a Project Proposal</title>
+  <link rel="stylesheet" href="../CSS/global.css">
+  <link rel="stylesheet" href="../CSS/apply.css">
+  <link rel="stylesheet" href="../CSS/proposal.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <img class="logo-icon" src="../ASSETS/logo-only.png" alt="Logo">
+            <span class="nav-title">Community Partners Portal</span>
+        </div>
+        <div class="nav-right">
+            <div class="d-flex flex-grow-1 justify-content-center position-relative">
+            <form class="d-flex search-form position-relative" action="/search" method="GET">
+                <input class="form-control" id="SearchInput" type="search" name="q" placeholder="Search Projects" autocomplete="off">
+                <i class="bi bi-search search-icon"></i>
+            </form>
+        </div>
+            <div class="profile-menu">
+                <img src="../ASSETS/DefaultProfile.jpg" alt="Profile" class="profile-pic"/>
+                <ul class="dropdown">
+                  <li><a href="/Frontend/HTML/profile.html">Profile</a></li>
+                  <li><a href="/Frontend/HTML/settings.html">Settings</a></li>
+                  <li><a href="/Frontend/HTML/login.html">Logout</a></li>
+                </ul>
+              </div>
+        </div>
+    </nav>
+    <!-- Sidebar -->
+<aside class="sidebar">
+  <ul>
+    <li><a href="/Frontend/HTML/dashboard.html"><i class="bi bi-house-door-fill"></i>   Dashboard</a></li>
+    <li><a href="/Frontend/HTML/projects.html"><i class="bi bi-kanban-fill"></i>    Projects</a></li>
+    <li><a href="/Frontend/HTML/Calendar.html"><i class="bi bi-calendar-fill"></i>   Calendar</a></li>
+    <li><a href="/Frontend/HTML/ResourceHub.html"><i class="bi bi-folder-fill"></i>   Resource Hub</a></li>
+  </ul>
+</aside>
+
+<!-- Main Content -->
+<main class="main-content">
+    <div class="proposal-container">
+        <div class="proposal-form-box">
+            <h1 class="apply-title">Project Proposal Submission</h1>
+            <p class="apply-subtitle">Please fill out the details below to submit a project proposal.</p>
+
+            <form id="proposalForm" enctype="multipart/form-data">
+                <!-- Project Title -->
+                <label for="ProjTitle">Project Title</label>
+                <input type="text" id="ProjTitle" name="ProjTitle" placeholder="Enter Project Title" required>
+
+                <!-- Project Summary -->
+                <label for="ProjSummary">Project Summary/Objectives</label>
+                <input type="text" id="ProjSummary" name="ProjSummary" placeholder="Write project summary or objectives" required>
+
+                <!-- Target Beneficiaries -->
+                <label for="TargetBeneficiaries">Target Beneficiaries</label>
+                <input type="text" id="TargetBeneficiaries" name="TargetBeneficiaries" placeholder="Enter number of target beneficiaries" required>
+
+                <!-- Advocacy Area -->
+                <label for="AdvocacyArea">Advocacy Area</label>
+                <select id="AdvocacyArea" name="AdvocacyArea" required>
+                    <option value="">Select advocacy area</option>
+                    <option value="Religious Vocation">Religious Vocation</option>
+                    <option value="Youth">Youth</option>
+                    <option value="Infrastructure">Infrastructure</option>
+                    <option value="Disaster Response">Disaster Response</option>
+                </select>
+
+                <!-- SDG Alignment -->
+                <label for="SDGAlignment">SDG Alignment</label>
+                <select id="SDGAlignment" name="SDGAlignment" required>
+                    <option value="">Select SDG goal</option>
+                    <option value="No Poverty">No Poverty</option>
+                    <option value="Zero Hunger">Zero Hunger</option>
+                    <option value="Good Health and Well-being">Good Health and Well-being</option>
+                    <option value="Quality Education">Quality Education</option>
+                    <option value="Gender Equality">Gender Equality</option>
+                    <option value="Clean Water and Sanitation">Clean Water and Sanitation</option>
+                    <option value="Affordable and Clean Energy">Affordable and Clean Energy</option>
+                    <option value="Decent Work and Economic Growth">Decent Work and Economic Growth</option>
+                    <option value="Industry, Innovation and Infrastructure">Industry, Innovation and Infrastructure</option>
+                    <option value="Reduced Inequalities">Reduced Inequalities</option>
+                    <option value="Sustainable Cities and Communities">Sustainable Cities and Communities</option>
+                    <option value="Responsible Consumption and Production">Responsible Consumption and Production</option>
+                    <option value="Climate Action">Climate Action</option>
+                    <option value="Life Below Water">Life Below Water</option>
+                    <option value="Life on Land">Life on Land</option>
+                    <option value="Peace, Justice and Strong Institutions">Peace, Justice and Strong Institutions</option>
+                    <option value="Partnerships for the Goals">Partnerships for the Goals</option>
+                </select>
+
+                <!-- Project Timeline -->
+                    <label for="Timeline">Timeline</label>
+                    <div class="timeline-group">
+                        <label for="timelineStart">Start Date:</label>
+                        <input type="date" id="timelineStart" name="timelineStart" required>
+                        <label for="timelineEnd">End Date:</label>
+                        <input type="date" id="timelineEnd" name="timelineEnd" required>
+                    </div>
+
+                <!-- Proposed Budget -->
+                <label for="ProposedBudget">Proposed Budget</label>
+                <input type="number" id="ProposedBudget" name="ProposedBudget" placeholder="Enter Proposed Budget" required>
+
+                <!-- Upload Detailed Proposal -->
+                <label for="Proposal">Upload Detailed Proposal</label>
+                <input type="file" id="Proposal" name="Proposal" accept=".pdf" required>
+
+                <!-- Submit Button -->
+                <button type="submit" class="apply-btn">Submit Project Proposal</button>
+            </form>
+        </div>
+    </div>
+</main>

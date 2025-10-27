@@ -1,0 +1,31 @@
+{{#> main}}
+<main class="main-content">
+    <div class="proposal-container">
+        <div class="proposal-form-box">
+            <h1 class="dashboard-title">Hi, {{PartnerOrg}}!</h1>
+            <div class="notification-header">
+                <i class="bi bi-bell-fill"></i>
+                <h2 class="Notif">Notifications</h2>
+            </div>
+
+            <div class="Green-header">
+                <img src="../ASSETS/Vector.png"></img>
+                <h2 class="Notif-white">{{nNotif}} new notification!</h2> 
+            </div>
+            <br/>
+            <br/>
+            {{>Projectbox Projects=Projects title="Community Projects" ButtonName="View Project"}}
+            <br/>
+            {{>Projectbox Projects=Projects title="Your Projects" ButtonName="Update Project"}}
+            <br/>
+            <div class="notification-header">
+                <img src="../ASSETS/toolbox.png"></img>
+                <h2 class="ProjManage">Project Management Tools</h2>
+            </div>
+            <button type="submit" class="dashboard-btn">Submit Project Proposal</button>
+            <button type="submit" class="dashboard-btn">Update Impact Tracker</button>
+            <button type="submit" class="dashboard-btn">Generate Progress Report</button>
+        </div>
+    </div>
+</main>
+{{/main}}

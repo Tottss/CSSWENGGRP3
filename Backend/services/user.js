@@ -43,6 +43,7 @@ export const createTestUser = asyncHandler(async (req, res) => {
 });
 
 export const userLogIn = asyncHandler(async (req, res) => {
+  console.log("Received login request:", req.body);
   const { user_email, user_password } = req.body;
 
   // Validate inputs
