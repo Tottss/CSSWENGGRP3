@@ -1,12 +1,15 @@
 import router from "./routes/routes.js";
 import { engine } from "express-handlebars";
 import express from "express";
-import mongoose from "mongoose";
-// import bodyParser from "body-parser";
 import "dotenv/config";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
+
+// for testing
+import { DynamoDBClient, ListTablesCommand } from "@aws-sdk/client-dynamodb";
+// import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb"; 
+// import { docClient } from "./config/dynamodb.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -38,19 +41,27 @@ app.use(express.static(path.join(__dirname, '../Frontend')));
 // app.use(bodyParser.json());
 app.use(express.json());
 
-// move to .env before deployment
-const MONGODB_URI = process.env.MONGODB_URI;
+// removed mongodb code
 
-// mongoose implementation
-mongoose
-  .connect(MONGODB_URI)
-  .then(() => console.log(`Connected to MongoDB: ${mongoose.connection.name}`))
-  .catch((err) => console.error("MongoDB connection error:", err.message));
-
-// stop (remove after testing)
+// dynamo start
+// config/dynamodb.js
+console.log("Connected to DynamoDB");
+// dynamo end
 
 // app.options("*", cors());
 app.use("/", router);
+
+async function testDynamo() {
+  try {
+    const client = new DynamoDBClient({ region: process.env.AWS_REGION || "ap-southeast-1" });
+    const data = await client.send(new ListTablesCommand({}));
+    console.log("Connected to DynamoDB. Tables:", data.TableNames);
+  } catch (err) {
+    console.error("DynamoDB connection failed:", err);
+  }
+}
+
+testDynamo();
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, function () {
