@@ -37,3 +37,5 @@ npm run dev
   GROUP 3 BACKEND SERVER
   TEST PORT: 3000
 ```
+
+3. `download .env file and add to /Backend`:
