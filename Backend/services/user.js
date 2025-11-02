@@ -1,35 +1,66 @@
-import User from "../models/User.js";
 import asyncHandler from "express-async-handler";
 import bcrypt from "bcrypt";
+import { docClient } from "../config/dynamodb.js";
+import { GetCommand, PutCommand, QueryCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
 
-// for testing
+const USERS_TABLE = "Users";
+// add other tables here
+
+// Create a test user (POST /user/createTestUser)
 export const createTestUser = asyncHandler(async (req, res) => {
   const { user_name, user_email, user_password, is_admin } = req.body;
 
-  // Check if username or email already exists
-  const existingUser = await User.findOne({
-    $or: [{ user_name }, { user_email }],
-  });
+  if (!user_name || !user_email || !user_password) {
+    res.status(400).json({ message: "All fields are required." });
+    throw new Error("Missing fields");
+  }
 
-  if (existingUser) {
-    if (existingUser.user_name === user_name) {
-      res.status(400).json({ message: "Username is already in use." });
-    } else {
-      res.status(400).json({ message: "Email is already registered." });
-    }
-    throw new Error("Duplicate username or email.");
+  // Check if email already exists
+  const existingUser = await docClient.send(
+    new GetCommand({
+      TableName: USERS_TABLE,
+      Key: { user_email },
+    })
+  );
+
+  if (existingUser.Item) {
+    res.status(400).json({ message: "Email is already registered." });
+    throw new Error("Duplicate email.");
+  }
+
+  // Optional: Check if username already exists (requires a Scan)
+  const usernameCheck = await docClient.send(
+    new ScanCommand({
+      TableName: USERS_TABLE,
+      FilterExpression: "#un = :uname",
+      ExpressionAttributeNames: { "#un": "user_name" },
+      ExpressionAttributeValues: { ":uname": user_name },
+    })
+  );
+
+  if (usernameCheck.Count > 0) {
+    res.status(400).json({ message: "Username is already in use." });
+    throw new Error("Duplicate username.");
   }
 
   // Hash password
   const hashed_password = await bcrypt.hash(user_password, 12);
 
   // Create new user
-  const newUser = await User.create({
-    user_name,
+  const newUser = {
     user_email,
+    user_name,
     hashed_password,
-    is_admin,
-  });
+    is_admin: !!is_admin,
+    user_id: Date.now(), // simple unique ID
+  };
+
+  await docClient.send(
+    new PutCommand({
+      TableName: USERS_TABLE,
+      Item: newUser,
+    })
+  );
 
   res.status(201).json({
     message: "Test user creation successful",
@@ -42,6 +73,7 @@ export const createTestUser = asyncHandler(async (req, res) => {
   });
 });
 
+// User Login (POST /user/login)
 export const userLogIn = asyncHandler(async (req, res) => {
   console.log("Received login request:", req.body);
   const { user_email, user_password } = req.body;
@@ -49,19 +81,26 @@ export const userLogIn = asyncHandler(async (req, res) => {
   // Validate inputs
   if (!user_email || !user_password) {
     res.status(400).json({ message: "All fields must be filled." });
-    throw new Error("All fields must be filled.");
+    throw new Error("Missing login fields");
   }
 
-  // Find user by email
-  const user = await User.findOne({ user_email });
+  // Fetch user by email
+  const result = await docClient.send(
+    new GetCommand({
+      TableName: USERS_TABLE,
+      Key: { user_email },
+    })
+  );
+
+  const user = result.Item;
 
   // Verify credentials
   if (!user || !(await bcrypt.compare(user_password, user.hashed_password))) {
     res.status(401).json({ message: "Invalid email or password!" });
-    throw new Error("Invalid email or password!");
+    throw new Error("Invalid login credentials.");
   }
 
-  // Successful login
+  // Success
   res.status(200).json({
     message: "Login successful",
     user: {
@@ -72,3 +111,4 @@ export const userLogIn = asyncHandler(async (req, res) => {
     },
   });
 });
+
