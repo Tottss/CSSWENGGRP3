@@ -73,4 +73,36 @@
             </form>
         </div>
     </div>
+
+    <script>
+        document.getElementById("proposalForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch("/proposal/create", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert("Proposal submitted successfully!");
+                    console.log("Saved:", result);
+                    e.target.reset();
+                } else {
+                    alert("Failed to submit proposal: " + result.message);
+                    console.error(result);
+                }
+            } catch (err) {
+                alert("Error connecting to server");
+                console.error(err);
+            }
+        });
+    </script>
+
 {{/main}}

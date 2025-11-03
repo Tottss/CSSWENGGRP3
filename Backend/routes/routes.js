@@ -1,6 +1,7 @@
 import express from "express";
 import { userLogIn, createTestUser } from "../services/user.js";
 import applyRouter from "./apply.js";
+import proposalRouter from "./proposal.js";
 
 const router = express.Router();
 
@@ -79,5 +80,7 @@ router.get("/proposal", (req, res) => {
     title: "Project Proposal"
   });
 });
+
+router.use("/proposal", proposalRouter);
 
 export default router;
