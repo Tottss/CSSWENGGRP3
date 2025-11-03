@@ -19,12 +19,35 @@ form input[type="date"] {
 }
 
 .proposal-container {
+  margin-left: 15%;
+  margin-top: 70px;
   width: 100%;
   max-height: calc(100vh - 90px - 40px);
   padding: 20px;
   border-radius: 12px;
+  max-width: 100%;
   background: #ffffff;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+
+  /* Make scrollbar rounded without cutting corners */
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+.proposal-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.proposal-container::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0);
+  border-radius: 12px;
+}
+
+.proposal-container::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .proposal-form-box {

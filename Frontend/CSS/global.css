@@ -23,6 +23,10 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
 }
+.container {
+  display: flex;
+  align-items: flex-start;
+}
 
 /* =====================================================
    NAVIGATION BAR (shown on all pages except login)
@@ -192,7 +196,7 @@ body {
   position: fixed;
   top: 70px;
   left: 0;
-  width: 313px;
+  width: 16%;
   height: calc(100vh - 70px); /* full height minus navbar */
   background-color: #29ABE2;
   color: #fff;
