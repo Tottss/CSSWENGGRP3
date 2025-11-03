@@ -33,6 +33,12 @@ router.get("/login", (req, res) => {
   });
 });
 
+// logout route
+router.get("/logout", (req, res) => {
+  // only redirect to login for now (no session handling yet)
+  res.redirect("/login");
+});
+
 // apply route
 router.get("/apply", (req, res) => {
   res.render("apply", {
@@ -45,7 +51,6 @@ router.get("/apply", (req, res) => {
 router.get("/adminView", (req, res) => {
   res.render("adminView", {
     title: "Admin View",
-    layout: false
   });
 });
 

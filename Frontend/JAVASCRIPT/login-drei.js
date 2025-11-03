@@ -19,9 +19,9 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 
     if (response.ok) {
       if (data.user.is_admin) {
-        window.location.href = "/dashboard";
+        window.location.href = "/adminView";
       } else {
-        window.location.href = "/userView";
+        window.location.href = "/dashboard";
       }
     } else {
       alert(data.message || "Invalid credentials");
