@@ -62,6 +62,7 @@ router.get("/dashboard", (req, res) => {
     title: "Dashboard",
     PartnerOrg: "Partner Org Name",
     nNotif: 1,
+    href: "/Yourprojects",
     Projects: [
       { ProjectImageURL: "/ASSETS/border-design.png", ProjectName: "Project 1" },
       { ProjectImageURL: "/ASSETS/border-design.png", ProjectName: "Project 2" },
@@ -74,13 +75,46 @@ router.get("/dashboard", (req, res) => {
   });
 });
 
-;//project proposal route
+//project proposal route
 router.get("/proposal", (req, res) => {
   res.render("proposal", {
     title: "Project Proposal"
   });
 });
 
+// your project route
+router.get("/Yourprojects", (req, res) => {
+  res.render("projects", {
+    Title: "Your Projects",
+    BtnName: "Update Project",
+    Projects: [
+      { ProjectImageURL: "/ASSETS/border-design.png", ProjectName: "Project 1" },
+      { ProjectImageURL: "/ASSETS/border-design.png", ProjectName: "Project 2" },
+      { ProjectImageURL: "/ASSETS/border-design.png", ProjectName: "Project 3" },
+      { ProjectImageURL: "/ASSETS/border-design.png", ProjectName: "Project 4" },
+      { ProjectImageURL: "/ASSETS/border-design.png", ProjectName: "Project 5" },
+      { ProjectImageURL: "/ASSETS/border-design.png", ProjectName: "Project 6" },
+      { ProjectImageURL: "/ASSETS/border-design.png", ProjectName: "Project 7" },
+    ]
+  });
+});
 router.use("/proposal", proposalRouter);
+
+//community projects route
+router.get("/Communityprojects", (req, res) => {
+  res.render("projects", {
+    Title: "Community Projects",
+    BtnName: "View Project",
+    Projects: [
+      { ProjectImageURL: "/ASSETS/border-design.png", ProjectName: "Project 1" },
+      { ProjectImageURL: "/ASSETS/border-design.png", ProjectName: "Project 2" },
+      { ProjectImageURL: "/ASSETS/border-design.png", ProjectName: "Project 3" },
+      { ProjectImageURL: "/ASSETS/border-design.png", ProjectName: "Project 4" },
+      { ProjectImageURL: "/ASSETS/border-design.png", ProjectName: "Project 5" },
+      { ProjectImageURL: "/ASSETS/border-design.png", ProjectName: "Project 6" },
+      { ProjectImageURL: "/ASSETS/border-design.png", ProjectName: "Project 7" },
+    ]
+  });
+});
 
 export default router;

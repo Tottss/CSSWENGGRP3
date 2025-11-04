@@ -14,17 +14,17 @@
             </div>
             <br/>
             <br/>
-            {{>Projectbox Projects=Projects title="Community Projects" ButtonName="View Project"}}
+            {{>Projectbox Projects=Projects title="Community Projects" ButtonName="View Project" href="/Communityprojects"}}
             <br/>
-            {{>Projectbox Projects=Projects title="Your Projects" ButtonName="Update Project"}}
+            {{>Projectbox Projects=Projects title="Your Projects" ButtonName="Update Project" href="/Yourprojects"}}
             <br/>
             <div class="notification-header">
                 <img src="../ASSETS/toolbox.png"></img>
                 <h2 class="ProjManage">Project Management Tools</h2>
             </div>
-            <button type="submit" class="dashboard-btn">Submit Project Proposal</button>
-            <button type="submit" class="dashboard-btn">Update Impact Tracker</button>
-            <button type="submit" class="dashboard-btn">Generate Progress Report</button>
+            <button type="submit" class="dashboard-btn" onclick="window.location.href='/proposal'">Submit Project Proposal</button>
+            <button type="submit" class="dashboard-btn" onclick="window.location.href='/tracker'">Update Impact Tracker</button>
+            <button type="submit" class="dashboard-btn" onclick="window.location.href='/report'">Generate Progress Report</button>
         </div>
     </div>
 </main>
