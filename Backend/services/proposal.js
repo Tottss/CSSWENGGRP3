@@ -23,6 +23,10 @@ export const createProposal = async (req, res) => {
         const file = req.file;
         if (!file) return res.status(400).json({ message: "No file uploaded" });
 
+        // Temporary hardcode until session integration
+        const user_id = 2; // Partner account
+        const partner_org = "Partner_Account"; // reminder to fetch from session in future (user_name)
+
         // Upload file to S3
         const proposalId = uuidv4();
         const fileKey = `proposals/${proposalId}-${file.originalname}`;
@@ -41,6 +45,8 @@ export const createProposal = async (req, res) => {
         // Save metadata to DynamoDB
         const newProposal = {
             proposal_id: proposalId,
+            user_id,
+            partner_org,
             ProjTitle,
             ProjSummary,
             TargetBeneficiaries,
@@ -51,6 +57,7 @@ export const createProposal = async (req, res) => {
             ProposedBudget: Number(ProposedBudget),
             ProposalFile: fileUrl,
             CreatedAt: new Date().toISOString(),
+            status: "pending",
         };
 
         await docClient.send(
