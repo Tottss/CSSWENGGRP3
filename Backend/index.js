@@ -4,11 +4,12 @@ import express from "express";
 import "dotenv/config";
 import cors from "cors";
 import path from "path";
+import session from "express-session";
 import { fileURLToPath } from "url";
 
 // for testing
 import { DynamoDBClient, ListTablesCommand } from "@aws-sdk/client-dynamodb";
-// import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb"; 
+// import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 // import { docClient } from "./config/dynamodb.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -26,34 +27,41 @@ app.use(
 );
 
 const hbs = engine({
-  extname: '.hbs',
-  defaultLayout: 'main',
-  layoutsDir: path.join(__dirname, '../Frontend/HBS/layouts'),
-  partialsDir: path.join(__dirname, '../Frontend/HBS/partials'),
+  extname: ".hbs",
+  defaultLayout: "main",
+  layoutsDir: path.join(__dirname, "../Frontend/HBS/layouts"),
+  partialsDir: path.join(__dirname, "../Frontend/HBS/partials"),
 });
 
-app.engine('hbs', hbs);
-app.set('view engine', 'hbs');
-app.set('views', path.join(__dirname, '../Frontend/HBS'));
+app.engine("hbs", hbs);
+app.set("view engine", "hbs");
+app.set("views", path.join(__dirname, "../Frontend/HBS"));
 
-app.use(express.static(path.join(__dirname, '../Frontend')));
+app.use(express.static(path.join(__dirname, "../Frontend")));
 
-// app.use(bodyParser.json());
 app.use(express.json());
 
-// removed mongodb code
-
-// dynamo start
-// config/dynamodb.js
-console.log("Connected to DynamoDB");
-// dynamo end
+// sessions
+// move secret to .env before deployment
+app.use(
+  session({
+    secret: "cssweng-bakhita",
+    saveUninitialized: false,
+    resave: false,
+    cookie: {
+      maxAge: 60000 * 60, // 1 hour
+    },
+  })
+);
 
 // app.options("*", cors());
 app.use("/", router);
 
 async function testDynamo() {
   try {
-    const client = new DynamoDBClient({ region: process.env.AWS_REGION || "ap-southeast-1" });
+    const client = new DynamoDBClient({
+      region: process.env.AWS_REGION || "ap-southeast-1",
+    });
     const data = await client.send(new ListTablesCommand({}));
     console.log("Connected to DynamoDB. Tables:", data.TableNames);
   } catch (err) {

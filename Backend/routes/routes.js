@@ -23,16 +23,22 @@ router.use("/request", applyRouter);
 
 // login route
 router.get("/", (req, res) => {
-  res.render("login", { 
+  req.session.visited = true; // to prevent new sessions from being created
+
+  // remove after testing
+  console.log(req.session);
+  console.log(req.sessionID);
+
+  res.render("login", {
     title: "Login Page",
-    layout: false
+    layout: false,
   });
 });
 
 router.get("/login", (req, res) => {
-  res.render("login", { 
+  res.render("login", {
     title: "Login Page",
-    layout: false
+    layout: false,
   });
 });
 
@@ -46,7 +52,7 @@ router.get("/logout", (req, res) => {
 router.get("/apply", (req, res) => {
   res.render("apply", {
     title: "Application Page",
-    layout: false
+    layout: false,
   });
 });
 
@@ -112,11 +118,10 @@ router.get("/dashboard", async (req, res) => {
   }
 });
 
-
 //project proposal route
 router.get("/proposal", (req, res) => {
   res.render("proposal", {
-    title: "Project Proposal"
+    title: "Project Proposal",
   });
 });
 
