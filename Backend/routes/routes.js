@@ -100,6 +100,7 @@ router.get("/dashboard", async (req, res) => {
       PartnerOrg: "Partner Org Name",
       nNotif: 1,
 
+      // test image urls
       // Community Projects
       CommunityProjects: communityProjects.map((p) => ({
         ProjectImageURL: p.ProjectImageURL || "/ASSETS/border-design.png",

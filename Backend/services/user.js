@@ -106,7 +106,7 @@ export const userLogIn = asyncHandler(async (req, res) => {
     throw new Error("INVALID CREDENTIALS!");
   }
 
-  // ✅ Securely regenerate session after login
+  // securely regenerate session after login
   req.session.regenerate((err) => {
     if (err) {
       console.error("Session regeneration error:", err);
@@ -116,6 +116,7 @@ export const userLogIn = asyncHandler(async (req, res) => {
     // Set session data
     req.session.user_id = user.user_id;
     req.session.is_admin = user.is_admin;
+    req.session.user_email = user.user_email;
 
     // remove after testing
     console.log("New session:", req.session);
