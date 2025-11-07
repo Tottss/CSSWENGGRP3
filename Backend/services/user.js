@@ -117,6 +117,7 @@ export const userLogIn = asyncHandler(async (req, res) => {
     req.session.user_id = user.user_id;
     req.session.is_admin = user.is_admin;
     req.session.user_email = user.user_email;
+    req.session.user_name = user.user_name;
 
     // remove after testing
     console.log("New session:", req.session);

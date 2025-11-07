@@ -45,6 +45,7 @@ router.get("/login", (req, res) => {
 // logout route
 router.get("/logout", (req, res) => {
   // only redirect to login for now (no session handling yet)
+  // destroy session here
   res.redirect("/login");
 });
 
@@ -70,10 +71,14 @@ router.get("/userView", (req, res) => {
   });
 });
 
+// changed p.ProjectImageURL to p.project_imageURL to match database field
+
 //dashboard route
 router.get("/dashboard", async (req, res) => {
   try {
-    const userId = 2; // temporary hardcode until sessions are added
+    const userId = req.session.user_id || 2; // temporary hardcode until sessions are added
+
+    console.log("Session User Id:", req.session.user_id); // remove after testing
 
     // Fetch all projects (for Community Projects)
     const allProjectsData = await docClient.send(
@@ -97,19 +102,19 @@ router.get("/dashboard", async (req, res) => {
 
     res.render("dashboard", {
       title: "Dashboard",
-      PartnerOrg: "Partner Org Name",
+      PartnerOrg: req.session.user_name || "Partner Org Name",
       nNotif: 1,
 
       // test image urls
       // Community Projects
       CommunityProjects: communityProjects.map((p) => ({
-        ProjectImageURL: p.ProjectImageURL || "/ASSETS/border-design.png",
+        ProjectImageURL: p.project_imageURL || "/ASSETS/border-design.png",
         ProjectName: p.project_name,
       })),
 
       // Your Projects
       YourProjects: yourProjects.map((p) => ({
-        ProjectImageURL: p.ProjectImageURL || "/ASSETS/border-design.png",
+        ProjectImageURL: p.project_imageURL || "/ASSETS/border-design.png",
         ProjectName: p.project_name,
       })),
     });
@@ -147,7 +152,7 @@ router.get("/Communityprojects", async (req, res) => {
       Title: "Community Projects",
       BtnName: "View Project",
       Projects: projects.map((p) => ({
-        ProjectImageURL: p.ProjectImageURL || "/ASSETS/border-design.png",
+        ProjectImageURL: p.project_imageURL || "/ASSETS/border-design.png",
         ProjectName: p.project_name,
       })),
     });
