@@ -10,6 +10,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   try {
     const response = await fetch("http://127.0.0.1:3000/user/login", {
       method: "POST",
+      credentials: "include", // testing
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ user_email, user_password }),
     });
