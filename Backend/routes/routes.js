@@ -45,6 +45,7 @@ router.get("/login", (req, res) => {
 // logout route
 router.get("/logout", (req, res) => {
   // only redirect to login for now (no session handling yet)
+  // destroy session here
   res.redirect("/login");
 });
 
@@ -77,6 +78,8 @@ router.get("/dashboard", async (req, res) => {
   try {
     const userId = req.session.user_id || 2; // temporary hardcode until sessions are added
 
+    console.log("Session User Id:", req.session.user_id); // remove after testing
+
     // Fetch all projects (for Community Projects)
     const allProjectsData = await docClient.send(
       new ScanCommand({
@@ -99,7 +102,7 @@ router.get("/dashboard", async (req, res) => {
 
     res.render("dashboard", {
       title: "Dashboard",
-      PartnerOrg: "Partner Org Name",
+      PartnerOrg: req.session.user_name || "Partner Org Name",
       nNotif: 1,
 
       // test image urls
