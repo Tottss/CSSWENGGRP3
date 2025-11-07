@@ -24,7 +24,7 @@ export const createProposal = async (req, res) => {
     if (!file) return res.status(400).json({ message: "No file uploaded" });
 
     // Temporary hardcode until session integration
-    const user_id = 2; // Partner account
+    const user_id = req.session.user_id || 2; // temp fallback (user account)
     const partner_org = "Partner_Account"; // reminder to fetch from session in future (user_name)
 
     // Upload file to S3

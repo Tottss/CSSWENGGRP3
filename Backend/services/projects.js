@@ -21,7 +21,7 @@ export const getUserProjects = async (req, res) => {
 
     const projects = data.Items || [];
 
-    console.log("Fetched projects:", projects); // remove this after testing
+    console.log("Fetched projects:", projects); // log in backend not in conse
 
     res.render("projects", {
       Title: "Your Projects",
