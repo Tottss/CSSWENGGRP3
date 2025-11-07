@@ -50,8 +50,9 @@ app.use(
     resave: false,
     cookie: {
       maxAge: 60000 * 60, // 1 hour
-      // secure: false, // set to true if using https
-      // httpOnly: false, // try changing to true later
+      sameSite: "lax",
+      secure: false, // set to true if using https
+      httpOnly: false, // try changing to true later
     },
   })
 );
