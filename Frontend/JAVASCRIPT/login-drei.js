@@ -8,8 +8,10 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   const user_password = document.getElementById("password").value.trim();
 
   try {
-    const response = await fetch("http://127.0.0.1:3000/user/login", {
+    // removed http://127.0.0.1:3000 in path
+    const response = await fetch("/user/login", {
       method: "POST",
+      credentials: "include", // testing
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ user_email, user_password }),
     });

@@ -1,7 +1,12 @@
 import asyncHandler from "express-async-handler";
 import bcrypt from "bcrypt";
 import { docClient } from "../config/dynamodb.js";
-import { GetCommand, PutCommand, QueryCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
+import {
+  GetCommand,
+  PutCommand,
+  QueryCommand,
+  ScanCommand,
+} from "@aws-sdk/lib-dynamodb";
 
 const USERS_TABLE = "Users";
 // add other tables here
@@ -74,8 +79,11 @@ export const createTestUser = asyncHandler(async (req, res) => {
 });
 
 // User Login (POST /user/login)
+// without session.save
+/*
 export const userLogIn = asyncHandler(async (req, res) => {
   console.log("Received login request:", req.body);
+
   const { user_email, user_password } = req.body;
 
   // Validate inputs
@@ -96,19 +104,112 @@ export const userLogIn = asyncHandler(async (req, res) => {
 
   // Verify credentials
   if (!user || !(await bcrypt.compare(user_password, user.hashed_password))) {
-    res.status(401).json({ message: "Invalid email or password!" });
-    throw new Error("Invalid login credentials.");
+    res.status(401).json({ message: "INVALID CREDENTIALS!" });
+    throw new Error("INVALID CREDENTIALS!");
   }
 
-  // Success
-  res.status(200).json({
-    message: "Login successful",
-    user: {
-      user_id: user.user_id,
-      email: user.user_email,
-      username: user.user_name,
-      is_admin: user.is_admin,
-    },
+  // securely regenerate session after login
+  req.session.regenerate((err) => {
+    if (err) {
+      console.error("Session regeneration error:", err);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+
+    // Set session data
+    req.session.user_id = user.user_id;
+    req.session.is_admin = user.is_admin;
+    req.session.user_email = user.user_email;
+    req.session.user_name = user.user_name;
+
+    // save session before redirecting
+    req.session.save((err) => {
+      if (err) {
+        console.error("Session save error:", err);
+        return res.status(500).json({ message: "Failed to save session" });
+      }
+    }
+
+    // remove after testing
+    console.log("New session:", req.session);
+    console.log("New sessionID:", req.sessionID);
+
+    // Send response *inside* the callback
+    res.status(200).json({
+      message: "Login successful",
+      user: {
+        user_id: user.user_id,
+        email: user.user_email,
+        username: user.user_name,
+        is_admin: user.is_admin,
+      },
+    });
+
   });
 });
+*/
 
+export const userLogIn = asyncHandler(async (req, res) => {
+  console.log("Received login request:", req.body);
+
+  const { user_email, user_password } = req.body;
+
+  // Validate inputs
+  if (!user_email || !user_password) {
+    res.status(400).json({ message: "All fields must be filled." });
+    throw new Error("Missing login fields");
+  }
+
+  // Fetch user by email
+  const result = await docClient.send(
+    new GetCommand({
+      TableName: USERS_TABLE,
+      Key: { user_email },
+    })
+  );
+
+  const user = result.Item;
+
+  //Verify credentials
+  if (!user || !(await bcrypt.compare(user_password, user.hashed_password))) {
+    res.status(401).json({ message: "INVALID CREDENTIALS!" });
+    throw new Error("INVALID CREDENTIALS!");
+  }
+
+  // Securely regenerate session after successful login
+  req.session.regenerate((err) => {
+    if (err) {
+      console.error("Session regeneration error:", err);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+
+    // Set session data
+    req.session.user_id = user.user_id;
+    req.session.is_admin = user.is_admin;
+    req.session.user_email = user.user_email;
+    req.session.user_name = user.user_name;
+
+    // Save session before sending response
+    req.session.save((err) => {
+      if (err) {
+        console.error("Session save error:", err);
+        return res.status(500).json({ message: "Failed to save session" });
+      } else {
+        console.log("Session saved successfully.");
+      }
+
+      console.log("New session:", req.session);
+      console.log("New sessionID:", req.sessionID);
+
+      // send response (inside save callback!)
+      res.status(200).json({
+        message: "Login successful",
+        user: {
+          user_id: user.user_id,
+          email: user.user_email,
+          username: user.user_name,
+          is_admin: user.is_admin,
+        },
+      });
+    });
+  });
+});
