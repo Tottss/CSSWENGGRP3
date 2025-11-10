@@ -43,7 +43,8 @@ router.get("/logout", (req, res) => {
 router.get("/apply", (req, res) => {
   res.render("apply", {
     title: "Application Page",
-    layout: false
+    layout: false,
+    isRequired: true
   });
 });
 
@@ -119,6 +120,13 @@ router.get("/Communityprojects", (req, res) => {
       { ProjectImageURL: "/ASSETS/border-design.png", ProjectName: "Project 6" },
       { ProjectImageURL: "/ASSETS/border-design.png", ProjectName: "Project 7" },
     ]
+  });
+});
+
+router.get("/profile", (req, res) => {
+  res.render("profile", {
+    ImageURL: "/ASSETS/DefaultProfile.jpg",
+    isRequired: false
   });
 });
 

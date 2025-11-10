@@ -1,0 +1,129 @@
+.profile-container {
+  margin-left: 34%;
+  margin-top: 90px;
+  position: relative;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 86%;
+  max-height: calc(100vh - 90px - 40px);
+
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+
+  /* Make scrollbar rounded without cutting corners */
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+.profile-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.profile-container::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0);
+  border-radius: 12px;
+}
+
+.profile-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
+.profile-title {
+  font-weight: 600;
+  font-size: 25px;
+  text-align: center;
+  color: black;
+  margin-top: -10px;
+}
+
+.image-upload-wrapper {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  display:block;
+  margin-right: auto;
+  margin-left: auto;
+}
+.image-label {
+  display: block;
+  position: relative;
+  cursor: pointer;
+}
+
+.edit-icon {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  font-size: 18px;
+  color: white;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  padding: 4px;
+}
+
+.profile-image-preview {
+  cursor: pointer;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.projects-form-box .mou-label {
+    display: none;
+}
+
+
+/* Modal background */
+.image-modal {
+  display: none; /* hidden by default */
+  position: fixed;
+  z-index: 1000;
+  padding-top: 60px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.8);
+}
+
+/* Image inside modal */
+.image-modal .modal-content {
+  display: block;
+  margin: auto;
+  max-width: 600px;
+  max-height: 600px;
+  border-radius: 12px;
+}
+
+/* Close button */
+.image-modal .close {
+  position: absolute;
+  top: 20px;
+  right: 35px;
+  color: #fff;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.image-modal .close:hover {
+  color: #bbb;
+}
+
+.changeImageBtn {
+  display: block;
+  margin: 20px auto 0 auto;
+  padding: 10px 20px;
+  background-color: #E94E1B;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  align-self: center;
+}

@@ -1,0 +1,54 @@
+{{#> main}}
+    <div class="profile-container">
+        <div class="projects-form-box">
+            <h1 class="profile-title">My Profile</h1>
+                <form action="/submit-image-data" method="post" enctype="multipart/form-data">
+                    <input type="file" id="fileInput" name="profileImage" accept="image/*" required hidden>
+  
+                    <!-- Clicking this image will trigger file input -->
+                    <div class="image-upload-wrapper">
+                        <img src="{{ImageURL}}" class="profile-image-preview" id="profileImage">
+                        <i class="bi bi-pen-fill edit-icon" id="editIcon"></i>
+                    </div>
+
+                    <!-- Modal -->
+                    <div id="imageModal" class="image-modal">
+                        <span class="close">&times;</span>
+                        <img class="modal-content" id="modalImage">
+                        <input type="file" id="fileInput" name="profileImage" accept="image/*">
+                        <button id="changeImageBtn" class="changeImageBtn">Change Image</button>
+                    </div>
+
+                </form>
+                <form id="profileForm" enctype="multipart/form-data">
+                {{> ApplyInputs}}
+                <!-- Save Button -->
+                <button type="submit" class="apply-btn">Save Edits</button>
+                </form>
+        </div>
+    </div>
+{{/main}}
+
+<script>
+const profileImage = document.getElementById('profileImage');
+const modal = document.getElementById('imageModal');
+const modalImg = document.getElementById('modalImage');
+const closeBtn = document.querySelector('.image-modal .close');
+
+// When user clicks the profile image
+profileImage.addEventListener('click', () => {
+  modal.style.display = 'block';
+  modalImg.src = profileImage.src; // show the same image in modal
+});
+
+// When user clicks the close button
+closeBtn.addEventListener('click', () => {
+  modal.style.display = 'none';
+});
+
+// Optional: click outside image to close
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) modal.style.display = 'none';
+});
+
+</script>
