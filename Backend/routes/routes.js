@@ -189,7 +189,8 @@ router.get("/admindashboard", (req, res) => {
       Submission: true,
       ProjectName: "Project Name",
       Date: "2024-06-01",
-      PartnerOrg: "EXAMPLE ORG"
+      PartnerOrg: "EXAMPLE ORG",
+      href: "/linktoProp"
     },
   {
     Update: true,
