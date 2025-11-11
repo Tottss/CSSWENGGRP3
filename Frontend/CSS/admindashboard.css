@@ -1,0 +1,101 @@
+.admindashboard-container {
+  
+  margin-right: 20px;
+  display: block;
+  position: relative;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 100%;
+  max-height: calc(100vh - 90px - 40px);
+
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+
+  /* Make scrollbar rounded without cutting corners */
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.admindashboard-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.admindashboard-container::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0);
+  border-radius: 12px;
+}
+
+.admindashboard-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.admindashboard-container .dashboard-form-box .notification-header{
+    padding: 0;
+}
+.Proposal-list{
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    max-width: auto;
+    overflow-y: auto;
+}
+.Proposal-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.Proposal-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 1100px;
+    overflow-y: auto;
+}
+
+.Proposal-box {
+    width: 100%;
+    max-width: 1200px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    padding: 15px;       
+}
+
+.Proposal-desc-container{
+    display: flex;
+    flex-direction: column;
+    margin-left: 15px;
+}
+
+.Proposal-desc{
+    font-size: 26px;
+    font-weight: 800;
+    color: #0D1B2A;
+}
+
+.Proposal-date{
+    font-size: 20px;
+    font-weight: 400;
+    color: black;
+}
+
+.Prop-btn{
+  text-decoration: none;
+  background-color: #E94E1B;
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-style: semi-bold;
+  width: 214px;
+  height: 50px;
+  border: 1px solid #0D1B2A;
+  padding-right: 4px;
+  margin-right: 20px;
+}
+
+.Prop-btn:hover{
+    background-color: #ffb400;
+}

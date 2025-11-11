@@ -14,6 +14,13 @@
   padding-left: 20px;
 }
 
+.project-tools{
+  display: flex;
+  align-items: center;
+  color: #000000;
+  margin-top:auto;
+}
+
 .Notif {
   margin: 0;
   font-size: 20px;
@@ -141,7 +148,6 @@
 
 /* Dashboard Buttons */
 .dashboard-btn {
-  margin-left: 20px;
   margin-top: 25px;
   width: 100%;
   padding: 12px;
@@ -154,7 +160,9 @@
   cursor: pointer;
   transition: 0.3s;
 }
-
+.dashboard-btn:hover{
+  background-color: #ffb400;
+}
 .dashboard-container {
   position: relative;
   justify-content: center;

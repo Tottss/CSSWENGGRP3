@@ -106,6 +106,7 @@ router.get("/dashboard", async (req, res) => {
       title: "Dashboard",
       PartnerOrg: req.session.user_name || "Partner Org Name",
       nNotif: 1,
+      showTools: true,
 
       // test image urls
       // Community Projects
@@ -177,6 +178,56 @@ router.get("/profile", (req, res) => {
   res.render("profile", {
     ImageURL: "/ASSETS/DefaultProfile.jpg",
     isRequired: false
+  });
+});
+
+router.get("/admindashboard", (req, res) => {
+  res.render("admindashboard", {
+    title: "Admin Dashboard",
+    PartnerOrg: req.session.user_name || "Partner Org Name",
+    Proposals: [{
+      Submission: true,
+      ProjectName: "Project Name",
+      Date: "2024-06-01",
+      PartnerOrg: "EXAMPLE ORG"
+    },
+  {
+    Update: true,
+    ProjectName: "Example Project2",
+    Date: "2024-08-21",
+    PartnerOrg:"EORG"
+  },
+{
+    Submission: true,
+    ProjectName: "Example Project3",
+    Date: "2024-11-21",
+    PartnerOrg:"AORG"
+  },
+  {
+    Submission: true,
+    ProjectName: "Example Project3",
+    Date: "2024-11-21",
+    PartnerOrg:"AORG"
+  },
+  {
+    Submission: true,
+    ProjectName: "Example Project3",
+    Date: "2024-11-21",
+    PartnerOrg:"AORG"
+  },
+  {
+    Submission: true,
+    ProjectName: "Example Project3",
+    Date: "2024-11-21",
+    PartnerOrg:"AORG"
+  },
+  {
+    Submission: true,
+    ProjectName: "Example Project3",
+    Date: "2024-11-21",
+    PartnerOrg:"AORG"
+  },
+]
   });
 });
 

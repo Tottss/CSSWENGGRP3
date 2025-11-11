@@ -1,0 +1,51 @@
+{{#> main}}
+<main class="main-content">
+    <div class="admindashboard-container">
+        <div class="dashboard-form-box">
+            <h1 class="dashboard-title">Hi, Admin!</h1>
+            <div class="notification-header">
+                <i class="bi bi-bell-fill"></i>
+                <h2 class="Notif">Notifications</h2>
+            </div>
+            <br/>
+            <div class="Proposal-list">
+                {{#each Proposals}}
+                    {{#if Submission}}
+                        <div class="Proposal-box">
+                            <div class="Proposal-content">
+                            <div class="Proposal-desc-container">
+                                    <div class="Proposal-desc">
+                                        {{PartnerOrg}} [Project Proposal Submission]
+                                    </div>
+                                    <div class="Proposal-date">
+                                        {{ProjectName}} - {{Date}}
+                                    </div>
+                                </div>
+                                <button class="Prop-btn" data-id="ViewProposal" onclick="window.location.href='{{href}}'">View Proposal</button>
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    {{#if Update}}
+                        <div class="Proposal-box">
+                            <div class="Proposal-content">
+                                <div class="Proposal-desc-container">
+                                    <div class="Proposal-desc">
+                                        {{PartnerOrg}} [Project Update]
+                                    </div>
+                                    <div class="Proposal-date">
+                                        {{ProjectName}} - {{Date}}
+                                    </div>
+                                </div>
+                                <button class="Prop-btn" data-id="ViewUpdate" onclick="window.location.href='{{href}}'">View Update</button>
+                            </div>
+                        </div>
+                    {{/if}}
+                {{/each}}
+
+            </div>
+        </div>
+    </div>
+</main>
+{{/main}}
+    

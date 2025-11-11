@@ -3,7 +3,16 @@
   <ul>
     <li><a href="/dashboard"><i class="bi bi-house-door-fill"></i>   Dashboard</a></li>
     <li><a href="/Yourprojects"><i class="bi bi-kanban-fill"></i>    Projects</a></li>
-    <li><a href="/calendar"><i class="bi bi-calendar-fill"></i>   Calendar</a></li>
+    <li><a href="/calendar"><i class="bi bi-calendar-fill"></i>   Proposals</a></li>
     <li><a href="/resourcehub"><i class="bi bi-folder-fill"></i>   Resource Hub</a></li>
   </ul>
+   {{#if showTools}}
+  <div class="project-tools">
+                <img src="../ASSETS/toolbox.png"></img>
+                <h2 class="ProjManage">Project Management Tools</h2>
+  </div>
+            <button type="submit" class="dashboard-btn" onclick="window.location.href='/proposal'">Submit Project Proposal</button>
+            <button type="submit" class="dashboard-btn" onclick="window.location.href='/tracker'">Update Impact Tracker</button>
+            <button type="submit" class="dashboard-btn" onclick="window.location.href='/report'">Generate Progress Report</button>
+  {{/if}}
 </aside>
