@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{title}}</title>
+
+  <link rel="stylesheet" href="../CSS/global.css" />
+  <link rel="stylesheet" href="../CSS/tracker.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <nav class="navbar">
+        <div class="nav-left">
+            <img class="logo-icon" src="/ASSETS/logo-only.png" alt="Logo">
+            <span class="nav-title">Community Partners Portal</span>
+        </div>
+        <div class="nav-right">
+            <div class="d-flex flex-grow-1 justify-content-center position-relative">
+            <form class="d-flex search-form position-relative" action="/search" method="GET">
+                <input class="form-control" id="SearchInput" type="search" name="q" placeholder="Search Projects" autocomplete="off">
+                <i class="bi bi-search search-icon"></i>
+            </form>
+        </div>
+            <div class="profile-menu">
+                <img src="/ASSETS/DefaultProfile.jpg" alt="Profile" class="profile-pic"/>
+                <ul class="dropdown">
+                  <li><a href="/profile">Profile</a></li>
+                  <li><a href="/settings">Settings</a></li>
+                  <li><a href="/logout">Logout</a></li>
+                </ul>
+              </div>
+        </div>
+    </nav>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <ul>
+      <li><a href="/Frontend/HTML/dashboard.html"><i class="bi bi-house-door-fill"></i> Dashboard</a></li>
+      <li><a href="/Frontend/HTML/projects.html"><i class="bi bi-kanban-fill"></i> Projects</a></li>
+      <li><a href="/Frontend/HTML/Calendar.html"><i class="bi bi-calendar-fill"></i> Calendar</a></li>
+      <li><a href="/Frontend/HTML/ResourceHub.html"><i class="bi bi-folder-fill"></i> Resource Hub</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="tracker-wrapper">
+      <div class="tracker-card">
+        <h2 class="tracker-header">Update Impact Tracker</h2>
+
+        <!-- Project Dropdown -->
+        <div class="form-group">
+          <label for="projectSelect">Project</label>
+          <select id="projectSelect">
+            <option value="">Select Project</option>
+            <option value="1">Clean Water Initiative</option>
+            <option value="2">Tree Planting Program</option>
+            <option value="3">Community Health Drive</option>
+          </select>
+        </div>
+
+        <p class="last-update">Last Update Period: January 2025</p>
+
+        <!-- Beneficiary Stats Section -->
+        <section class="beneficiary-stats">
+        <h2>Beneficiaries Served</h2>
+
+        <div class="beneficiary-inputs">
+            <label for="actualValue">Actual Beneficiaries Served</label>
+            <input type="number" id="actualValue" value="0" min="0" />
+
+            <label for="targetValue">Target Beneficiaries</label>
+            <input type="number" id="targetValue" value="0" min="0" />
+        </div>
+
+        <div class="bar-graph">
+            <div class="bar-row">
+            <span class="bar-label">Actual Beneficiaries Served</span>
+            <div class="bar-bg">
+                <div class="bar-fill actual" id="actualBar">0</div>
+            </div>
+            </div>
+
+            <div class="bar-row">
+            <span class="bar-label">Target Beneficiaries</span>
+            <div class="bar-bg">
+                <div class="bar-fill target" id="targetBar">0</div>
+            </div>
+            </div>
+        </div>
+        </section>
+
+
+        <!-- Budget Section -->
+        <section class="budget-section">
+        <table class="budget-table">
+            <thead>
+            <tr>
+                <th>Project Amount (Budget)</th>
+                <th>Expense to Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><input type="number" id="projectBudget" name="projectBudget" placeholder="Enter total budget" /></td>
+                <td><input type="number" id="expenseToDate" name="expenseToDate" placeholder="Enter expenses so far" /></td>
+            </tr>
+            </tbody>
+        </table>
+        </section>
+
+
+        <!-- Progress Section -->
+        <div class="progress-section">
+          <h3>Progress Meter (%)</h3>
+          <div class="progress-meter">
+            <div class="progress-circle">
+              <svg viewBox="0 0 36 36">
+                <path class="bg" d="M18 2.0845a15.9155 15.9155 0 0 1 0 31.831a15.9155 15.9155 0 0 1 0-31.831" />
+              </svg>
+              <span class="progress-text">75%</span>
+            </div>
+            <p class="progress-subtext">75% Progress Reported</p>
+          </div>
+          <input type="range" id="progressRange" min="0" max="100" value="75" />
+        </div>
+
+        <!-- Auto-Filled Fields -->
+        <div class="form-group">
+          <label>Advocacy Area</label>
+          <input type="text" value="Auto-filled Advocacy Area" readonly />
+        </div>
+
+        <div class="form-group">
+          <label>SDG Alignment</label>
+          <input type="text" value="Auto-filled SDG Alignment" readonly />
+        </div>
+
+        <div class="form-group">
+          <label>Community Partner Location</label>
+          <input type="text" placeholder="Enter location" />
+        </div>
+
+        <!-- Narrative Update -->
+        <div class="form-group">
+          <label>Narrative Update (Progress, Challenges, Lessons)</label>
+          <textarea rows="4" placeholder="Write your update here..."></textarea>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="form-group upload-group">
+          <label>Upload Photos / Reports</label>
+          <input type="file" />
+        </div>
+
+        <!-- Save Button -->
+        <button class="save-btn">Save Edits</button>
+      </div>
+    </div>
+  </main>
+
+  <script src="../JAVASCRIPT/impactTracker.js"></script>
+</body>
+</html>
