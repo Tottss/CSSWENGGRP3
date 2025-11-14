@@ -53,27 +53,35 @@
         <!-- Project Dropdown -->
         <div class="form-group">
           <label for="projectSelect">Project</label>
-          <select id="projectSelect">
+          <select id="projectSelect" name="projectSelect">
             <option value="">Select Project</option>
-            {{#each Projects}}
-              <option value="{{project_id}}">{{project_name}}</option>
+
+            {{#each projects}}
+              <option value="{{this._id}}">
+                {{this.projectName}}
+              </option>
             {{/each}}
+
           </select>
         </div>
 
-        <p class="last-update">Last Update Period: January 2025</p>
+        <p class="last-update">Last Update Period: {{lastUpdate}}</p>
 
         <!-- Beneficiary Stats Section -->
         <section class="beneficiary-stats">
         <h2>Beneficiaries Served</h2>
 
-        <div class="beneficiary-inputs">
-            <label for="actualValue">Actual Beneficiaries Served</label>
-            <input type="number" id="actualValue" value="0" min="0" />
+        <table class="beneficiary-table">
+      <tr>
+        <td><label for="actualValue">Actual Beneficiaries Served</label></td>
+        <td><input type="number" id="actualValue" value="0" min="0" /></td>
+      </tr>
 
-            <label for="targetValue">Target Beneficiaries</label>
-            <input type="number" id="targetValue" value="0" min="0" />
-        </div>
+      <tr>
+        <td><label for="targetValue">Target Beneficiaries</label></td>
+        <td><input type="number" id="targetValue" value="0" min="0" /></td>
+      </tr>
+    </table>
 
         <div class="bar-graph">
             <div class="bar-row">
@@ -95,20 +103,20 @@
 
         <!-- Budget Section -->
         <section class="budget-section">
-        <table class="budget-table">
-            <thead>
-            <tr>
-                <th>Project Amount (Budget)</th>
-                <th>Expense to Date</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td><input type="number" id="projectBudget" name="projectBudget" placeholder="Enter total budget" /></td>
-                <td><input type="number" id="expenseToDate" name="expenseToDate" placeholder="Enter expenses so far" /></td>
-            </tr>
-            </tbody>
-        </table>
+          <table class="budget-table">
+              <thead>
+              <tr>
+                  <th>Project Amount (Budget)</th>
+                  <th>Expense to Date</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                  <td><input type="number" id="projectBudget" value="{{budget}}" placeholder="Enter total budget" /></td>
+                  <td><input type="number" id="expenseToDate" value="{{expense}}" placeholder="Enter expenses so far" /></td>
+              </tr>
+              </tbody>
+          </table>
         </section>
 
 
@@ -120,28 +128,44 @@
               <svg viewBox="0 0 36 36">
                 <path class="bg" d="M18 2.0845a15.9155 15.9155 0 0 1 0 31.831a15.9155 15.9155 0 0 1 0-31.831" />
               </svg>
-              <span class="progress-text">75%</span>
+
+              <!-- HBS OUTPUT (default value) -->
+              <span id="progressText" class="progress-text">
+                {{#if progress}}
+                  {{progress}}%
+                {{else}}
+                  0%
+                {{/if}}
+              </span>
             </div>
-            <p class="progress-subtext">75% Progress Reported</p>
+
+            <!-- Replace BLANK with HBS output -->
+            <p id="progressLabel" class="progress-subtext">
+              {{#if progress}}
+                {{progress}}% Progress Reported
+              {{else}}
+                0% Progress Reported
+              {{/if}}
+            </p>
           </div>
-          <input type="range" id="progressRange" min="0" max="100" value="75" />
         </div>
 
         <!-- Auto-Filled Fields -->
         <div class="form-group">
           <label>Advocacy Area</label>
-          <input type="text" value="Auto-filled Advocacy Area" readonly />
+          <input type="text" value="{{advocacyArea}}" readonly />
         </div>
 
         <div class="form-group">
           <label>SDG Alignment</label>
-          <input type="text" value="Auto-filled SDG Alignment" readonly />
+          <input type="text" value="{{sdgAlignment}}" readonly />
         </div>
 
         <div class="form-group">
           <label>Community Partner Location</label>
-          <input type="text" placeholder="Enter location" />
+          <input type="text" value="{{communityLocation}}" placeholder="Enter location" />
         </div>
+
 
         <!-- Narrative Update -->
         <div class="form-group">
@@ -152,8 +176,9 @@
         <!-- Upload Section -->
         <div class="form-group upload-group">
           <label>Upload Photos / Reports</label>
-          <input type="file" />
+          <input type="file" name="files" multiple />
         </div>
+
 
         <!-- Save Button -->
         <button class="save-btn">Save Edits</button>
