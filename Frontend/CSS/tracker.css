@@ -7,7 +7,6 @@ body {
   padding: 40px;
 }
 
-/* Tracker Card */
 .tracker-wrapper {
   display: flex;
   justify-content: center;
@@ -25,8 +24,6 @@ body {
   font-size: 24px;
   font-weight: 600;
   margin-bottom: 20px;
-  border-left: 6px solid #007bff;
-  padding-left: 10px;
 }
 
 /* Forms */
@@ -61,7 +58,7 @@ textarea:focus {
 /* Beneficiaries */
 .beneficiary-section {
   display: flex;
-  gap: 20px;
+  gap: 10px;
   margin: 20px 0;
 }
 
@@ -87,7 +84,7 @@ textarea:focus {
 .budget-section {
   display: flex;
   gap: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .budget-box {
@@ -100,36 +97,31 @@ textarea:focus {
   font-weight: 500;
 }
 
-/* Progress Meter */
-.progress-section {
-  text-align: center;
-  margin: 25px 0;
-}
-
 .progress-circle {
+  width: 200px;      /* Increase size here */
+  height: 200px;
   position: relative;
-  width: 120px;
-  height: 120px;
-  margin: 0 auto;
+  margin: auto;
 }
 
 .progress-circle svg {
-  transform: rotate(-90deg);
   width: 100%;
   height: 100%;
+  transform: rotate(-90deg);
 }
 
 .progress-circle .bg {
   fill: none;
-  stroke: #eee;
+  stroke: #e6e6e6;
   stroke-width: 3;
 }
 
-.progress-circle .meter {
+.progress-circle .progress {
   fill: none;
-  stroke: #28a745;
+  stroke: #4caf50;
   stroke-width: 3;
   stroke-linecap: round;
+  transition: stroke-dasharray 0.5s ease;
 }
 
 .progress-text {
@@ -137,26 +129,12 @@ textarea:focus {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 2rem;
+  font-weight: bold;
 }
 
 .progress-subtext {
-  font-size: 14px;
-  color: #555;
-  margin-top: 10px;
-}
-
-/* Buttons */
-.upload-btn {
-  background: #ffc107;
-  border: none;
-  color: #333;
-  font-weight: 500;
-  padding: 8px 16px;
-  border-radius: 8px;
-  margin-top: 8px;
-  cursor: pointer;
+  text-align: center;;
 }
 
 .save-btn {
@@ -244,19 +222,21 @@ textarea:focus {
 }
 
 /* Input section */
-.beneficiary-inputs {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+.beneficiary-table {
+  width: 100%;
+  border-collapse: collapse;
   margin-bottom: 25px;
 }
 
-.beneficiary-inputs label {
-  font-weight: 500;
-  color: #333;
+.beneficiary-table td {
+  padding: 8px 10px;
 }
 
-.beneficiary-inputs input {
+.beneficiary-table label {
+  font-weight: 600;
+}
+
+.beneficiary-table input {
   padding: 10px;
   font-size: 15px;
   border: 1.5px solid #ccc;
@@ -264,7 +244,7 @@ textarea:focus {
   transition: border-color 0.3s;
 }
 
-.beneficiary-inputs input:focus {
+.beneficiary-table input:focus {
   outline: none;
   border-color: #009688;
   box-shadow: 0 0 4px rgba(0, 150, 136, 0.4);
@@ -274,7 +254,6 @@ textarea:focus {
 .bar-graph {
   display: flex;
   flex-direction: column;
-  gap: 20px;
 }
 
 .bar-row {
