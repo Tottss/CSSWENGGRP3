@@ -222,6 +222,13 @@
   overflow: visible;
 }
 
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; 
+    width: 100%;
+}
+
 .yourproject-header {
   display: flex;
   justify-content: space-between;

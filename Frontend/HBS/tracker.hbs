@@ -11,38 +11,9 @@
 </head>
 
 <body>
-  <nav class="navbar">
-        <div class="nav-left">
-            <img class="logo-icon" src="/ASSETS/logo-only.png" alt="Logo">
-            <span class="nav-title">Community Partners Portal</span>
-        </div>
-        <div class="nav-right">
-            <div class="d-flex flex-grow-1 justify-content-center position-relative">
-            <form class="d-flex search-form position-relative" action="/search" method="GET">
-                <input class="form-control" id="SearchInput" type="search" name="q" placeholder="Search Projects" autocomplete="off">
-                <i class="bi bi-search search-icon"></i>
-            </form>
-        </div>
-            <div class="profile-menu">
-                <img src="/ASSETS/DefaultProfile.jpg" alt="Profile" class="profile-pic"/>
-                <ul class="dropdown">
-                  <li><a href="/profile">Profile</a></li>
-                  <li><a href="/settings">Settings</a></li>
-                  <li><a href="/logout">Logout</a></li>
-                </ul>
-              </div>
-        </div>
-    </nav>
-
+  {{> navbar}}
   <!-- Sidebar -->
-  <aside class="sidebar">
-    <ul>
-      <li><a href="/Frontend/HTML/dashboard.html"><i class="bi bi-house-door-fill"></i> Dashboard</a></li>
-      <li><a href="/Frontend/HTML/projects.html"><i class="bi bi-kanban-fill"></i> Projects</a></li>
-      <li><a href="/Frontend/HTML/Calendar.html"><i class="bi bi-calendar-fill"></i> Calendar</a></li>
-      <li><a href="/Frontend/HTML/ResourceHub.html"><i class="bi bi-folder-fill"></i> Resource Hub</a></li>
-    </ul>
-  </aside>
+  {{> sidebar}}
 
   <!-- Main Content -->
   <main class="main-content" class="alert-box">
@@ -175,6 +146,11 @@
           <input type="file" name="files" multiple />
         </div>
 
+        <!-- Change Display Picture-->
+        <div class="form-group upload-group">
+          <label>Upload Display Photo</label>
+          <input type="file" name="files" accept="image/*" multiple>
+        </div>
 
         <!-- Save Button -->
         <button id="saveImpact" class="save-btn" type="button">Save Edits</button>

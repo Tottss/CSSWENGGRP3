@@ -29,6 +29,29 @@
   background: transparent;
 }
 
+.profileview-container{
+  margin-left: 34%;
+  margin-top: 90px;
+  width: 700px;
+  position: relative;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 86%;
+  max-height: calc(100vh - 90px - 40px);
+
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+
+  /* Make scrollbar rounded without cutting corners */
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.profile-info{
+  color: black;
+}
 
 .profile-title {
   font-weight: 600;
