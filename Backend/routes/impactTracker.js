@@ -38,6 +38,17 @@ router.get("/tracker", async (req, res) => {
             trackerData = trackerResp.Items?.[0] || {};
         }
 
+        // calculate progress percent if budget and expenses are present
+        let calculatedProgress = 0;
+        const budget = Number(trackerData.budget || 0);
+        const expense = Number(trackerData.expenses_to_date || 0);
+
+        if (budget > 0) {
+            calculatedProgress = Math.round((expense / budget) * 100);
+            if (calculatedProgress > 100) calculatedProgress = 100;
+            if (calculatedProgress < 0) calculatedProgress = 0;
+        }
+
         res.render("tracker", {
             title: "Impact Tracker",
             projects,
@@ -46,7 +57,7 @@ router.get("/tracker", async (req, res) => {
             target: trackerData.target_beneficiaries || 0,
             budget: trackerData.budget || 0,
             expense: trackerData.expenses_to_date || 0,
-            progress: trackerData.progress_percent || 0,
+            progress: calculatedProgress || 0,
             location: trackerData.communityLocation || "",
             narrative: trackerData.narrative || "",
             uploads: trackerData.uploads || [],
@@ -112,6 +123,18 @@ router.post("/tracker/save", upload.array("uploads"), async (req, res) => {
             uploadedFiles.push(`https://impacttracker-uploads.s3.amazonaws.com/${fileKey}`);
         }
 
+        // compute progress percent dynamically first
+        const budget = Number(req.body.budget || 0);
+        const expenses = Number(req.body.expenses_to_date || 0);
+
+        let computedProgress = 0;
+
+        if (budget > 0) {
+            computedProgress = Math.round((expenses / budget) * 100);
+            if (computedProgress > 100) computedProgress = 100;
+            if (computedProgress < 0) computedProgress = 0;
+        }
+
         // save/update tracker in DynamoDB
         await docClient.send(
             new PutCommand({
@@ -122,7 +145,7 @@ router.post("/tracker/save", upload.array("uploads"), async (req, res) => {
                     target_beneficiaries: Number(fields.target_beneficiaries),
                     budget: Number(fields.budget),
                     expenses_to_date: Number(fields.expenses_to_date),
-                    progress_percent: Number(fields.progress_percent),
+                    progress_percent: computedProgress,
                     location: fields.location,
                     narrative: fields.narrative,
                     uploads: uploadedFiles

@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const communityLocation = document.getElementById("communityLocation");
     const narrativeField = document.getElementById("narrativeField");
     const fileInput = document.querySelector('input[type="file"]');
-    const saveBtn = document.querySelector(".save-btn"); // ok to use class, but id is better
+    const saveBtn = document.querySelector(".save-btn");
 
     // --- helper to show alerts (uses customAlert if present, otherwise alert()) ---
     function showAlert(message, type = "success") {
@@ -39,12 +39,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!communityLocation) missing.push("communityLocation");
     if (!narrativeField) missing.push("narrativeField");
     if (!saveBtn) missing.push("save button (.save-btn)");
-    if (missing.length) {
-        console.error("impactTracker: missing DOM elements ->", missing.join(", "));
-        // Don't return — we keep going so partial features still work, but we warn.
-    } else {
-        console.log("impactTracker: all required DOM elements found");
-    }
 
     // --- project selection handler ---
     if (projectSelect) {
