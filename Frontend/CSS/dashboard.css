@@ -148,6 +148,7 @@
 
 /* Dashboard Buttons */
 .dashboard-btn {
+  height: 180px;
   margin-top: 25px;
   width: 100%;
   padding: 12px;
@@ -156,13 +157,31 @@
   color: #fff;
   background-color: #e94e1b;
   border: none;
-  border-radius: 8px;
+  border-radius: 10%;
   cursor: pointer;
   transition: 0.3s;
 }
 .dashboard-btn:hover{
   background-color: #ffb400;
 }
+.dashboard-list{
+  padding-left: 20px;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;     
+  overflow-y: hidden;
+  max-width: 100%;
+  gap: 50px;
+  padding-bottom: 10px;
+  scroll-behavior: smooth;
+}
+
+.bi-newspaper,
+.bi-speedometer,
+.bi-file-arrow-down-fill{
+  font-size: 5rem;
+}
+
 .dashboard-container {
   position: relative;
   justify-content: center;

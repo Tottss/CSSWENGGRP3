@@ -14,6 +14,17 @@
             </div>
             <br/>
             <br/>
+            <div class="project-tools">
+                <img src="../ASSETS/toolbox.png"></img>
+                <h2 class="ProjManage">Project Management Tools</h2>
+            </div>
+            <div class="dashboard-list">
+                <button type="submit" class="dashboard-btn" onclick="window.location.href='/proposal'"><i class="bi bi-newspaper"></i><br/><br/>Submit Project Proposal</button>
+                <button type="submit" class="dashboard-btn" onclick="window.location.href='/tracker'"><i class="bi bi-speedometer"></i><br/><br/>Update Impact Tracker</button>
+                <button type="submit" class="dashboard-btn" onclick="window.location.href='/report'"><i class="bi bi-file-arrow-down-fill"></i><br/><br/>Generate Progress Report</button>
+            </div>
+            <br/>
+            <br/>
             {{>Projectbox Projects=CommunityProjects title="Community Projects" ButtonName="View Project" href="/Communityprojects"}}
             <br/>
             {{>Projectbox Projects=YourProjects title="Your Projects" ButtonName="Update Project" href="/Yourprojects"}}
