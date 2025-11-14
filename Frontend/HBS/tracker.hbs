@@ -45,7 +45,7 @@
   </aside>
 
   <!-- Main Content -->
-  <main class="main-content">
+  <main class="main-content" class="alert-box">
     <div class="tracker-wrapper">
       <div class="tracker-card">
         <h2 class="tracker-header">Update Impact Tracker</h2>
@@ -53,15 +53,11 @@
         <!-- Project Dropdown -->
         <div class="form-group">
           <label for="projectSelect">Project</label>
-          <select id="projectSelect" name="projectSelect">
-            <option value="">Select Project</option>
-
-            {{#each projects}}
-              <option value="{{this._id}}">
-                {{this.projectName}}
-              </option>
-            {{/each}}
-
+          <select id="projectSelect">
+              <option value="">Select Project</option>
+              {{#each projects}}
+                  <option value="{{this.project_id}}">{{this.project_name}}</option>
+              {{/each}}
           </select>
         </div>
 
@@ -163,14 +159,14 @@
 
         <div class="form-group">
           <label>Community Partner Location</label>
-          <input type="text" value="{{communityLocation}}" placeholder="Enter location" />
+          <input type="text" name="communityLocation" id="communityLocation" value="{{communityLocation}}" />
         </div>
 
 
         <!-- Narrative Update -->
         <div class="form-group">
           <label>Narrative Update (Progress, Challenges, Lessons)</label>
-          <textarea rows="4" placeholder="Write your update here..."></textarea>
+          <textarea rows="4" placeholder="Write your update here..." id="narrativeField" ></textarea>
         </div>
 
         <!-- Upload Section -->
@@ -181,7 +177,7 @@
 
 
         <!-- Save Button -->
-        <button class="save-btn">Save Edits</button>
+        <button id="saveImpact" class="save-btn" type="button">Save Edits</button>
       </div>
     </div>
   </main>
