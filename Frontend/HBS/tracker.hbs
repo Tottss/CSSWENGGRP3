@@ -55,9 +55,9 @@
           <label for="projectSelect">Project</label>
           <select id="projectSelect">
             <option value="">Select Project</option>
-            <option value="1">Clean Water Initiative</option>
-            <option value="2">Tree Planting Program</option>
-            <option value="3">Community Health Drive</option>
+            {{#each Projects}}
+              <option value="{{project_id}}">{{project_name}}</option>
+            {{/each}}
           </select>
         </div>
 

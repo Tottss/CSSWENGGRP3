@@ -2,6 +2,7 @@ import express from "express";
 import { userLogIn, createTestUser } from "../services/user.js";
 import applyRouter from "./apply.js";
 import proposalRouter from "./proposal.js";
+import impactTrackerRouter from "./impactTracker.js";
 import { ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
 import { getUserProjects } from "../services/projects.js";
@@ -231,5 +232,8 @@ router.get("/admindashboard", (req, res) => {
 ]
   });
 });
+
+// impact tracker routes
+router.use("/", impactTrackerRouter);
 
 export default router;
