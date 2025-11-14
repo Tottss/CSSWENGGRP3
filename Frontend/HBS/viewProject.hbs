@@ -1,0 +1,132 @@
+{{#> main}}
+<main class="main-content">
+    <div class="viewProject-container">
+        <div class="dashboard-form-box">
+            <h1 class="dashboard-title">{{projtitle}}</h1>
+                <img src="{{ImageURL}}" class="ProjImg">
+        <div class="ProjectDesc">
+            {{ProjectDesc}}
+        </div>
+        <div class="boldtext">Target Beneficiaries:</div>{{nBeneficiaries}}
+        <div class="boldtext">Advocacy Area:</div>{{Advocacyarea}}
+        <div class="boldtext">SDG Alignment:</div>{{SDG}}
+        <div class="boldtext">Timeline:</div>{{Timeline}}
+        <div class="boldtext">Proposed Budget:</div>{{Budget}}
+        <div class="boldtext">Detailed Proposal:</div>{{Proposal}}<br/>
+
+        <p class="last-update">Last Update Period: {{lastUpdate}}</p>
+
+        <!-- Beneficiary Stats Section -->
+        <section class="beneficiary-stats">
+            <h2>Beneficiaries Served</h2>
+
+            <table class="beneficiary-table">
+                <tr>
+                    <td>Actual Beneficiaries Served</td>
+                    <td><span class="value">{{actualValue}}</span></td>
+                </tr>
+
+                <tr>
+                    <td>Target Beneficiaries</td>
+                    <td><span class="value">{{targetValue}}</span></td>
+                </tr>
+            </table>
+            </section>
+
+        <div class="bar-graph">
+            <div class="bar-row">
+            <span class="bar-label">Actual Beneficiaries Served</span>
+            <div class="bar-bg">
+                <div class="bar-fill actual" id="actualBar">0</div>
+            </div>
+            </div>
+
+            <div class="bar-row">
+            <span class="bar-label">Target Beneficiaries</span>
+            <div class="bar-bg">
+                <div class="bar-fill target" id="targetBar">0</div>
+            </div>
+            </div>
+        </div>
+        </section>
+
+
+        <!-- Budget Section -->
+        <section class="budget-section">
+            <table class="budget-table">
+                <thead>
+                <tr>
+                    <th>Project Amount (Budget)</th>
+                    <th>Expense to Date</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+                    <td>{{totalBudget}}</td>
+                    <td>{{expenses}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+        <!-- Progress Section -->
+        <div class="progress-section">
+          <h3>Progress Meter (%)</h3>
+          <div class="progress-meter">
+            <div class="progress-circle">
+              <svg viewBox="0 0 36 36">
+                <path class="bg" d="M18 2.0845a15.9155 15.9155 0 0 1 0 31.831a15.9155 15.9155 0 0 1 0-31.831" />
+              </svg>
+
+              <!-- HBS OUTPUT (default value) -->
+              <span id="progressText" class="progress-text">
+                {{#if progress}}
+                  {{progress}}%
+                {{else}}
+                  0%
+                {{/if}}
+              </span>
+            </div>
+
+            <!-- Replace BLANK with HBS output -->
+            <p id="progressLabel" class="progress-subtext">
+              {{#if progress}}
+                {{progress}}% Progress Reported
+              {{else}}
+                0% Progress Reported
+              {{/if}}
+            </p>
+          </div>
+        </div>
+
+        <!-- Auto-Filled Fields -->
+        <div class="form-group">
+          <label>Advocacy Area</label>
+            {{advocacyarea}}
+        </div>
+
+        <div class="form-group">
+          <label>SDG Alignment</label>
+            {{sdgalignment}}
+        </div>
+
+        <div class="form-group">
+          <label>Community Partner Location</label>
+            {{communitylocation}}
+        </div>
+
+
+        <!-- Narrative Update -->
+        <div class="form-group">
+          <label>Narrative Update (Progress, Challenges, Lessons)</label>
+          <textarea rows="4" placeholder="Write your update here..." id="narrativeField" ></textarea>
+        </div>
+
+        <!-- Progress Report Button -->
+        <button id="saveImpact" class="save-btn" type="button">Generate Progress Report</button>
+
+</main>
+{{/main}}

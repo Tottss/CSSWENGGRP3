@@ -252,6 +252,21 @@ router.get("/profileview", (req, res) => {
 
 });
 
+router.get("/viewProject", (req, res) => {
+  res.render("viewProject", {
+    projtitle: "Project Title Here",
+    ImageURL:"/ASSETS/border-design.png",
+    ProjectDesc: "This is a project to help the project is a project to help",
+    totalBudget: "1298127",
+    expenses:"19021829",
+    actualValue:"0",
+    targetValue:"200",
+    advocacyarea: "Poverty",
+    sdgalignment: "1,2,3",
+    communitylocation: "12281",
+})
+});
+
 // impact tracker routes
 router.use("/", impactTrackerRouter);
 

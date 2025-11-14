@@ -60,3 +60,61 @@
     font-family: 'Poppins', sans-serif;
     padding-left: 0px;
 }
+
+.ProjectDesc{
+  color: black;
+}
+
+.boldtext{
+  color: black;
+  font-weight: 700;
+}
+
+.beneficiary-table td span.value {
+  display: inline-block;
+  padding: 10px;               
+  font-size: 15px;
+  font-family: "Poppins", sans-serif; 
+  font-weight: 400;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  text-align: right;
+  min-width: 80px;
+}
+
+.viewProject-container {
+  margin-top: 13%;
+  margin-left: auto;
+  display: block;
+  position: relative;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 100%;
+  max-height: calc(100vh - 90px - 40px);
+
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+
+  /* Make scrollbar rounded without cutting corners */
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.viewProject-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.viewProject-container::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0);
+  border-radius: 12px;
+}
+
+.viewProject-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.viewProject-container .dashboard-form-box .notification-header{
+    padding: 0;
+}
