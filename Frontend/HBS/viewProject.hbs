@@ -122,8 +122,11 @@
         <!-- Narrative Update -->
         <div class="form-group">
           <label>Narrative Update (Progress, Challenges, Lessons)</label>
-          <textarea rows="4" placeholder="Write your update here..." id="narrativeField" ></textarea>
+          <textarea rows="4" id="narrativeField">
+            {{narrativeUpdate}}
+          </textarea>
         </div>
+
 
         <!-- Progress Report Button -->
         <button id="saveImpact" class="save-btn" type="button">Generate Progress Report</button>
