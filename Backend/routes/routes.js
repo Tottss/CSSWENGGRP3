@@ -55,7 +55,7 @@ router.get("/apply", (req, res) => {
   res.render("apply", {
     title: "Application Page",
     layout: false,
-    isRequired: true
+    isRequired: true,
   });
 });
 
@@ -171,14 +171,14 @@ router.get("/Communityprojects", async (req, res) => {
 router.get("/profile", (req, res) => {
   res.render("profiledit", {
     ImageURL: "/ASSETS/DefaultProfile.jpg",
-    isRequired: false
+    isRequired: false,
   });
 });
 
 router.get("/profile", (req, res) => {
   res.render("profiledit", {
     ImageURL: "/ASSETS/DefaultProfile.jpg",
-    isRequired: false
+    isRequired: false,
   });
 });
 
@@ -186,50 +186,51 @@ router.get("/admindashboard", (req, res) => {
   res.render("admindashboard", {
     title: "Admin Dashboard",
     PartnerOrg: req.session.user_name || "Partner Org Name",
-    Proposals: [{
-      Submission: true,
-      ProjectName: "Project Name",
-      Date: "2024-06-01",
-      PartnerOrg: "EXAMPLE ORG",
-      href: "/linktoProp"
-    },
-  {
-    Update: true,
-    ProjectName: "Example Project2",
-    Date: "2024-08-21",
-    PartnerOrg:"EORG"
-  },
-{
-    Submission: true,
-    ProjectName: "Example Project3",
-    Date: "2024-11-21",
-    PartnerOrg:"AORG"
-  },
-  {
-    Submission: true,
-    ProjectName: "Example Project3",
-    Date: "2024-11-21",
-    PartnerOrg:"AORG"
-  },
-  {
-    Submission: true,
-    ProjectName: "Example Project3",
-    Date: "2024-11-21",
-    PartnerOrg:"AORG"
-  },
-  {
-    Submission: true,
-    ProjectName: "Example Project3",
-    Date: "2024-11-21",
-    PartnerOrg:"AORG"
-  },
-  {
-    Submission: true,
-    ProjectName: "Example Project3",
-    Date: "2024-11-21",
-    PartnerOrg:"AORG"
-  },
-]
+    Proposals: [
+      {
+        Submission: true,
+        ProjectName: "Project Name",
+        Date: "2024-06-01",
+        PartnerOrg: "EXAMPLE ORG",
+        href: "/linktoProp",
+      },
+      {
+        Update: true,
+        ProjectName: "Example Project2",
+        Date: "2024-08-21",
+        PartnerOrg: "EORG",
+      },
+      {
+        Submission: true,
+        ProjectName: "Example Project3",
+        Date: "2024-11-21",
+        PartnerOrg: "AORG",
+      },
+      {
+        Submission: true,
+        ProjectName: "Example Project3",
+        Date: "2024-11-21",
+        PartnerOrg: "AORG",
+      },
+      {
+        Submission: true,
+        ProjectName: "Example Project3",
+        Date: "2024-11-21",
+        PartnerOrg: "AORG",
+      },
+      {
+        Submission: true,
+        ProjectName: "Example Project3",
+        Date: "2024-11-21",
+        PartnerOrg: "AORG",
+      },
+      {
+        Submission: true,
+        ProjectName: "Example Project3",
+        Date: "2024-11-21",
+        PartnerOrg: "AORG",
+      },
+    ],
   });
 });
 
@@ -245,26 +246,25 @@ router.get("/profileview", (req, res) => {
     province: "asjkdbnasbjd",
     municipality: "Ajksdjksdbn",
     barangay: "asjkdhsbdhj",
-    partnertype:"ORG",
+    partnertype: "ORG",
     advocacy: "??>?>?",
     AccOwner: true,
   });
-
 });
 
 router.get("/viewProject", (req, res) => {
   res.render("viewProject", {
     projtitle: "Project Title Here",
-    ImageURL:"/ASSETS/border-design.png",
+    ImageURL: "/ASSETS/border-design.png",
     ProjectDesc: "This is a project to help the project is a project to help",
     totalBudget: "1298127",
-    expenses:"19021829",
-    actualValue:"0",
-    targetValue:"200",
+    expenses: "19021829",
+    actualValue: "0",
+    targetValue: "200",
     advocacyarea: "Poverty",
     sdgalignment: "1,2,3",
     communitylocation: "12281",
-})
+  });
 });
 
 // impact tracker routes
