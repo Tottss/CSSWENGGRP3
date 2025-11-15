@@ -10,7 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const progressLabel = document.getElementById("progressLabel");
     const communityLocation = document.getElementById("communityLocation");
     const narrativeField = document.getElementById("narrativeField");
-    const fileInput = document.querySelector('input[type="file"]');
+    const uploadFilesInput = document.querySelector('input[name="uploads"]');
+    const displayPhotoInput = document.querySelector('input[name="display_photo"]');
     const saveBtn = document.querySelector(".save-btn");
 
     // --- helper to show alerts (uses customAlert if present, otherwise alert()) ---
@@ -70,15 +71,30 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
             console.log("tracker data:", data);
 
-            actualValue && (actualValue.value = data.actual_beneficiaries || 0);
-            targetValue && (targetValue.value = data.target_beneficiaries || 0);
-            projectBudget && (projectBudget.value = data.budget || 0);
-            expenseToDate && (expenseToDate.value = data.expenses_to_date || 0);
-            if (progressRange) progressRange.value = data.progress_percent || 0;
-            if (progressText) progressText.textContent = `${data.progress_percent || 0}%`;
-            if (progressLabel) progressLabel.textContent = `${data.progress_percent || 0}% Progress Reported`;
-            communityLocation && (communityLocation.value = data.location || "");
-            narrativeField && (narrativeField.value = data.narrative || "");
+            const t = data.tracker || {};
+            const p = data.project || {};
+
+            // populate fields
+            if (actualValue) actualValue.value = t.actual_beneficiaries || 0;
+            if (targetValue) targetValue.value = t.target_beneficiaries || 0;
+            if (projectBudget) projectBudget.value = t.budget || 0;
+            if (expenseToDate) expenseToDate.value = t.expenses_to_date || 0;
+
+            // progress
+            if (progressRange) progressRange.value = t.progress_percent || 0;
+            if (progressText) progressText.textContent = `${t.progress_percent || 0}%`;
+            if (progressLabel) progressLabel.textContent = `${t.progress_percent || 0}% Progress Reported`;
+
+            // other fields
+            if (communityLocation) communityLocation.value = t.location || "";
+            if (narrativeField) narrativeField.value = t.narrative || "";
+
+            // display photo preview
+            const preview = document.getElementById("displayPhotoPreview");
+            if (preview) {
+                preview.src = p.project_imageURL || null;
+            }
+
         } catch (err) {
             console.error("Error fetching tracker data:", err);
             showAlert("Error fetching tracker data", "error");
@@ -117,10 +133,15 @@ document.addEventListener("DOMContentLoaded", () => {
         formData.append("narrative", narrativeField ? narrativeField.value : "");
 
         // files (if present)
-        if (fileInput && fileInput.files && fileInput.files.length) {
-            for (const file of fileInput.files) {
+        if (uploadFilesInput?.files?.length) {
+            for (const file of uploadFilesInput.files) {
                 formData.append("uploads", file);
             }
+        }
+
+        // for display photo
+        if (displayPhotoInput?.files?.length) {
+            formData.append("display_photo", displayPhotoInput.files[0]);
         }
 
         console.log("Saving tracker for project:", project_id);

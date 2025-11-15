@@ -1,5 +1,5 @@
 import express from "express";
-import { ScanCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
+import { ScanCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
 import multer from "multer";
 import s3Client from "../config/s3Client.js";
@@ -53,18 +53,21 @@ router.get("/tracker", async (req, res) => {
       title: "Impact Tracker",
       projects,
       project_id: project_id || "",
-      actual: trackerData.actual_beneficiaries || 0,
-      target: trackerData.target_beneficiaries || 0,
-      budget: trackerData.budget || 0,
-      expense: trackerData.expenses_to_date || 0,
-      progress: calculatedProgress || 0,
-      location: trackerData.communityLocation || "",
-      narrative: trackerData.narrative || "",
-      uploads: trackerData.uploads || [],
-      lastUpdate: trackerData.lastUpdate || "N/A",
-      advocacyArea: trackerData.advocacyArea || "",
-      sdgAlignment: trackerData.sdgAlignment || "",
-      error: null,
+      tracker: {
+        actual_beneficiaries: trackerData.actual_beneficiaries || 0,
+        target_beneficiaries: trackerData.target_beneficiaries || 0,
+        budget: trackerData.budget || 0,
+        expenses_to_date: trackerData.expenses_to_date || 0,
+        progress_percent: calculatedProgress || 0,
+        location: trackerData.location || "",
+        narrative: trackerData.narrative || "",
+        uploads: trackerData.uploads || [],
+        lastUpdate: trackerData.lastUpdate || "N/A",
+        advocacyArea: trackerData.advocacyArea || "",
+        sdgAlignment: trackerData.sdgAlignment || "",
+      },
+      projectImage: null,
+      error: null
     });
 
     console.log("Loaded Projects:", projects);
@@ -84,7 +87,8 @@ router.get("/tracker/get/:project_id", async (req, res) => {
   try {
     const project_id = Number(req.params.project_id);
 
-    const result = await docClient.send(
+    // get tracker entry
+    const trackerResult = await docClient.send(
       new ScanCommand({
         TableName: "ImpactTracker",
         FilterExpression: "#pid = :pid",
@@ -93,69 +97,192 @@ router.get("/tracker/get/:project_id", async (req, res) => {
       })
     );
 
-    return res.json(result.Items?.[0] || {});
+    const tracker = trackerResult.Items?.[0] || {};
+
+    // get project entry
+    const projectResult = await docClient.send(
+      new ScanCommand({
+        TableName: "Projects",
+        FilterExpression: "#pid = :pid",
+        ExpressionAttributeNames: { "#pid": "project_id" },
+        ExpressionAttributeValues: { ":pid": project_id },
+      })
+    );
+
+    const project = projectResult.Items?.[0] || {};
+
+    // combine and return
+    return res.json({
+      tracker,
+      project: {
+        ...project,
+        displayPhoto: project.project_imageURL
+      }
+    });
+
   } catch (err) {
-    console.error("Error loading tracker data:", err);
-    return res.json({});
+    console.error("Error loading tracker + project data:", err);
+    return res.json({ tracker: {}, project: {} });
   }
 });
 
-router.post("/tracker/save", upload.array("uploads"), async (req, res) => {
-  try {
-    const fields = req.body;
-    const files = req.files || [];
+// for normal uploads and display photo
+const uploadTracker = upload.fields([
+  { name: "uploads", maxCount: 10 },        // regular evidence/upload files
+  { name: "display_photo", maxCount: 1 }    // new display photo
+]);
 
+// API to save tracker data (partial update - Option B)
+router.post("/tracker/save", uploadTracker, async (req, res) => {
+  try {
+    const fields = req.body || {};
+    const files = req.files || {};
+
+    const projectId = Number(fields.project_id);
+    if (!projectId) {
+      return res.status(400).json({ success: false, message: "Missing project_id" });
+    }
+
+    // handle file uploads to S3
     let uploadedFiles = [];
 
-    // upload files to S3
-    for (const file of files) {
-      const fileKey = `tracker/${Date.now()}-${file.originalname}`;
+    if (files.uploads && files.uploads.length > 0) {
+      for (const file of files.uploads) {
+        const key = `tracker/${Date.now()}-${file.originalname}`;
 
+        await s3Client.send(
+          new PutObjectCommand({
+            Bucket: "impacttracker-uploads",
+            Key: key,
+            Body: file.buffer,
+            ContentType: file.mimetype,
+          })
+        );
+
+        uploadedFiles.push(`https://impacttracker-uploads.s3.amazonaws.com/${key}`);
+      }
+    }
+
+    // handle display photo upload separately
+    let projectImageURL = null;
+    if (files.display_photo && files.display_photo.length > 0) {
+      const file = files.display_photo[0];
+      const key = `images/${Date.now()}-${file.originalname}`;
+
+      // upload to S3
       await s3Client.send(
         new PutObjectCommand({
-          Bucket: "impacttracker-uploads",
-          Key: fileKey,
+          Bucket: "proposals-storage",
+          Key: key,
           Body: file.buffer,
           ContentType: file.mimetype,
         })
       );
 
-      uploadedFiles.push(
-        `https://impacttracker-uploads.s3.amazonaws.com/${fileKey}`
+      projectImageURL = `https://proposals-storage.s3.amazonaws.com/${key}`;
+
+      // update only project_imageURL on Projects
+      await docClient.send(
+        new UpdateCommand({
+          TableName: "Projects",
+          Key: { project_id: projectId },
+          UpdateExpression: "SET #img = :img",
+          ExpressionAttributeNames: { "#img": "project_imageURL" },
+          ExpressionAttributeValues: { ":img": projectImageURL },
+          ReturnValues: "UPDATED_NEW",
+        })
       );
     }
 
-    // compute progress percent dynamically first
-    const budget = Number(req.body.budget || 0);
-    const expenses = Number(req.body.expenses_to_date || 0);
+    // fetch existing tracker to merge uploads
+    const existingTrackerResp = await docClient.send(
+      new ScanCommand({
+        TableName: "ImpactTracker",
+        FilterExpression: "#pid = :pid",
+        ExpressionAttributeNames: { "#pid": "project_id" },
+        ExpressionAttributeValues: { ":pid": projectId },
+      })
+    );
+    const existingTracker = existingTrackerResp.Items?.[0] || {};
 
-    let computedProgress = 0;
+    // merge uploads (append new ones to existing array)
+    const mergedUploads = Array.isArray(existingTracker.uploads)
+      ? existingTracker.uploads.concat(uploadedFiles)
+      : uploadedFiles;
 
-    if (budget > 0) {
-      computedProgress = Math.round((expenses / budget) * 100);
-      if (computedProgress > 100) computedProgress = 100;
-      if (computedProgress < 0) computedProgress = 0;
+    // update tracker entry
+    // only update fields that are provided (non-empty)
+    const updateParts = [];
+    const exprNames = {};
+    const exprValues = {};
+
+    function addUpdate(name, attrName, value, asNumber = false) {
+      if (value === undefined || value === null || value === "") return;
+      const placeholder = `:${name}`;
+      const pname = `#${name}`;
+      exprNames[pname] = attrName;
+      exprValues[placeholder] = asNumber ? Number(value) : value;
+      updateParts.push(`${pname} = ${placeholder}`);
     }
 
-    // save/update tracker in DynamoDB
+    addUpdate("actual", "actual_beneficiaries", fields.actual_beneficiaries, true);
+    addUpdate("target", "target_beneficiaries", fields.target_beneficiaries, true);
+    addUpdate("budget", "budget", fields.budget, true);
+    addUpdate("expenses", "expenses_to_date", fields.expenses_to_date, true);
+    // compute progress_percent if budget or expenses changed
+    if (fields.budget !== undefined || fields.expenses_to_date !== undefined) {
+      const b = Number(fields.budget || existingTracker.budget || 0);
+      const e = Number(fields.expires_to_date || fields.expenses_to_date || existingTracker.expenses_to_date || 0);
+      let computedProgress = 0;
+      if (b > 0) {
+        computedProgress = Math.round((e / b) * 100);
+        if (computedProgress < 0) computedProgress = 0;
+        if (computedProgress > 100) computedProgress = 100;
+      }
+      exprNames["#progress_percent"] = "progress_percent";
+      exprValues[":progress_percent"] = computedProgress;
+      updateParts.push(`#progress_percent = :progress_percent`);
+    }
+
+    addUpdate("location", "location", fields.location, false);
+    addUpdate("narrative", "narrative", fields.narrative, false);
+
+    // always update uploads (even if empty array) to reflect mergedUploads if there are any new uploads
+    if (mergedUploads.length > 0) {
+      exprNames["#uploads"] = "uploads";
+      exprValues[":uploadsVal"] = mergedUploads;
+      updateParts.push(`#uploads = :uploadsVal`);
+    }
+
+    // always update lastUpdate
+    exprNames["#lastUpdate"] = "lastUpdate";
+    exprValues[":lastUpdateVal"] = new Date().toISOString();
+    updateParts.push(`#lastUpdate = :lastUpdateVal`);
+
+    // If no update parts (user sent nothing meaningful), respond success (no-op)
+    if (updateParts.length === 0) {
+      return res.json({ success: true, project_imageURL });
+    }
+
+    const updateExpression = "SET " + updateParts.join(", ");
+
+    // execute the update for ImpactTracker
     await docClient.send(
-      new PutCommand({
+      new UpdateCommand({
         TableName: "ImpactTracker",
-        Item: {
-          project_id: Number(fields.project_id),
-          actual_beneficiaries: Number(fields.actual_beneficiaries),
-          target_beneficiaries: Number(fields.target_beneficiaries),
-          budget: Number(fields.budget),
-          expenses_to_date: Number(fields.expenses_to_date),
-          progress_percent: computedProgress,
-          location: fields.location,
-          narrative: fields.narrative,
-          uploads: uploadedFiles,
-        },
+        Key: { project_id: projectId },
+        UpdateExpression: updateExpression,
+        ExpressionAttributeNames: exprNames,
+        ExpressionAttributeValues: exprValues,
+        ReturnValues: "UPDATED_NEW",
       })
     );
 
-    return res.json({ success: true });
+    return res.json({
+      success: true,
+      project_imageURL: projectImageURL,
+    });
+
   } catch (err) {
     console.error("Error saving tracker:", err);
     return res.status(500).json({ success: false });
