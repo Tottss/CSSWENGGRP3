@@ -3,7 +3,7 @@ import { userLogIn, createTestUser } from "../services/user.js";
 import applyRouter from "./apply.js";
 import proposalRouter from "./proposal.js";
 import impactTrackerRouter from "./impactTracker.js";
-import { ScanCommand } from "@aws-sdk/lib-dynamodb";
+import { GetCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
 import { getUserProjects } from "../services/projects.js";
 
@@ -234,6 +234,7 @@ router.get("/admindashboard", (req, res) => {
   });
 });
 
+/*
 router.get("/profileview", (req, res) => {
   res.render("profileview", {
     ImageURL: "/ASSETS/DefaultProfile.jpg",
@@ -248,6 +249,67 @@ router.get("/profileview", (req, res) => {
     barangay: "asjkdhsbdhj",
     partnertype: "ORG",
     advocacy: "??>?>?",
+    AccOwner: true,
+  });
+});
+*/
+router.get("/profileview", async (req, res) => {
+  const partner_id = 2; // temp, replace later
+
+  // Scan PartnerOrg table
+  const partnerScan = await docClient.send(
+    new ScanCommand({
+      TableName: "PartnerOrg",
+      FilterExpression: "partner_id = :pid",
+      ExpressionAttributeValues: { ":pid": partner_id },
+    })
+  );
+
+  // Scan ContactPerson table
+
+  const contactScan = await docClient.send(
+    new ScanCommand({
+      TableName: "ContactPerson",
+      FilterExpression: "contact_id = :pid",
+      ExpressionAttributeValues: {
+        ":pid": partner_id,
+      },
+    })
+  );
+
+  // Scan Location table
+  const locationScan = await docClient.send(
+    new ScanCommand({
+      TableName: "Location",
+      FilterExpression: "location_id = :pid",
+      ExpressionAttributeValues: { ":pid": partner_id },
+    })
+  );
+
+  const partner = partnerScan.Items?.[0] || {};
+  const contact = contactScan.Items?.[0] || {};
+  const location = locationScan.Items?.[0] || {};
+
+  res.render("profileview", {
+    ImageURL: partner.profile_picture,
+
+    // partner table
+    orgname: partner.partner_name,
+    email: partner.partner_email,
+    partnertype: partner.partner_type,
+    advocacy: partner.advocacy_focus,
+
+    // contact table
+    contactname: contact.contact_name,
+    contactposition: contact.contact_position,
+    contactnumber: contact.contact_number,
+
+    // location table
+    address: location.full_address,
+    province: location.province,
+    municipality: location.municipality,
+    barangay: location.barangay,
+
     AccOwner: true,
   });
 });
