@@ -168,14 +168,16 @@ router.get("/Communityprojects", async (req, res) => {
   }
 });
 
+/*
 router.get("/profile", (req, res) => {
   res.render("profiledit", {
     ImageURL: "/ASSETS/DefaultProfile.jpg",
     isRequired: false,
   });
 });
+*/
 
-router.get("/profile", (req, res) => {
+router.get("/editprofile", (req, res) => {
   res.render("profiledit", {
     ImageURL: "/ASSETS/DefaultProfile.jpg",
     isRequired: false,
@@ -234,25 +236,6 @@ router.get("/admindashboard", (req, res) => {
   });
 });
 
-/*
-router.get("/profileview", (req, res) => {
-  res.render("profileview", {
-    ImageURL: "/ASSETS/DefaultProfile.jpg",
-    orgname: "Trial Org",
-    contactname: "A",
-    contactposition: "Leader",
-    contactnumber: "091201",
-    email: "asd@asjdkl.com",
-    address: "asldkjasdlk",
-    province: "asjkdbnasbjd",
-    municipality: "Ajksdjksdbn",
-    barangay: "asjkdhsbdhj",
-    partnertype: "ORG",
-    advocacy: "??>?>?",
-    AccOwner: true,
-  });
-});
-*/
 router.get("/profileview", async (req, res) => {
   const partner_id = 2; // temp, replace later
 
