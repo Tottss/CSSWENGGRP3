@@ -168,19 +168,11 @@ router.get("/Communityprojects", async (req, res) => {
   }
 });
 
-/*
-router.get("/profile", (req, res) => {
-  res.render("profiledit", {
-    ImageURL: "/ASSETS/DefaultProfile.jpg",
-    isRequired: false,
-  });
-});
-*/
-
 router.get("/editprofile", (req, res) => {
   res.render("profiledit", {
     ImageURL: "/ASSETS/DefaultProfile.jpg",
     isRequired: false,
+    user: req.session.user,
   });
 });
 
@@ -236,6 +228,7 @@ router.get("/admindashboard", (req, res) => {
   });
 });
 
+/* before edit
 router.get("/profileview", async (req, res) => {
   const partner_id = 2; // temp, replace later
 
@@ -293,6 +286,69 @@ router.get("/profileview", async (req, res) => {
     municipality: location.municipality,
     barangay: location.barangay,
 
+    AccOwner: true,
+  });
+}); */
+router.get("/profileview", async (req, res) => {
+  const partner_id = 2; // temp, replace later
+
+  const partnerScan = await docClient.send(
+    new ScanCommand({
+      TableName: "PartnerOrg",
+      FilterExpression: "partner_id = :pid",
+      ExpressionAttributeValues: { ":pid": partner_id },
+    })
+  );
+
+  const contactScan = await docClient.send(
+    new ScanCommand({
+      TableName: "ContactPerson",
+      FilterExpression: "contact_id = :pid",
+      ExpressionAttributeValues: { ":pid": partner_id },
+    })
+  );
+
+  const locationScan = await docClient.send(
+    new ScanCommand({
+      TableName: "Location",
+      FilterExpression: "location_id = :pid",
+      ExpressionAttributeValues: { ":pid": partner_id },
+    })
+  );
+
+  const partner = partnerScan.Items?.[0] || {};
+  const contact = contactScan.Items?.[0] || {};
+  const location = locationScan.Items?.[0] || {};
+
+  // Build user session object
+  const user = {
+    ImageURL: partner.profile_picture,
+
+    // partner table
+    orgname: partner.partner_name,
+    email: partner.partner_email,
+    partnertype: partner.partner_type,
+    advocacy: partner.advocacy_focus,
+
+    // contact table
+    contactname: contact.contact_name,
+    contactposition: contact.contact_position,
+    contactnumber: contact.contact_number,
+
+    // location table
+    address: location.full_address,
+    province: location.province,
+    municipality: location.municipality,
+    barangay: location.barangay,
+  };
+
+  // Save all data into session
+  req.session.user = user;
+
+  console.log(req.session); // remove after testing
+
+  res.render("profileview", {
+    ...user,
     AccOwner: true,
   });
 });
