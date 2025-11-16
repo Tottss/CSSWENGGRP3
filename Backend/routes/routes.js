@@ -368,6 +368,19 @@ router.get("/viewProject", (req, res) => {
   });
 });
 
+router.get("/adminproposal", (req, res) => {
+  res.render("adminproposal", {
+    orgname: "Partnerorg name",
+    projTitle: "Project Title Here",
+    projectDesc: "This is a project to help the project is a project to help",
+    totalBudget: "1298127",
+    targetValue: "200",
+    advocacyArea: "Poverty",
+    sdgAlignment: "1,2,3",
+    startDate: "Nov 18,2025",
+    endDate: "Dec 25,2025"
+  });
+});
 // impact tracker routes
 router.use("/", impactTrackerRouter);
 

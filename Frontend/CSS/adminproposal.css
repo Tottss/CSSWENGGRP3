@@ -1,0 +1,79 @@
+.gray-box{
+    background-color: lightgray;
+    padding: 10px 15px; 
+    display: inline-block;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+
+    border-bottom: 1px solid black;
+}
+
+.adminprop-title{
+  color: #0d2b56;
+  text-align: left;
+  font-size: 30px;
+  font-weight: 800;
+  font-style:bold;
+  margin-bottom: 20px;
+}
+
+.left-title{
+    font-weight: 800;
+}
+
+.approve-btn{
+    background-color: green;
+    color: White;
+    flex: 1;
+    border-radius: 8px;
+    height: 40px;
+    border: none;
+}
+
+.decline-btn{
+    background-color: red;
+    color: White;
+    flex: 1;
+    border-radius: 8px;
+    height: 40px;
+    border: none;
+}
+
+/*Comments*/
+.comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.comment-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.comment-textarea {
+    width: 100%;
+    height: 120px;
+    padding: 10px;
+    padding-bottom: 35px; /* space so text doesn't overlap button */
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    resize: vertical;
+    background-color: lightgray;
+}
+
+.submit-comment-btn {
+    position: absolute;
+    bottom: 8px;
+    right: 10px;
+    padding: 4px 10px;
+    font-size: 12px;
+    background-color: #e94e1b;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+

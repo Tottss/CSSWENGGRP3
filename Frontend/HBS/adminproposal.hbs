@@ -1,0 +1,92 @@
+{{#> main}}
+<main class="main-content">
+    <div class="admindashboard-container">
+        <div class="dashboard-form-box">
+                <h1 class="adminprop-title">{{orgname}} - Project Proposal Submission</h1>
+
+                <!---Project Title-->
+                <div class="dashboard-header">
+                    <div class="gray-box"><div class="left-title">Project Title</div>
+                    </div>
+                    <div class="gray-box">{{projTitle}}</div>
+                </div>
+
+                <!--Project Summary-->
+                <div class="dashboard-header">
+                    <div class="gray-box"><div class="left-title">Project Summary/Objectives</div>
+                    </div>
+                    <div class="gray-box">{{projectDesc}}</div>
+                </div>
+
+                <!---Target Beneficiaries-->
+                <div class="dashboard-header">
+                    <div class="gray-box"><div class="left-title">Target Beneficiaries</div>
+                    </div>
+                    <div class="gray-box">{{targetValue}}</div>
+                </div>
+
+                <!--Advocacy Area-->
+                <div class="dashboard-header">
+                    <div class="gray-box"><div class="left-title">Advocacy Area</div>
+                    </div>
+                    <div class="gray-box">{{advocacyArea}}</div>
+                </div>
+
+                <!--SDG Alignment-->
+                <div class="dashboard-header">
+                    <div class="gray-box"><div class="left-title">SDG Alignment</div>
+                    </div>
+                    <div class="gray-box">{{sdgAlignment}}</div>
+                </div>
+
+                <!--Start date-->
+                <div class="dashboard-header">
+                    <div class="gray-box"><div class="left-title">Start Date</div>
+                    </div>
+                    <div class="gray-box">{{startDate}}</div>
+                </div>
+
+                <!--End Date--->
+                <div class="dashboard-header">
+                    <div class="gray-box"><div class="left-title">End Date</div>
+                    </div>
+                    <div class="gray-box">{{endDate}}</div>
+                </div>
+
+                <!--Proposed Budget-->
+                <div class="dashboard-header">
+                    <div class="gray-box"><div class="left-title">Proposed Budget</div>
+                    </div>
+                    <div class="gray-box">{{totalBudget}}</div>
+                </div>
+
+                <!--Detailed Proposal-->
+                <div class="dashboard-header">
+                    <div class="gray-box"><div class="left-title">Detailed Proposal</div>
+                    </div>
+                    <div class="gray-box">{{Proposalpdf}}</div>
+                </div>
+                <br/>
+                <br/>
+                <div class="dashboard-header">
+                    <button class="decline-btn">DECLINE</button>
+                    <button class="approve-btn">APPROVE</button>
+                </div>
+                <br/>
+                <br/>
+                <form action="/submitComment" method="POST" class="comment-form">
+                    <label for="comment">Comments</label>
+
+                    <div class="comment-wrapper">
+                        <textarea id="comment" name="comment" class="comment-textarea"placeholder="Write your comment here..."></textarea>
+
+                        <button type="submit" class="submit-comment-btn">Send</button>
+                    </div>
+                </form>
+
+
+        </div>
+    </div>
+</main>
+{{/main}}
+    
