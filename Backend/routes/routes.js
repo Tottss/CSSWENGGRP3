@@ -170,7 +170,7 @@ router.get("/Communityprojects", async (req, res) => {
 
 router.get("/editprofile", (req, res) => {
   res.render("profiledit", {
-    ImageURL: "/ASSETS/DefaultProfile.jpg",
+    // ImageURL: req.session.ImageURL,
     isRequired: false,
     user: req.session.user,
   });
