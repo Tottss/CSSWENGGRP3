@@ -69,17 +69,21 @@
                 <br/>
                 <br/>
                 <div class="dashboard-header">
-                    <button class="decline-btn">DECLINE</button>
-                    <button class="approve-btn">APPROVE</button>
+                    <form action="/adminproposal/{{proposalId}}/decline" method="POST">
+                        <button class="decline-btn" type="submit">DECLINE</button>
+                    </form>
+
+                    <form action="/adminproposal/{{proposalId}}/approve" method="POST">
+                        <button class="approve-btn" type="submit">APPROVE</button>
+                    </form>
                 </div>
                 <br/>
                 <br/>
-                <form action="/submitComment" method="POST" class="comment-form">
+                <form action="/adminproposal/{{proposalId}}/comment" method="POST" class="comment-form">
                     <label for="comment">Comments</label>
-
                     <div class="comment-wrapper">
-                        <textarea id="comment" name="comment" class="comment-textarea"placeholder="Write your comment here..."></textarea>
-
+                        <textarea id="comment" name="comment" class="comment-textarea"
+                            placeholder="Write your comment here..."></textarea>
                         <button type="submit" class="submit-comment-btn">Send</button>
                     </div>
                 </form>

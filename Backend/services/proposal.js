@@ -49,7 +49,7 @@ export const createProposal = async (req, res) => {
       partner_org,
       ProjTitle,
       ProjSummary,
-      TargetBeneficiaries,
+      TargetBeneficiaries: Number(TargetBeneficiaries),
       AdvocacyArea,
       SDGAlignment,
       timelineStart,

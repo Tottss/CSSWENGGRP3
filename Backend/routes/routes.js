@@ -3,6 +3,7 @@ import { userLogIn, createTestUser } from "../services/user.js";
 import applyRouter from "./apply.js";
 import proposalRouter from "./proposal.js";
 import impactTrackerRouter from "./impactTracker.js";
+import adminProposalRouter from "./admin/adminproposal.js";
 import {
   UpdateCommand,
   PutCommand,
@@ -437,19 +438,8 @@ router.get("/viewProject", (req, res) => {
   });
 });
 
-router.get("/adminproposal", (req, res) => {
-  res.render("adminproposal", {
-    orgname: "Partnerorg name",
-    projTitle: "Project Title Here",
-    projectDesc: "This is a project to help the project is a project to help",
-    totalBudget: "1298127",
-    targetValue: "200",
-    advocacyArea: "Poverty",
-    sdgAlignment: "1,2,3",
-    startDate: "Nov 18,2025",
-    endDate: "Dec 25,2025",
-  });
-});
+router.use("/adminproposal", adminProposalRouter);
+
 // impact tracker routes
 router.use("/", impactTrackerRouter);
 
