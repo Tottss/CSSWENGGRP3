@@ -3,11 +3,20 @@ import { userLogIn, createTestUser } from "../services/user.js";
 import applyRouter from "./apply.js";
 import proposalRouter from "./proposal.js";
 import impactTrackerRouter from "./impactTracker.js";
-import { GetCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
+import {
+  UpdateCommand,
+  PutCommand,
+  GetCommand,
+  ScanCommand,
+} from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
 import { getUserProjects } from "../services/projects.js";
 
 const router = express.Router();
+
+// remove after making it a function
+import multer from "multer";
+const upload = multer({ storage: multer.memoryStorage() });
 
 router.get("/test", function (req, res) {
   res.status(200).json("Hello, world!");
@@ -176,6 +185,126 @@ router.get("/editprofile", (req, res) => {
   });
 });
 
+router.post(
+  "/editprofile/save",
+  upload.single("profileImage"),
+  async (req, res) => {
+    try {
+      const partner_id = req.session.user?.partner_id || 2; // TEMP FALLBACK
+
+      const {
+        orgName,
+        contactName,
+        contactPosition,
+        contactNumber,
+        email,
+        fullAddress,
+        province,
+        municipality,
+        barangay,
+        partnerType,
+        advocacy,
+      } = req.body;
+
+      let imageURL = req.session.user.ImageURL;
+
+      // If user uploaded a new profile image
+      if (req.file) {
+        imageURL = "/uploads/" + req.file.filename;
+      }
+
+      /*
+       * UPDATE PartnerOrg table
+       */
+      await docClient.send(
+        new UpdateCommand({
+          TableName: "PartnerOrg",
+          Key: { partner_id },
+          UpdateExpression: `
+            SET partner_name = :name,
+                partner_email = :email,
+                partner_type = :ptype,
+                advocacy_focus = :adv,
+                profile_picture = :img
+          `,
+          ExpressionAttributeValues: {
+            ":name": orgName,
+            ":email": email,
+            ":ptype": partnerType,
+            ":adv": advocacy,
+            ":img": imageURL,
+          },
+        })
+      );
+
+      /*
+       * UPDATE ContactPerson table
+       */
+      await docClient.send(
+        new UpdateCommand({
+          TableName: "ContactPerson",
+          Key: { contact_id: partner_id },
+          UpdateExpression: `
+            SET contact_name = :cname,
+                contact_position = :cpos,
+                contact_number = :cnum
+          `,
+          ExpressionAttributeValues: {
+            ":cname": contactName,
+            ":cpos": contactPosition,
+            ":cnum": contactNumber,
+          },
+        })
+      );
+
+      /*
+       * UPDATE Location table
+       */
+      await docClient.send(
+        new UpdateCommand({
+          TableName: "Location",
+          Key: { location_id: partner_id },
+          UpdateExpression: `
+            SET full_address = :addr,
+                province = :prov,
+                municipality = :mun,
+                barangay = :brgy
+          `,
+          ExpressionAttributeValues: {
+            ":addr": fullAddress,
+            ":prov": province,
+            ":mun": municipality,
+            ":brgy": barangay,
+          },
+        })
+      );
+
+      // Update session so UI immediately reflects changes
+      // remove this after
+      req.session.user = {
+        ...req.session.user,
+        orgname: orgName,
+        email: email,
+        partnertype: partnerType,
+        advocacy: advocacy,
+        contactname: contactName,
+        contactposition: contactPosition,
+        contactnumber: contactNumber,
+        address: fullAddress,
+        province,
+        municipality,
+        barangay,
+        ImageURL: imageURL,
+      };
+
+      res.sendStatus(200);
+    } catch (err) {
+      console.error("Error updating profile:", err);
+      res.status(500).send("Failed to update profile");
+    }
+  }
+);
+
 router.get("/admindashboard", (req, res) => {
   res.render("admindashboard", {
     title: "Admin Dashboard",
@@ -228,67 +357,6 @@ router.get("/admindashboard", (req, res) => {
   });
 });
 
-/* before edit
-router.get("/profileview", async (req, res) => {
-  const partner_id = 2; // temp, replace later
-
-  // Scan PartnerOrg table
-  const partnerScan = await docClient.send(
-    new ScanCommand({
-      TableName: "PartnerOrg",
-      FilterExpression: "partner_id = :pid",
-      ExpressionAttributeValues: { ":pid": partner_id },
-    })
-  );
-
-  // Scan ContactPerson table
-
-  const contactScan = await docClient.send(
-    new ScanCommand({
-      TableName: "ContactPerson",
-      FilterExpression: "contact_id = :pid",
-      ExpressionAttributeValues: {
-        ":pid": partner_id,
-      },
-    })
-  );
-
-  // Scan Location table
-  const locationScan = await docClient.send(
-    new ScanCommand({
-      TableName: "Location",
-      FilterExpression: "location_id = :pid",
-      ExpressionAttributeValues: { ":pid": partner_id },
-    })
-  );
-
-  const partner = partnerScan.Items?.[0] || {};
-  const contact = contactScan.Items?.[0] || {};
-  const location = locationScan.Items?.[0] || {};
-
-  res.render("profileview", {
-    ImageURL: partner.profile_picture,
-
-    // partner table
-    orgname: partner.partner_name,
-    email: partner.partner_email,
-    partnertype: partner.partner_type,
-    advocacy: partner.advocacy_focus,
-
-    // contact table
-    contactname: contact.contact_name,
-    contactposition: contact.contact_position,
-    contactnumber: contact.contact_number,
-
-    // location table
-    address: location.full_address,
-    province: location.province,
-    municipality: location.municipality,
-    barangay: location.barangay,
-
-    AccOwner: true,
-  });
-}); */
 router.get("/profileview", async (req, res) => {
   const partner_id = 2; // temp, replace later
 
@@ -345,7 +413,7 @@ router.get("/profileview", async (req, res) => {
   // Save all data into session
   req.session.user = user;
 
-  console.log(req.session); // remove after testing
+  // console.log(req.session); // remove after testing
 
   res.render("profileview", {
     ...user,
@@ -378,7 +446,7 @@ router.get("/adminproposal", (req, res) => {
     advocacyArea: "Poverty",
     sdgAlignment: "1,2,3",
     startDate: "Nov 18,2025",
-    endDate: "Dec 25,2025"
+    endDate: "Dec 25,2025",
   });
 });
 // impact tracker routes
