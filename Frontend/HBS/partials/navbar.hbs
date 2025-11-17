@@ -1,23 +1,40 @@
 <!-- Navbar -->
-    <nav class="navbar">
-        <div class="nav-left">
-            <img class="logo-icon" src="/ASSETS/logo-only.png" alt="Logo">
-            <span class="nav-title">Community Partners Portal</span>
-        </div>
-        <div class="nav-right">
-            <div class="d-flex flex-grow-1 justify-content-center position-relative">
-            <form class="d-flex search-form position-relative" action="/search" method="GET">
-                <input class="form-control" id="SearchInput" type="search" name="q" placeholder="Search Projects" autocomplete="off">
-                <i class="bi bi-search search-icon"></i>
-            </form>
-        </div>
-            <div class="profile-menu">
-                <img src="/ASSETS/DefaultProfile.jpg" alt="Profile" class="profile-pic"/>
-                <ul class="dropdown">
-                  <li><a href="/profileview">Profile</a></li>
-                  <li><a href="/settings">Settings</a></li>
-                  <li><a href="/logout">Logout</a></li>
-                </ul>
-              </div>
-        </div>
-    </nav>
+<nav class="navbar">
+  <div class="nav-left">
+    <img class="logo-icon" src="/ASSETS/logo-only.png" alt="Logo" />
+    <span class="nav-title">Community Partners Portal</span>
+  </div>
+  <div class="nav-right">
+    <div class="d-flex flex-grow-1 justify-content-center position-relative">
+      <form
+        class="d-flex search-form position-relative"
+        action="/search"
+        method="GET"
+      >
+        <input
+          class="form-control"
+          id="SearchInput"
+          type="search"
+          name="q"
+          placeholder="Search Projects"
+          autocomplete="off"
+        />
+        <i class="bi bi-search search-icon"></i>
+      </form>
+    </div>
+    <div class="profile-menu">
+      {{! hardcoded for now will change it later }}
+      {{!-- change to src={{imageURL}} after implementation --}}
+      <img
+        src="https://proposals-storage.s3.ap-southeast-1.amazonaws.com/images/mewomewo.png"
+        alt="Profile"
+        class="profile-pic"
+      />
+      <ul class="dropdown">
+        <li><a href="/profileview">Profile</a></li>
+        <li><a href="/settings">Settings</a></li>
+        <li><a href="/logout">Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>

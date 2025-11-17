@@ -18,6 +18,7 @@ const router = express.Router();
 import multer from "multer";
 const upload = multer({ storage: multer.memoryStorage() });
 
+// this route is just for testing
 router.get("/test", function (req, res) {
   res.status(200).json("Hello, world!");
 });
