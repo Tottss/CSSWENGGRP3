@@ -1,32 +1,42 @@
 {{#> main}}
-    <div class="profile-container">
-        <div class="projects-form-box">
-            <h1 class="profile-title">My Profile</h1>
-                <form action="/submit-image-data" method="post" enctype="multipart/form-data">
-                    <input type="file" id="fileInput" name="profileImage" accept="image/*" required hidden>
-  
-                    <!-- Clicking this image will trigger file input -->
-                    <div class="image-upload-wrapper">
-                        <img src="{{user.ImageURL}}" class="profile-image-preview" id="profileImage">
-                        <i class="bi bi-pen-fill edit-icon" id="editIcon"></i>
-                    </div>
+<div class="profile-container">
+    <div class="projects-form-box">
+        <h1 class="profile-title">My Profile</h1>
 
-                    <!-- Modal -->
-                    <div id="imageModal" class="image-modal">
-                        <span class="close">&times;</span>
-                        <img class="modal-content" id="modalImage">
-                        <input type="file" id="fileInput" name="profileImage" accept="image/*">
-                        <button id="changeImageBtn" class="changeImageBtn">Change Image</button>
-                    </div>
+        <!-- SINGLE FORM FOR EVERYTHING (removed method="post") -->
+        <form id="profileForm" enctype="multipart/form-data">
 
-                </form>
-                <form id="profileForm" enctype="multipart/form-data">
-                {{> ApplyInputs user=user}}
-                <!-- Save Button -->
-                <button type="submit" class="apply-btn">Save Edits</button>
-                </form>
-        </div>
+            <!-- Hidden file input for main image selection -->
+            <input type="file" id="fileInput" name="profileImage" accept="image/*" hidden>
+
+            <!-- Clicking this opens modal -->
+            <div class="image-upload-wrapper">
+                <img src="{{user.ImageURL}}" class="profile-image-preview" id="profileImage">
+                <i class="bi bi-pen-fill edit-icon" id="editIcon"></i>
+            </div>
+
+            <!-- IMAGE MODAL -->
+            <div id="imageModal" class="image-modal">
+                <span class="close">&times;</span>
+                <img class="modal-content" id="modalImage">
+
+                <!-- Second file input INSIDE FORM but WITHOUT duplicate ID -->
+                <input type="file" name="profileImage" accept="image/*">
+
+                <button type="button" id="changeImageBtn" class="changeImageBtn">
+                    Change Image
+                </button>
+            </div>
+
+            <!-- Other profile input fields -->
+            {{> ApplyInputs user=user}}
+
+            <!-- Save Button -->
+            <button type="submit" class="apply-btn">Save Edits</button>
+
+        </form>
     </div>
+</div>
 {{/main}}
 
 <script>
@@ -34,21 +44,42 @@ const profileImage = document.getElementById('profileImage');
 const modal = document.getElementById('imageModal');
 const modalImg = document.getElementById('modalImage');
 const closeBtn = document.querySelector('.image-modal .close');
+const fileInput = document.getElementById('fileInput');
+const changeImageBtn = document.getElementById('changeImageBtn');
 
-// When user clicks the profile image
+// Open modal when profile image is clicked
 profileImage.addEventListener('click', () => {
   modal.style.display = 'block';
-  modalImg.src = profileImage.src; // show the same image in modal
+  modalImg.src = profileImage.src;
 });
 
-// When user clicks the close button
+// Close modal
 closeBtn.addEventListener('click', () => {
   modal.style.display = 'none';
 });
 
-// Optional: click outside image to close
+// Close modal when clicking outside image
 modal.addEventListener('click', (e) => {
   if (e.target === modal) modal.style.display = 'none';
 });
 
+// Trigger image selection from modal button
+changeImageBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  fileInput.click();
+});
+
+// Update preview when new image is selected
+fileInput.addEventListener('change', () => {
+  const file = fileInput.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      profileImage.src = e.target.result;
+      modalImg.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+});
 </script>
+<script src="/JAVASCRIPT/editProfile.js"></script>

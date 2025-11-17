@@ -1,13 +1,28 @@
-// this is for updating the profile info
+const profileForm = document.getElementById("profileForm");
 
-const partner_name = document.getElementById("orgName");
-const contact_name = document.getElementById("contactName");
-const contact_position = document.getElementById("contactPosition");
-const contact_number = document.getElementById("contactNumber");
-const partner_email = document.getElementById("email");
-const full_address = document.getElementById("fullAddress");
-const province = document.getElementById("province");
-const municipality = document.getElementById("municipality");
-const barangay = document.getElementById("barangay");
-const partner_type = document.getElementById("partnerType");
-const advocacy_focus = document.getElementById("advocacy");
+profileForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  console.log("Save Edits button was clicked!");
+
+  const formData = new FormData(profileForm);
+
+  try {
+    const response = await fetch("/editprofile/save", {
+      method: "POST",
+      credentials: "include",
+      body: formData,
+    });
+
+    console.log("response: ", response.ok);
+
+    if (!response.ok) {
+      alert("Failed to update profile");
+    } else {
+      alert("Profile updated successfully!");
+      window.location.href = "/profileview";
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Something went wrong");
+  }
+});
