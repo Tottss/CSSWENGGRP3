@@ -19,6 +19,9 @@ const router = express.Router();
 import multer from "multer";
 const upload = multer({ storage: multer.memoryStorage() });
 
+// controllers
+import { showLogin, logoutUser } from "../controllers/authController.js";
+
 // this route is just for testing
 router.get("/test", function (req, res) {
   res.status(200).json("Hello, world!");
@@ -33,33 +36,12 @@ router.post("/user/createTestUser", createTestUser);
 // apply.js
 router.use("/request", applyRouter);
 
-// login route
-router.get("/", (req, res) => {
-  req.session.visited = true; // to prevent new sessions from being created
-
-  // remove after testing
-  console.log(req.session);
-  console.log(req.sessionID);
-
-  res.render("login", {
-    title: "Login Page",
-    layout: false,
-  });
-});
-
-router.get("/login", (req, res) => {
-  res.render("login", {
-    title: "Login Page",
-    layout: false,
-  });
-});
+// new login route
+router.get("/", showLogin);
+router.get("/login", showLogin);
 
 // logout route
-router.get("/logout", (req, res) => {
-  // only redirect to login for now (no session handling yet)
-  // destroy session here
-  res.redirect("/login");
-});
+router.get("/logout", logoutUser);
 
 // apply route
 router.get("/apply", (req, res) => {
