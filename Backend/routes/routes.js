@@ -31,6 +31,11 @@ import {
 import { userDashboard } from "../controllers/dashboardController.js";
 import { showProposal } from "../controllers/proposalController.js";
 
+/*
+  Note: Only routes should be here
+  Put logic either in services or controllers
+*/
+
 // this route is just for testing
 router.get("/test", function (req, res) {
   res.status(200).json("Hello, world!");
