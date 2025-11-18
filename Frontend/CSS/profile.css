@@ -150,3 +150,7 @@
   cursor: pointer;
   align-self: center;
 }
+
+.dashboard-header .apply-btn{
+  flex:1;
+}

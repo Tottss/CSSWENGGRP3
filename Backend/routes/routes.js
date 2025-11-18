@@ -101,6 +101,12 @@ router.get("/adminapplication", (req, res) => {
     advocacy:"poverty",
   });
 });
+
+router.get("/editpassword", (req, res) =>{
+  res.render("editpassword", {
+    
+  })
+})
 router.use("/adminproposal", adminProposalRouter);
 
 // impact tracker routes
