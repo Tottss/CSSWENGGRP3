@@ -1,0 +1,76 @@
+{{#> main}}
+<main class="main-content">
+    <div class="adminproposal-container">
+        <div class="dashboard-form-box">
+                <h1 class="adminprop-title">{{orgname}} - Application</h1>
+
+                <!-- Organization Name -->
+                <div class="dashboard-header">
+                    <div class="gray-box"><div class="left-title">Organization / Partner Name</div>
+                    </div>
+                    <div class="gray-box">{{orgname}}</div>
+                </div>
+
+                <!-- Contact Person -->
+                <div class="dashboard-header">
+                    <div class="gray-box"><div class="left-title">Contact Person</div>
+                    </div>
+                    <div class="gray-box"><strong>Name:</strong> {{contactname}}<br>
+                    <strong>Position:</strong> {{contactposition}}<br>
+                    <strong>Number:</strong> {{contactnumber}}
+                    </div>
+                </div>
+
+                <!-- Email Address -->
+                <div class="dashboard-header">
+                    <div class="gray-box"><div class="left-title">Email</div>
+                    </div>
+                    <div class="gray-box">{{email}}</div>
+                </div>
+
+                <!-- Full Address -->
+                <div class="dashboard-header">
+                    <div class="gray-box"><div class="left-title">Full Address & Location</div>
+                    </div>
+                    <div class="gray-box"><strong>Full address:</strong> {{address}}<br>
+                    <strong>Province:</strong> {{province}}<br>
+                    <strong>Municipality:</strong> {{municipality}}<br>
+                    <strong>Barangay:</strong> {{barangay}}
+                    </div>
+                </div>
+
+                <!-- Type of Partner -->
+                <div class="dashboard-header">
+                    <div class="gray-box"><div class="left-title">Type of Partner</div>
+                    </div>
+                    <div class="gray-box">{{partnertype}}</div>
+                </div>
+
+                <!-- Advocacy Focus -->
+                <div class="dashboard-header">
+                    <div class="gray-box"><div class="left-title">Advocacy Focus</div>
+                    </div>
+                    <div class="gray-box">{{advocacy}}</div>
+                </div>
+
+                <!--MOU-->
+                <div class="dashboard-header">
+                    <div class="gray-box"><div class="left-title">Memorandum of Understanding</div>
+                    </div>
+                    <div class="gray-box">{{MOU}}</div>
+                </div>
+                <br/>
+                <br/>
+                <div class="dashboard-header">
+                    <form action="/adminapplication/{{proposalId}}/decline" method="POST">
+                        <button class="decline-btn" type="submit">DECLINE</button>
+                    </form>
+
+                    <form action="/adminapplication/{{proposalId}}/approve" method="POST">
+                        <button class="approve-btn" type="submit">APPROVE</button>
+                    </form>
+        </div>
+    </div>
+</main>
+{{/main}}
+    

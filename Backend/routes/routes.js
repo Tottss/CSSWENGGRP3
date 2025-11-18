@@ -356,6 +356,17 @@ router.get("/admindashboard", (req, res) => {
         PartnerOrg: "AORG",
       },
     ],
+    Application: [{
+      PartnerOrg: "Org Name",
+      Date: "asdjnsd",
+      href: "/asdds"
+    },
+    {
+      PartnerOrg: "EEEERP3",
+      Date: "asdjnsd",
+      href: "/asdds"
+    },
+  ]
   });
 });
 
@@ -438,6 +449,21 @@ router.get("/viewProject", (req, res) => {
   });
 });
 
+router.get("/adminapplication", (req, res) => {
+  res.render("adminapplication", {
+    orgname: "Aaaa",
+    contactname: "john",
+    contactposition: "Leader",
+    contactnumber: "091284834",
+    email: "jlawliong@gmail.com",
+    address: "Quezon city",
+    province: "Quezon City",
+    municipality: "asdsd",
+    barangay: "Igiveup",
+    partnertype:"Church",
+    advocacy:"poverty",
+  });
+});
 router.use("/adminproposal", adminProposalRouter);
 
 // impact tracker routes

@@ -1,6 +1,6 @@
 .admindashboard-container {
   margin-top: 150px;
-  margin-right: 20px;
+  margin-left: 70px;
   display: block;
   position: relative;
   justify-content: center;
@@ -18,16 +18,65 @@
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
 }
 
-.admindashboard-container::-webkit-scrollbar {
+.adminproposal-container {
+  margin-top: 150px;
+  margin-left: 275px;
+  display: block;
+  position: relative;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 100%;
+  max-height: calc(100vh - 90px - 40px);
+
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+
+  /* Make scrollbar rounded without cutting corners */
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.adminapp-container {
+  margin-top: 150px;
+  margin-left: 10px;
+  display: block;
+  position: relative;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 100%;
+  max-height: calc(100vh - 90px - 40px);
+
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+
+  /* Make scrollbar rounded without cutting corners */
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+.admin-content {
+  display: flex;
+}
+
+.admindashboard-container::-webkit-scrollbar,
+.adminapp-container::-webkit-scrollbar,
+.adminproposal-container::-webkit-scrollbar  {
   width: 8px;
 }
 
-.admindashboard-container::-webkit-scrollbar-thumb {
+.admindashboard-container::-webkit-scrollbar-thumb,
+.adminappcontainer::-webkit-scrollbar-thumb,
+.adminproposal-container::-webkit-scrollbar-thumb {
   background-color: rgba(0, 0, 0, 0);
   border-radius: 12px;
 }
 
-.admindashboard-container::-webkit-scrollbar-track {
+.admindashboard-container::-webkit-scrollbar-track, 
+.adminapp-container::-webkit-scrollbar-track,
+.adminproposal-container::-webkit-scrollbar-track {
   background: transparent;
 }
 
@@ -52,15 +101,30 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    width: 1100px;
+    width: 900px;
     overflow-y: auto;
 }
 
 .Proposal-box {
     width: 100%;
-    max-width: 1200px;
+    max-width: 900px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     padding: 15px;       
+}
+
+.Application-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 300px;
+    overflow-y: auto;
+}
+
+.Application-box {
+    width: 100%;
+    max-width: 300px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    padding: 15px;  
 }
 
 .Proposal-desc-container{
@@ -73,6 +137,10 @@
     font-size: 26px;
     font-weight: 800;
     color: #0D1B2A;
+}
+
+.Application-list .Proposal-content {
+    flex-wrap: wrap;
 }
 
 .Proposal-date{

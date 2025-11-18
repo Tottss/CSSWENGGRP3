@@ -1,11 +1,9 @@
 {{#> main}}
-<main class="main-content">
+<main class="admin-content">
     <div class="admindashboard-container">
         <div class="dashboard-form-box">
             <div class="dashboard-header">
                 <h1 class="dashboard-title">Hi, Admin!</h1>
-
-                <button type="button" class="Prop-btn"onclick="window.location.href='/accountcreation'">Account Creation</button>
             </div>
 
             <div class="notification-header">
@@ -48,6 +46,27 @@
                     {{/if}}
                 {{/each}}
 
+            </div>
+        </div>
+    </div>
+    <div class="adminapp-container">
+        <div class="dashboard-form-box">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Application List</h1>
+            </div>
+            <div class="Application-list">
+                {{#each Application}}
+                        <div class="Application-box">
+                            <div class="Proposal-content">
+                                <div class="Proposal-desc-container">
+                                    <div class="Proposal-desc">
+                                        {{PartnerOrg}}
+                                    </div>
+                                </div>
+                                <button class="Prop-btn" data-id="ViewProposal" onclick="window.location.href='{{href}}'">View Application</button>
+                            </div>
+                        </div>
+                {{/each}}
             </div>
         </div>
     </div>

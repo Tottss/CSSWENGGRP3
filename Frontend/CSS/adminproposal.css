@@ -1,13 +1,14 @@
-.gray-box{
+.gray-box {
     background-color: lightgray;
-    padding: 10px 15px; 
-    display: inline-block;
-    flex: 1;
-    display: flex;
-    align-items: center;
-    font-size: 20px;
+    padding: 10px 15px;
 
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    font-size: 20px;
     border-bottom: 1px solid black;
+    flex:1;
 }
 
 .adminprop-title{
