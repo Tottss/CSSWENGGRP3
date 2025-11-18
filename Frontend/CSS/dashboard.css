@@ -228,6 +228,14 @@
     gap: 10px;
 }
 
+.dashboard-header form {
+    flex: 1; 
+}
+
+.dashboard-header form button {
+    width: 100%;
+}
+
 .yourproject-header {
   display: flex;
   justify-content: space-between;
