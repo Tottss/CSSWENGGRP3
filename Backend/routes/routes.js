@@ -4,13 +4,6 @@ import applyRouter from "./apply.js";
 import proposalRouter from "./proposal.js";
 import impactTrackerRouter from "./impactTracker.js";
 import adminProposalRouter from "./admin/adminproposal.js";
-import {
-  UpdateCommand,
-  PutCommand,
-  GetCommand,
-  ScanCommand,
-} from "@aws-sdk/lib-dynamodb";
-import { docClient } from "../config/dynamodb.js";
 import { getUserProjects } from "../services/projects.js";
 
 const router = express.Router();
@@ -21,6 +14,22 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 // controllers
 import { showLogin, logoutUser } from "../controllers/authController.js";
+import { showApplyPage } from "../controllers/applyController.js";
+import {
+  showAdminDashboard,
+  showAdminView,
+} from "../controllers/adminController.js";
+import {
+  showEditProfile,
+  showViewProfile,
+  updateProfile,
+} from "../controllers/profileController.js";
+import {
+  showCommunityProjects,
+  showViewProject,
+} from "../controllers/projectController.js";
+import { userDashboard } from "../controllers/dashboardController.js";
+import { showProposal } from "../controllers/proposalController.js";
 
 // this route is just for testing
 router.get("/test", function (req, res) {
@@ -29,104 +38,27 @@ router.get("/test", function (req, res) {
 
 // implement other routes here
 router.post("/user/login", userLogIn);
+router.get("/", showLogin);
+router.get("/login", showLogin);
 
 // test user creation route
 router.post("/user/createTestUser", createTestUser);
 
-// apply.js
+// apply
 router.use("/request", applyRouter);
-
-// new login route
-router.get("/", showLogin);
-router.get("/login", showLogin);
+router.get("/apply", showApplyPage);
 
 // logout route
 router.get("/logout", logoutUser);
 
-// apply route
-router.get("/apply", (req, res) => {
-  res.render("apply", {
-    title: "Application Page",
-    layout: false,
-    isRequired: true,
-  });
-});
-
 //admin view route
-router.get("/adminView", (req, res) => {
-  res.render("adminView", {
-    title: "Admin View",
-  });
-});
-
-//user view route
-router.get("/userView", (req, res) => {
-  res.render("userView", {
-    title: "User View",
-  });
-});
-
-// changed p.ProjectImageURL to p.project_imageURL to match database field
+router.get("/adminView", showAdminView);
 
 //dashboard route
-router.get("/dashboard", async (req, res) => {
-  try {
-    const userId = req.session.user_id || 2; // temporary hardcode until sessions are added
-
-    console.log("Session id (for debugging): ", req.session.id); // remove after testing
-    console.log("Session User Id:", req.session.user_id); // remove after testing
-
-    // Fetch all projects (for Community Projects)
-    const allProjectsData = await docClient.send(
-      new ScanCommand({
-        TableName: "Projects",
-        // Gets all projects from all users
-      })
-    );
-
-    // Fetch partner’s own projects (currently logged in partner) **hardcoded user for now**
-    const yourProjectsData = await docClient.send(
-      new ScanCommand({
-        TableName: "Projects",
-        FilterExpression: "user_id = :uid",
-        ExpressionAttributeValues: { ":uid": userId },
-      })
-    );
-
-    const communityProjects = allProjectsData.Items || [];
-    const yourProjects = yourProjectsData.Items || [];
-
-    res.render("dashboard", {
-      title: "Dashboard",
-      PartnerOrg: req.session.user_name || "Partner Org Name",
-      nNotif: 1,
-      showTools: true,
-
-      // test image urls
-      // Community Projects
-      CommunityProjects: communityProjects.map((p) => ({
-        ProjectImageURL: p.project_imageURL || "/ASSETS/border-design.png",
-        ProjectName: p.project_name,
-      })),
-
-      // Your Projects
-      YourProjects: yourProjects.map((p) => ({
-        ProjectImageURL: p.project_imageURL || "/ASSETS/border-design.png",
-        ProjectName: p.project_name,
-      })),
-    });
-  } catch (err) {
-    console.error("Error loading dashboard:", err);
-    res.status(500).send("Failed to load dashboard");
-  }
-});
+router.get("/dashboard", userDashboard);
 
 //project proposal route
-router.get("/proposal", (req, res) => {
-  res.render("proposal", {
-    title: "Project Proposal",
-  });
-});
+router.get("/proposal", showProposal);
 
 // your project route
 router.get("/Yourprojects", getUserProjects);
@@ -134,291 +66,20 @@ router.get("/Yourprojects", getUserProjects);
 router.use("/proposal", proposalRouter);
 
 //community projects route
-router.get("/Communityprojects", async (req, res) => {
-  try {
-    // Fetch ALL accepted projects from the Projects table
-    const data = await docClient.send(
-      new ScanCommand({
-        TableName: "Projects",
-      })
-    );
+router.get("/Communityprojects", showCommunityProjects);
 
-    const projects = data.Items || [];
+router.get("/editprofile", showEditProfile);
 
-    res.render("projects", {
-      Title: "Community Projects",
-      BtnName: "View Project",
-      Projects: projects.map((p) => ({
-        ProjectImageURL: p.project_imageURL || "/ASSETS/border-design.png",
-        ProjectName: p.project_name,
-      })),
-    });
-  } catch (err) {
-    console.error("Error loading community projects:", err);
-    res.status(500).render("error", {
-      message: "Failed to load community projects.",
-    });
-  }
-});
+// new
+router.post("/editprofile/save", upload.single("profileImage"), updateProfile);
 
-router.get("/editprofile", (req, res) => {
-  res.render("profiledit", {
-    // ImageURL: req.session.ImageURL,
-    isRequired: false,
-    user: req.session.user,
-  });
-});
+router.get("/admindashboard", showAdminDashboard);
 
-router.post(
-  "/editprofile/save",
-  upload.single("profileImage"),
-  async (req, res) => {
-    try {
-      const partner_id = req.session.user?.partner_id || 2; // TEMP FALLBACK
+// new
+router.get("/profileview", showViewProfile);
 
-      const {
-        orgName,
-        contactName,
-        contactPosition,
-        contactNumber,
-        email,
-        fullAddress,
-        province,
-        municipality,
-        barangay,
-        partnerType,
-        advocacy,
-      } = req.body;
-
-      let imageURL = req.session.user.ImageURL;
-
-      // If user uploaded a new profile image
-      if (req.file) {
-        imageURL = "/uploads/" + req.file.filename;
-      }
-
-      /*
-       * UPDATE PartnerOrg table
-       */
-      await docClient.send(
-        new UpdateCommand({
-          TableName: "PartnerOrg",
-          Key: { partner_id },
-          UpdateExpression: `
-            SET partner_name = :name,
-                partner_email = :email,
-                partner_type = :ptype,
-                advocacy_focus = :adv,
-                profile_picture = :img
-          `,
-          ExpressionAttributeValues: {
-            ":name": orgName,
-            ":email": email,
-            ":ptype": partnerType,
-            ":adv": advocacy,
-            ":img": imageURL,
-          },
-        })
-      );
-
-      /*
-       * UPDATE ContactPerson table
-       */
-      await docClient.send(
-        new UpdateCommand({
-          TableName: "ContactPerson",
-          Key: { contact_id: partner_id },
-          UpdateExpression: `
-            SET contact_name = :cname,
-                contact_position = :cpos,
-                contact_number = :cnum
-          `,
-          ExpressionAttributeValues: {
-            ":cname": contactName,
-            ":cpos": contactPosition,
-            ":cnum": contactNumber,
-          },
-        })
-      );
-
-      /*
-       * UPDATE Location table
-       */
-      await docClient.send(
-        new UpdateCommand({
-          TableName: "Location",
-          Key: { location_id: partner_id },
-          UpdateExpression: `
-            SET full_address = :addr,
-                province = :prov,
-                municipality = :mun,
-                barangay = :brgy
-          `,
-          ExpressionAttributeValues: {
-            ":addr": fullAddress,
-            ":prov": province,
-            ":mun": municipality,
-            ":brgy": barangay,
-          },
-        })
-      );
-
-      // Update session so UI immediately reflects changes
-      // remove this after
-      req.session.user = {
-        ...req.session.user,
-        orgname: orgName,
-        email: email,
-        partnertype: partnerType,
-        advocacy: advocacy,
-        contactname: contactName,
-        contactposition: contactPosition,
-        contactnumber: contactNumber,
-        address: fullAddress,
-        province,
-        municipality,
-        barangay,
-        ImageURL: imageURL,
-      };
-
-      res.sendStatus(200);
-    } catch (err) {
-      console.error("Error updating profile:", err);
-      res.status(500).send("Failed to update profile");
-    }
-  }
-);
-
-router.get("/admindashboard", (req, res) => {
-  res.render("admindashboard", {
-    title: "Admin Dashboard",
-    PartnerOrg: req.session.user_name || "Partner Org Name",
-    Proposals: [
-      {
-        Submission: true,
-        ProjectName: "Project Name",
-        Date: "2024-06-01",
-        PartnerOrg: "EXAMPLE ORG",
-        href: "/linktoProp",
-      },
-      {
-        Update: true,
-        ProjectName: "Example Project2",
-        Date: "2024-08-21",
-        PartnerOrg: "EORG",
-      },
-      {
-        Submission: true,
-        ProjectName: "Example Project3",
-        Date: "2024-11-21",
-        PartnerOrg: "AORG",
-      },
-      {
-        Submission: true,
-        ProjectName: "Example Project3",
-        Date: "2024-11-21",
-        PartnerOrg: "AORG",
-      },
-      {
-        Submission: true,
-        ProjectName: "Example Project3",
-        Date: "2024-11-21",
-        PartnerOrg: "AORG",
-      },
-      {
-        Submission: true,
-        ProjectName: "Example Project3",
-        Date: "2024-11-21",
-        PartnerOrg: "AORG",
-      },
-      {
-        Submission: true,
-        ProjectName: "Example Project3",
-        Date: "2024-11-21",
-        PartnerOrg: "AORG",
-      },
-    ],
-  });
-});
-
-router.get("/profileview", async (req, res) => {
-  const partner_id = 2; // temp, replace later
-
-  const partnerScan = await docClient.send(
-    new ScanCommand({
-      TableName: "PartnerOrg",
-      FilterExpression: "partner_id = :pid",
-      ExpressionAttributeValues: { ":pid": partner_id },
-    })
-  );
-
-  const contactScan = await docClient.send(
-    new ScanCommand({
-      TableName: "ContactPerson",
-      FilterExpression: "contact_id = :pid",
-      ExpressionAttributeValues: { ":pid": partner_id },
-    })
-  );
-
-  const locationScan = await docClient.send(
-    new ScanCommand({
-      TableName: "Location",
-      FilterExpression: "location_id = :pid",
-      ExpressionAttributeValues: { ":pid": partner_id },
-    })
-  );
-
-  const partner = partnerScan.Items?.[0] || {};
-  const contact = contactScan.Items?.[0] || {};
-  const location = locationScan.Items?.[0] || {};
-
-  // Build user session object
-  const user = {
-    ImageURL: partner.profile_picture,
-
-    // partner table
-    orgname: partner.partner_name,
-    email: partner.partner_email,
-    partnertype: partner.partner_type,
-    advocacy: partner.advocacy_focus,
-
-    // contact table
-    contactname: contact.contact_name,
-    contactposition: contact.contact_position,
-    contactnumber: contact.contact_number,
-
-    // location table
-    address: location.full_address,
-    province: location.province,
-    municipality: location.municipality,
-    barangay: location.barangay,
-  };
-
-  // Save all data into session
-  req.session.user = user;
-
-  // console.log(req.session); // remove after testing
-
-  res.render("profileview", {
-    ...user,
-    AccOwner: true,
-  });
-});
-
-router.get("/viewProject", (req, res) => {
-  res.render("viewProject", {
-    projtitle: "Project Title Here",
-    ImageURL: "/ASSETS/border-design.png",
-    ProjectDesc: "This is a project to help the project is a project to help",
-    totalBudget: "1298127",
-    expenses: "19021829",
-    actualValue: "0",
-    targetValue: "200",
-    advocacyarea: "Poverty",
-    sdgalignment: "1,2,3",
-    communitylocation: "12281",
-  });
-});
+// new
+router.get("/viewProject", showViewProject);
 
 router.use("/adminproposal", adminProposalRouter);
 
