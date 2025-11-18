@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Details & Impact Tracker</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+  <link rel="stylesheet" href="../CSS/global.css">
+  <link rel="stylesheet" href="../CSS/communityProject.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-left">
+            <img class="logo-icon" src="../ASSETS/logo-only.png" alt="Logo">
+            <span class="nav-title">Community Partners Portal</span>
+        </div>
+        <div class="nav-right">
+            <div class="d-flex flex-grow-1 justify-content-center position-relative">
+            <form class="d-flex search-form position-relative" action="/search" method="GET">
+                <input class="form-control" id="SearchInput" type="search" name="q" placeholder="Search Projects" autocomplete="off">
+                <i class="bi bi-search search-icon"></i>
+            </form>
+        </div>
+            <div class="profile-menu">
+                <img src="../ASSETS/DefaultProfile.jpg" alt="Profile" class="profile-pic"/>
+                <ul class="dropdown">
+                  <li><a href="/Frontend/HTML/profile.html">Profile</a></li>
+                  <li><a href="/Frontend/HTML/settings.html">Settings</a></li>
+                  <li><a href="/Frontend/HTML/login.html">Logout</a></li>
+                </ul>
+              </div>
+        </div>
+    </nav>
+
+    <aside class="sidebar">
+      <ul>
+        <li><a href="/Frontend/HTML/dashboard.html"><i class="bi bi-house-door-fill"></i>   Dashboard</a></li>
+        <li><a href="/Frontend/HTML/projects.html"><i class="bi bi-kanban-fill"></i>    Projects</a></li>
+        <li><a href="/Frontend/HTML/Calendar.html"><i class="bi bi-calendar-fill"></i>   Calendar</a></li>
+        <li><a href="/Frontend/HTML/ResourceHub.html"><i class="bi bi-folder-fill"></i>   Resource Hub</a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="proposal-container">
+            
+            <div class="project-details-box">
+                <h1 class="project-title">Project Title Here</h1>
+
+                <div class="gallery-wrapper">
+                    <button class="gallery-btn left" onclick="changeSlide(-1)"><i class="bi bi-chevron-left"></i></button>
+                    
+                    <div class="gallery-view" id="galleryView"></div>
+                    
+                    <button class="gallery-btn right" onclick="changeSlide(1)"><i class="bi bi-chevron-right"></i></button>
+                </div>
+
+                <div class="project-text-content">
+                    <p>This project is a project to help the project is a project to help this project is a project to help the project is a project to the lp the project.</p>
+                    <ul>
+                        <li>The project</li>
+                        <li>Project</li>
+                        <li>This project</li>
+                    </ul>
+                    
+                    <div class="meta-data-grid">
+                        <div class="meta-item"><strong>Target Beneficiaries:</strong> 15,000</div>
+                        <div class="meta-item"><strong>Advocacy Area:</strong> Advocacy</div>
+                        <div class="meta-item"><strong>SDG Alignment:</strong> 12, 13, 15</div>
+                        <div class="meta-item"><strong>Timeline:</strong> 01-24-2005 - 12-13-2025</div>
+                        <div class="meta-item"><strong>Proposed Budget:</strong> 150,000</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="impact-section">
+                <div class="impact-header">
+                    <div class="impact-title">
+                        <i class="bi bi-speedometer2"></i> Impact Tracker
+                    </div>
+                    <div class="impact-subtitle">Last Update Period: January 2025</div>
+                </div>
+
+                <h3 class="section-label">Beneficiaries Served</h3>
+                
+                <div class="beneficiary-grid">
+                    <div class="b-label">Actual Beneficiaries Served</div>
+                    <div class="bar-container">
+                        <div class="bar actual" style="width: 90%;">15,000</div>
+                    </div>
+                    
+                    <div class="b-label">Target Beneficiaries</div>
+                    <div class="bar-container">
+                        <div class="bar target" style="width: 60%;">10,000</div>
+                    </div>
+                </div>
+
+                <div class="budget-cards">
+                    <div class="b-card">
+                        <div class="b-card-header">Project Amount (Budget)</div>
+                        <div class="b-card-body">150,000</div>
+                    </div>
+                    <div class="b-card">
+                        <div class="b-card-header">Expense to Date</div>
+                        <div class="b-card-body">98,000</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-section">
+                <h3 class="section-label" style="padding-left: 50px;">Progress Meter (%)</h3>
+                <div class="gauge-container">
+                    <div class="gauge">
+                        <div class="gauge-fill"></div>
+                        <div class="gauge-cover"></div> 
+                        <div class="gauge-labels">
+                            <span class="val-75">75%</span>
+                            <span class="val-25">25%</span>
+                        </div>
+                    </div>
+                    <div class="gauge-caption">75% Progress Reported</div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <form id="updateForm">
+                    <div class="form-group">
+                        <label>Advocacy Area</label>
+                        <input type="text" class="gray-input" value="Auto-filled Advocacy Area" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>SDG Alignment</label>
+                        <input type="text" class="gray-input" value="Auto-filled SDG Alignment" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Community Partner Location</label>
+                        <input type="text" class="white-input" placeholder="Enter location">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Narrative Update (Progress, Challenges, Lessons)</label>
+                        <textarea class="white-input" rows="8">This project is a project to help the project is a project to help this project is a project to help the project is a project to the lp the project:
+- The project
+- Project
+- This project</textarea>
+                    </div>
+
+                    <button type="button" class="generate-btn">Generate Progress Report</button>
+                </form>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="../JAVASCRIPT/communityProject.js"></script>
+</body>
+</html>
