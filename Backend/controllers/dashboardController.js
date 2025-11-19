@@ -15,7 +15,7 @@ export const userDashboard = async (req, res) => {
     }
 
     console.log("Session id (for debugging): ", req.session.id); // remove after testing
-    console.log("Session User Id:", req.session.partner_id_id); // remove after testing
+    console.log("Session User Id:", req.session.partner_id); // remove after testing
 
     // Fetch all projects (for Community Projects)
     const allProjectsData = await docClient.send(
