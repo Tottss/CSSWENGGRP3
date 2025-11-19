@@ -241,6 +241,13 @@ body {
   padding-top: 90px;
 }
 
+.content-wrapper { 
+  padding: 30px;   
+  width: 84%;
+  box-sizing: border-box;
+}
+
+
 
 /* =====================================================
    SEARCH BAR (shared across pages)

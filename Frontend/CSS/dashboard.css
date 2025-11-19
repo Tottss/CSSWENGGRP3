@@ -178,7 +178,8 @@
 
 .bi-newspaper,
 .bi-speedometer,
-.bi-file-arrow-down-fill{
+.bi-file-arrow-down-fill,
+.bi-pencil-fill{
   font-size: 5rem;
 }
 
@@ -186,8 +187,8 @@
   position: relative;
   justify-content: center;
   align-items: flex-start;
-  max-width: 53%;
-  margin-left: -40%;
+  max-width: 100%;
+  margin-left: 10%;
   max-height: calc(100vh - 90px - 40px);
 
   overflow-y: auto;

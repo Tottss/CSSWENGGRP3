@@ -1,0 +1,30 @@
+{{#> main}}
+<main class="admin-content">
+    <div class="viewproposals-container">
+        <div class="dashboard-form-box">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">My Proposals</h1>
+            </div>
+            <br/>
+            <div class="Proposal-list">
+                {{#each Proposals}}
+                   
+                        <div class="Proposal-box">
+                            <div class="Proposal-content">
+                            <div class="Proposal-desc-container">
+                                    
+                                    <div class="Proposal-date">
+                                        <div class="boldtext">{{ProjectName}}</div>{{Date}}
+                                    </div>
+                                </div>
+                                <button class="Prop-btn" data-id="ViewProposal" onclick="window.location.href='{{href}}'">View Proposal</button>
+                            </div>
+                        </div>
+                {{/each}}
+
+            </div>
+        </div>
+    </div>
+</main>
+{{/main}}
+    

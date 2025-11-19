@@ -14,16 +14,17 @@
     <link rel="stylesheet" href="/CSS/admindashboard.css">
     <link rel="stylesheet" href="/CSS/tracker.css">
     <link rel="stylesheet" href="/CSS/adminproposal.css">
+    <link rel="stylesheet" href="/CSS/viewproposal.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&display=swap"rel="stylesheet"/>
 </head>
 <body>
     
     {{> navbar}}
-    <div class="container">
+    
     {{> sidebar}}
-
-    {{{body}}}
+    <div class="content-wrapper">
+        {{{body}}}
     </div>
 </body>
 </html>

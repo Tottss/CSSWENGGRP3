@@ -1,0 +1,68 @@
+{{#> main}}
+<div class="profileview-container">
+    <div class="projects-form-box">
+        <h1 class="profile-title">{{projTitle}}</h1>
+
+        <form id="profileForm" enctype="multipart/form-data">
+
+            <!-- Project Title -->
+            <label for="orgName">Project Title</label>
+            {{projTitle}}
+
+            <!-- Project Summary -->
+            <label for="ProjSummary">Project Summary/Objectives</label>
+            {{projSummary}}
+
+            <!-- Target Beneficiaries -->
+            <label for="TargetBeneficiaries">Target Beneficiaries</label>
+            {{targetValue}}
+
+            <!-- Advocacy Area -->
+            <label for="AdvocacyArea">Advocacy Area</label>
+            {{advoacyArea}}
+
+            <!-- SDG Alignment -->
+            <label for="SDGAlignment">SDG Alignment</label>
+            {{SDG}}
+
+            <!-- Timeline -->
+            <label for="timelineStart">Start Date:</label>
+            {{startDate}}
+
+            <label for="timelineEnd">End Date:</label>
+            {{endDate}}
+
+            <!-- Proposed Budget -->
+            <label for="ProposedBudget">Proposed Budget</label>
+            {{proposedBudget}}
+
+            <!-- Detailed Proposal -->
+            <label for="Proposal">Detailed Proposal</label>
+            {{detailedProposal}}
+
+        </form>
+
+        <!-- Comments Section -->
+        <div class="comments-section">
+            <h3>Comments</h3>
+
+            <div class="comments-box">
+                {{#each comments}}
+                    <div class="comment-item">
+                        <div class="comment-meta">
+                            <span class="comment-author">Admin</span>
+                            <span class="comment-date">{{this.date}}</span>
+                        </div>
+                        <div class="comment-text">{{this.text}}</div>
+                    </div>
+                {{/each}}
+
+                {{#unless comments.length}}
+                    <div class="no-comments">No comments yet.</div>
+                {{/unless}}
+            </div>
+        </div>
+
+    </div>
+</div>
+{{/main}}
