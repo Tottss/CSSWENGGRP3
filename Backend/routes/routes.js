@@ -4,6 +4,7 @@ import proposalRouter from "./proposal.js";
 import impactTrackerRouter from "./impactTracker.js";
 import adminProposalRouter from "./admin/adminproposal.js";
 import { getUserProjects } from "../services/projects.js";
+import { changePassword } from "../services/changepassword.js";
 
 const router = express.Router();
 
@@ -104,6 +105,8 @@ router.get("/adminapplication", (req, res) => {
 router.get("/editpassword", (req, res) => {
   res.render("editpassword", {});
 });
+router.post("/editpassword", changePassword);
+
 router.use("/adminproposal", adminProposalRouter);
 
 // impact tracker routes
