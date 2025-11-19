@@ -1,6 +1,5 @@
 import express from "express";
 import { userLogIn } from "../services/user.js";
-import applyRouter from "./apply.js";
 import proposalRouter from "./proposal.js";
 import impactTrackerRouter from "./impactTracker.js";
 import adminProposalRouter from "./admin/adminproposal.js";
@@ -14,7 +13,10 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 // controllers
 import { showLogin, logoutUser } from "../controllers/authController.js";
-import { showApplyPage } from "../controllers/applyController.js";
+import {
+  processApplication,
+  showApplyPage,
+} from "../controllers/applyController.js";
 import {
   showAdminDashboard,
   showAdminView,
@@ -47,8 +49,8 @@ router.get("/", showLogin);
 router.get("/login", showLogin);
 
 // apply
-router.use("/request", applyRouter);
-router.get("/apply", showApplyPage);
+router.get("/partnerapplication", showApplyPage);
+router.post("/processapplication", upload.single("mou"), processApplication);
 
 // logout route
 router.get("/logout", logoutUser);

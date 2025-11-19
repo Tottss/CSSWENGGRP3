@@ -30,7 +30,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Collect form data
     const orgName = document.getElementById("orgName").value.trim();
     const contactName = document.getElementById("contactName").value.trim();
-    const contactPosition = document.getElementById("contactPosition").value.trim();
+    const contactPosition = document
+      .getElementById("contactPosition")
+      .value.trim();
     const contactNumber = document.getElementById("contactNumber").value.trim();
     const email = document.getElementById("email").value.trim();
     const fullAddress = document.getElementById("fullAddress").value.trim();
@@ -66,15 +68,9 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // --- SAMPLE SUCCESS (for testing) ---
-    if (orgName === "Test Org" && contactName === "John Doe") {
-      showAlert("✅ Application successful! We will contact you soon.", "success");
-      applyForm.reset();
-      return;
-    }
-
-    // Backend for sending the application
+    // Backend request
     showAlert("Sending Application...", "success");
+
     const formData = new FormData();
     formData.append("orgName", orgName);
     formData.append("contactName", contactName);
@@ -89,17 +85,23 @@ document.addEventListener("DOMContentLoaded", () => {
     formData.append("advocacy", advocacy);
     formData.append("mou", mouFile);
 
-    fetch("http://127.0.0.1:3000/request/apply", {
+    // Must match backend route:
+    // router.post("/processapplication", upload.single("mou"), processApplication);
+    fetch("/processapplication", {
       method: "POST",
-      body: formData
+      body: formData,
     })
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
-          showAlert("Application submitted successfully! We'll email you soon.", "success");
+          showAlert("Application submitted successfully!", "success");
           applyForm.reset();
         } else {
-          showAlert("Failed to submit application. Please try again later.", "error");
+          showAlert(
+            data.error ||
+              "Failed to submit application. Please try again later.",
+            "error"
+          );
         }
       })
       .catch((err) => {
