@@ -18,10 +18,7 @@ import {
   processApplication,
   showApplyPage,
 } from "../controllers/applyController.js";
-import {
-  showAdminDashboard,
-  showAdminView,
-} from "../controllers/adminController.js";
+import { showAdminDashboard } from "../controllers/adminController.js";
 import {
   showEditProfile,
   showViewProfile,
@@ -33,6 +30,11 @@ import {
 } from "../controllers/projectController.js";
 import { userDashboard } from "../controllers/dashboardController.js";
 import { showProposal } from "../controllers/proposalController.js";
+import {
+  approveApplication,
+  declineApplication,
+  showApplication,
+} from "../controllers/applicationController.js";
 
 /*
   Note: Only routes should be here
@@ -43,6 +45,15 @@ import { showProposal } from "../controllers/proposalController.js";
 router.get("/test", function (req, res) {
   res.status(200).json("Hello, world!");
 });
+
+// application route
+// show, approve and decline application
+router.get("/adminapplication/:applicant_id", showApplication);
+router.post("/adminapplication/:applicant_id/approve", approveApplication);
+router.post("/adminapplication/:applicant_id/decline", declineApplication);
+
+// admin
+router.get("/admindashboard", showAdminDashboard);
 
 // implement other routes here
 router.post("/user/login", userLogIn);
@@ -55,9 +66,6 @@ router.post("/processapplication", upload.single("mou"), processApplication);
 
 // logout route
 router.get("/logout", logoutUser);
-
-//admin view route
-router.get("/adminView", showAdminView);
 
 //dashboard route
 router.get("/dashboard", userDashboard);
@@ -77,8 +85,6 @@ router.get("/editprofile", showEditProfile);
 
 // new
 router.post("/editprofile/save", upload.single("profileImage"), updateProfile);
-
-router.get("/admindashboard", showAdminDashboard);
 
 // new
 router.get("/profileview", showViewProfile);
