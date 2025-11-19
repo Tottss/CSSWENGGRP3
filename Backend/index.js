@@ -8,7 +8,7 @@ import session from "express-session";
 import { fileURLToPath } from "url";
 
 // for testing
-import { DynamoDBClient, ListTablesCommand } from "@aws-sdk/client-dynamodb";
+import { testDynamo } from "./services/testdynamo.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,6 +18,7 @@ const app = express();
 const PORT = process.env.PORT;
 
 // change this one later with the deployment url
+// use .env for allowed origins
 app.use(
   cors({
     origin: ["http://127.0.0.1:3000", "http://localhost:3000"],
@@ -61,20 +62,7 @@ app.use(
 // app.options("*", cors());
 app.use("/", router);
 
-// for testing DynamoDB connection
-async function testDynamo() {
-  try {
-    const client = new DynamoDBClient({
-      region: process.env.AWS_REGION,
-    });
-    const data = await client.send(new ListTablesCommand({}));
-    console.log(process.env.AWS_REGION);
-    console.log("Connected to DynamoDB. Tables:", data.TableNames);
-  } catch (err) {
-    console.error("DynamoDB connection failed:", err);
-  }
-}
-
+// log tables for testing
 testDynamo();
 
 app.listen(PORT, function () {
