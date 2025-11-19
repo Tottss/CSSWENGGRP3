@@ -1,5 +1,5 @@
 import express from "express";
-import { userLogIn, createTestUser } from "../services/user.js";
+import { userLogIn } from "../services/user.js";
 import applyRouter from "./apply.js";
 import proposalRouter from "./proposal.js";
 import impactTrackerRouter from "./impactTracker.js";
@@ -45,9 +45,6 @@ router.get("/test", function (req, res) {
 router.post("/user/login", userLogIn);
 router.get("/", showLogin);
 router.get("/login", showLogin);
-
-// test user creation route
-router.post("/user/createTestUser", createTestUser);
 
 // apply
 router.use("/request", applyRouter);
@@ -97,16 +94,14 @@ router.get("/adminapplication", (req, res) => {
     province: "Quezon City",
     municipality: "asdsd",
     barangay: "Igiveup",
-    partnertype:"Church",
-    advocacy:"poverty",
+    partnertype: "Church",
+    advocacy: "poverty",
   });
 });
 
-router.get("/editpassword", (req, res) =>{
-  res.render("editpassword", {
-    
-  })
-})
+router.get("/editpassword", (req, res) => {
+  res.render("editpassword", {});
+});
 router.use("/adminproposal", adminProposalRouter);
 
 // impact tracker routes

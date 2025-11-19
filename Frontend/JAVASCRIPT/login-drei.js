@@ -21,7 +21,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 
     if (response.ok) {
       if (data.user.is_admin) {
-        window.location.href = "/adminView";
+        window.location.href = "/admindashboard";
       } else {
         window.location.href = "/dashboard";
       }

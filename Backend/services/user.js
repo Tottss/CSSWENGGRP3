@@ -8,78 +8,11 @@ import {
   ScanCommand,
 } from "@aws-sdk/lib-dynamodb";
 
-const USERS_TABLE = "Users";
-// add other tables here
-
-// Create a test user (POST /user/createTestUser)
-export const createTestUser = asyncHandler(async (req, res) => {
-  const { user_name, user_email, user_password, is_admin } = req.body;
-
-  if (!user_name || !user_email || !user_password) {
-    res.status(400).json({ message: "All fields are required." });
-    throw new Error("Missing fields");
-  }
-
-  // Check if email already exists
-  const existingUser = await docClient.send(
-    new GetCommand({
-      TableName: USERS_TABLE,
-      Key: { user_email },
-    })
-  );
-
-  if (existingUser.Item) {
-    res.status(400).json({ message: "Email is already registered." });
-    throw new Error("Duplicate email.");
-  }
-
-  // Optional: Check if username already exists (requires a Scan)
-  const usernameCheck = await docClient.send(
-    new ScanCommand({
-      TableName: USERS_TABLE,
-      FilterExpression: "#un = :uname",
-      ExpressionAttributeNames: { "#un": "user_name" },
-      ExpressionAttributeValues: { ":uname": user_name },
-    })
-  );
-
-  if (usernameCheck.Count > 0) {
-    res.status(400).json({ message: "Username is already in use." });
-    throw new Error("Duplicate username.");
-  }
-
-  // Hash password
-  const hashed_password = await bcrypt.hash(user_password, 12);
-
-  // Create new user
-  const newUser = {
-    user_email,
-    user_name,
-    hashed_password,
-    is_admin: !!is_admin,
-    user_id: Date.now(), // simple unique ID
-  };
-
-  await docClient.send(
-    new PutCommand({
-      TableName: USERS_TABLE,
-      Item: newUser,
-    })
-  );
-
-  res.status(201).json({
-    message: "Test user creation successful",
-    user: {
-      user_id: newUser.user_id,
-      user_name: newUser.user_name,
-      user_email: newUser.user_email,
-      is_admin: newUser.is_admin,
-    },
-  });
-});
+// change USERS_TABLE from 'Users' to 'Login Credentials'
+const CREDENTIALS_TABLE = "LoginCredentials";
 
 export const userLogIn = asyncHandler(async (req, res) => {
-  console.log("Received login request:", req.body);
+  console.log("Received login request: ", req.body); // remove before deployment
 
   const { user_email, user_password } = req.body;
 
@@ -92,7 +25,7 @@ export const userLogIn = asyncHandler(async (req, res) => {
   // Fetch user by email
   const result = await docClient.send(
     new GetCommand({
-      TableName: USERS_TABLE,
+      TableName: CREDENTIALS_TABLE,
       Key: { user_email },
     })
   );
@@ -113,10 +46,9 @@ export const userLogIn = asyncHandler(async (req, res) => {
     }
 
     // Set session data
-    req.session.user_id = user.user_id;
+    req.session.user_id = user.partner_id; // previously user.user_id
     req.session.is_admin = user.is_admin;
     req.session.user_email = user.user_email;
-    req.session.user_name = user.user_name;
 
     // Save session before sending response
     req.session.save((err) => {
@@ -134,9 +66,8 @@ export const userLogIn = asyncHandler(async (req, res) => {
       res.status(200).json({
         message: "Login successful",
         user: {
-          user_id: user.user_id,
+          user_id: user.user_partner_id,
           email: user.user_email,
-          username: user.user_name,
           is_admin: user.is_admin,
         },
       });
