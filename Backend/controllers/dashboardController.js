@@ -8,10 +8,14 @@ import { docClient } from "../config/dynamodb.js";
 
 export const userDashboard = async (req, res) => {
   try {
-    const userId = req.session.user_id || 2; // temporary hardcode until sessions are added
+    const userId = req.session.partner_id;
+
+    if (!userId) {
+      throw alert("UserId uninitialized");
+    }
 
     console.log("Session id (for debugging): ", req.session.id); // remove after testing
-    console.log("Session User Id:", req.session.user_id); // remove after testing
+    console.log("Session User Id:", req.session.partner_id_id); // remove after testing
 
     // Fetch all projects (for Community Projects)
     const allProjectsData = await docClient.send(

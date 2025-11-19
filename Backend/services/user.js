@@ -46,7 +46,7 @@ export const userLogIn = asyncHandler(async (req, res) => {
     }
 
     // Set session data
-    req.session.user_id = user.partner_id; // previously user.user_id
+    req.session.partner_id = user.partner_id;
     req.session.is_admin = user.is_admin;
     req.session.user_email = user.user_email;
 
