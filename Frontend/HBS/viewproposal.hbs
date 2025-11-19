@@ -48,17 +48,17 @@
 
             <div class="comments-box">
                 {{#each comments}}
-                    <div class="comment-item">
-                        <div class="comment-meta">
-                            <span class="comment-author">Admin</span>
-                            <span class="comment-date">{{this.date}}</span>
-                        </div>
-                        <div class="comment-text">{{this.text}}</div>
+                <div class="comment-item">
+                    <div class="comment-meta">
+                        <span class="comment-author">{{this.admin}}</span>
+                        <span class="comment-date">{{this.timestamp}}</span>
                     </div>
+                    <div class="comment-text">{{this.message}}</div>
+                </div>
                 {{/each}}
-
+                
                 {{#unless comments.length}}
-                    <div class="no-comments">No comments yet.</div>
+                <div class="no-comments">No comments yet.</div>
                 {{/unless}}
             </div>
         </div>
