@@ -4,7 +4,7 @@ import { GetCommand, PutCommand, DeleteCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
 import crypto from "crypto"; // for random password
 import bcrypt from "bcrypt";
-import nodemailer from "nodemailer";
+import { sendEmail } from "../services/applicationmail.js";
 
 const APPLICANTS_TABLE = "Applicants";
 
@@ -139,6 +139,12 @@ export const approveApplication = async (req, res) => {
       `Login details sent to ${a.partner_email}: password=${generatedPassword}`
     );
 
+    await sendEmail(
+      a.partner_email,
+      "Application Approved",
+      `Your application has been approved.\n\nHere are your login details:\nEmail: ${a.partner_email}\nPassword: ${generatedPassword}`
+    );
+
     // Redirect to admin dashboard
     return res.redirect("/adminDashboard");
   } catch (err) {
@@ -179,6 +185,12 @@ export const declineApplication = async (req, res) => {
     // (Optional) send rejection email
     console.log(
       `Rejection email sent to ${a.partner_email}: "Your application has been declined."`
+    );
+
+    await sendEmail(
+      a.partner_email,
+      "Application Declined",
+      "We regret to inform you that your application has been declined."
     );
 
     // return res.status(200).send("Application declined and applicant removed");

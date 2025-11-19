@@ -1,5 +1,6 @@
 import { PutCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
+import { sendEmail } from "../services/applicationmail.js";
 
 const APPLICANTS_TABLE = "Applicants";
 
@@ -49,6 +50,12 @@ export const processApplication = async (req, res) => {
         TableName: APPLICANTS_TABLE,
         Item: item,
       })
+    );
+
+    await sendEmail(
+      req.body.email,
+      "Application Sent",
+      `Your application is now under review. Kindly wait for another email regarding your application status.`
     );
 
     res.status(200).json({
