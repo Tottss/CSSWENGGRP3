@@ -6,9 +6,10 @@ import crypto from "crypto"; // for random password
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 
+const APPLICANTS_TABLE = "Applicants";
+
 export const showApplication = async (req, res) => {
   const applicantId = Number(req.params.applicant_id);
-  const APPLICANTS_TABLE = "Applicants";
 
   console.log("Applicant ID; ", applicantId); // remove this after all is working
 
@@ -53,7 +54,7 @@ export const showApplication = async (req, res) => {
   }
 };
 
-// route /application/approve
+// for testing
 export const approveApplication = async (req, res) => {
   const applicantId = Number(req.params.applicant_id);
 
@@ -113,16 +114,16 @@ export const approveApplication = async (req, res) => {
 
     // Store records in DynamoDB
     await docClient.send(
-      new PutCommand({ TableName: LOGIN_TABLE, Item: loginData })
+      new PutCommand({ TableName: "LoginCredentials", Item: loginData })
     );
     await docClient.send(
-      new PutCommand({ TableName: PARTNER_TABLE, Item: partnerData })
+      new PutCommand({ TableName: "PartnerOrg", Item: partnerData })
     );
     await docClient.send(
-      new PutCommand({ TableName: CONTACT_TABLE, Item: contactData })
+      new PutCommand({ TableName: "ContactPerson", Item: contactData })
     );
     await docClient.send(
-      new PutCommand({ TableName: LOCATION_TABLE, Item: locationData })
+      new PutCommand({ TableName: "Location", Item: locationData })
     );
 
     // Delete applicant afterwards
@@ -138,14 +139,15 @@ export const approveApplication = async (req, res) => {
       `Login details sent to ${a.partner_email}: password=${generatedPassword}`
     );
 
-    return res.status(200).send("Application approved successfully");
+    // Redirect to admin dashboard
+    return res.redirect("/adminDashboard");
   } catch (err) {
     console.error("Error approving application:", err);
     return res.status(500).send("Server Error");
   }
 };
 
-// route /application/decline/
+// already working
 export const declineApplication = async (req, res) => {
   const applicantId = Number(req.params.applicant_id);
 

@@ -33,9 +33,19 @@ export const userDashboard = async (req, res) => {
     const communityProjects = allProjectsData.Items || [];
     const yourProjects = yourProjectsData.Items || [];
 
+    const partnerData = await docClient.send(
+      new ScanCommand({
+        TableName: "PartnerOrg",
+        FilterExpression: "partner_id = :uid",
+        ExpressionAttributeValues: { ":uid": Number(userId) },
+      })
+    );
+
+    const data = partnerData.Items;
+
     res.render("dashboard", {
       title: "Dashboard",
-      PartnerOrg: req.session.user_name || "Partner Org Name",
+      PartnerOrg: data[0].partner_name || "Partner Org Name",
       nNotif: 1,
       showTools: true,
 
