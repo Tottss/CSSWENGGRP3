@@ -40,6 +40,7 @@ app.set("views", path.join(__dirname, "../Frontend/HBS"));
 app.use(express.static(path.join(__dirname, "../Frontend")));
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // sessions
 // move secret to .env before deployment

@@ -74,6 +74,7 @@ router.get("/:id", async (req, res) => {
             endDate: p.timelineEnd,
             totalBudget: p.ProposedBudget,
             Proposalpdf: p.ProposalFile,
+            comments: p.comments || [],
         });
     } catch (err) {
         console.error("Fetch error:", err);
@@ -116,14 +117,15 @@ router.post("/:id/comment", async (req, res) => {
             new UpdateCommand({
                 TableName: TABLE_NAME,
                 Key: { proposal_id: req.params.id },
-                UpdateExpression: "SET comments = list_append(if_not_exists(comments, :emptyList), :newComment)",
+                UpdateExpression:
+                    "SET comments = list_append(if_not_exists(comments, :emptyList), :newComment)",
                 ExpressionAttributeValues: {
                     ":newComment": [
                         {
-                            admin: req.session.user_name,
+                            admin: req.session.user_name || "Admin",
                             message: comment,
                             timestamp: new Date().toISOString(),
-                        },
+                        }
                     ],
                     ":emptyList": [],
                 },

@@ -1,5 +1,5 @@
 import express from "express";
-import { ScanCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import { ScanCommand, UpdateCommand, GetCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
 import multer from "multer";
 import s3Client from "../config/s3Client.js";
@@ -28,14 +28,12 @@ router.get("/tracker", async (req, res) => {
     let trackerData = {};
     if (project_id) {
       const trackerResp = await docClient.send(
-        new ScanCommand({
+        new GetCommand({
           TableName: "ImpactTracker",
-          FilterExpression: "#pid = :pid",
-          ExpressionAttributeNames: { "#pid": "project_id" },
-          ExpressionAttributeValues: { ":pid": Number(project_id) },
+          Key: { project_id: Number(project_id) },
         })
       );
-      trackerData = trackerResp.Items?.[0] || {};
+      trackerData = trackerResp.Item || {};
     }
 
     // calculate progress percent if budget and expenses are present
@@ -63,9 +61,9 @@ router.get("/tracker", async (req, res) => {
         narrative: trackerData.narrative || "",
         uploads: trackerData.uploads || [],
         lastUpdate: trackerData.lastUpdate || "N/A",
-        advocacyArea: trackerData.advocacyArea || "",
-        sdgAlignment: trackerData.sdgAlignment || "",
       },
+      advocacyArea: trackerData.advocacyArea || "",
+      sdgAlignment: trackerData.sdgAlignment || "",
       projectImage: null,
       error: null
     });

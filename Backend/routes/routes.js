@@ -1,10 +1,10 @@
 import express from "express";
-import { userLogIn, createTestUser } from "../services/user.js";
-import applyRouter from "./apply.js";
+import { userLogIn } from "../services/user.js";
 import proposalRouter from "./proposal.js";
 import impactTrackerRouter from "./impactTracker.js";
 import adminProposalRouter from "./admin/adminproposal.js";
 import { getUserProjects } from "../services/projects.js";
+import { changePassword } from "../services/changepassword.js";
 
 const router = express.Router();
 
@@ -14,11 +14,11 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 // controllers
 import { showLogin, logoutUser } from "../controllers/authController.js";
-import { showApplyPage } from "../controllers/applyController.js";
 import {
-  showAdminDashboard,
-  showAdminView,
-} from "../controllers/adminController.js";
+  processApplication,
+  showApplyPage,
+} from "../controllers/applyController.js";
+import { showAdminDashboard } from "../controllers/adminController.js";
 import {
   showEditProfile,
   showViewProfile,
@@ -30,6 +30,11 @@ import {
 } from "../controllers/projectController.js";
 import { userDashboard } from "../controllers/dashboardController.js";
 import { showProposal } from "../controllers/proposalController.js";
+import {
+  approveApplication,
+  declineApplication,
+  showApplication,
+} from "../controllers/applicationController.js";
 
 /*
   Note: Only routes should be here
@@ -41,23 +46,26 @@ router.get("/test", function (req, res) {
   res.status(200).json("Hello, world!");
 });
 
+// application route
+// show, approve and decline application
+router.get("/adminapplication/:applicant_id", showApplication);
+router.post("/adminapplication/:applicant_id/approve", approveApplication);
+router.post("/adminapplication/:applicant_id/decline", declineApplication);
+
+// admin
+router.get("/admindashboard", showAdminDashboard);
+
 // implement other routes here
 router.post("/user/login", userLogIn);
 router.get("/", showLogin);
 router.get("/login", showLogin);
 
-// test user creation route
-router.post("/user/createTestUser", createTestUser);
-
 // apply
-router.use("/request", applyRouter);
-router.get("/apply", showApplyPage);
+router.get("/partnerapplication", showApplyPage);
+router.post("/processapplication", upload.single("mou"), processApplication);
 
 // logout route
 router.get("/logout", logoutUser);
-
-//admin view route
-router.get("/adminView", showAdminView);
 
 //dashboard route
 router.get("/dashboard", userDashboard);
@@ -78,8 +86,6 @@ router.get("/editprofile", showEditProfile);
 // new
 router.post("/editprofile/save", upload.single("profileImage"), updateProfile);
 
-router.get("/admindashboard", showAdminDashboard);
-
 // new
 router.get("/profileview", showViewProfile);
 
@@ -97,16 +103,16 @@ router.get("/adminapplication", (req, res) => {
     province: "Quezon City",
     municipality: "asdsd",
     barangay: "Igiveup",
-    partnertype:"Church",
-    advocacy:"poverty",
+    partnertype: "Church",
+    advocacy: "poverty",
   });
 });
 
-router.get("/editpassword", (req, res) =>{
-  res.render("editpassword", {
-    
-  })
-})
+router.get("/editpassword", (req, res) => {
+  res.render("editpassword", {});
+});
+router.post("/editpassword", changePassword);
+
 
 router.get("/viewproposal-list", (req, res) =>{
   res.render("viewproposal-list", {

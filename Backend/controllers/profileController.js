@@ -15,7 +15,7 @@ export const showEditProfile = async (req, res) => {
 };
 
 export const showViewProfile = async (req, res) => {
-  const partner_id = req.session.user_id || 2;
+  const partner_id = req.session.partner_id;
 
   if (!partner_id) return res.redirect("/login"); // avoid fallback in production
 
@@ -77,7 +77,7 @@ export const updateProfile = async (req, res) => {
     const user = req.session.user;
     // if (!user) return res.status(401).send("Unauthorized");
 
-    const partner_id = user.partner_id || 2;
+    const partner_id = req.session.partner_id;
 
     const {
       orgName,

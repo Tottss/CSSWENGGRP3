@@ -39,4 +39,4 @@ npm run dev
   TEST PORT: 3000
 ```
 
-3. `download .env file and add to /Backend`:
+3. `copy contents from our discord server and paste them in /Backend/.env`:
