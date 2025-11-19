@@ -1,13 +1,34 @@
-export const showAdminView = async (req, res) => {
-  res.render("adminView", {
-    title: "Admin View",
-  });
-};
+import { ScanCommand } from "@aws-sdk/lib-dynamodb";
+import { docClient } from "../config/dynamodb.js";
 
 export const showAdminDashboard = async (req, res) => {
+  const APPLICANTS_TABLE = "Applicants";
+
+  let applicants = [];
+
+  try {
+    // Fetch all applicants
+    const result = await docClient.send(
+      new ScanCommand({
+        TableName: APPLICANTS_TABLE,
+      })
+    );
+
+    // Map to the format your Handlebars template expects
+    applicants = result.Items.map((item) => ({
+      PartnerOrg: item.partner_name,
+      applicant_id: item.applicant_id,
+    }));
+    console.log("applicants: ", applicants);
+  } catch (err) {
+    console.error("Error fetching applicants:", err);
+  }
+
+  // Render admin dashboard
   res.render("admindashboard", {
     title: "Admin Dashboard",
-    PartnerOrg: req.session.user_name || "Partner Org Name",
+    PartnerOrg: req.session.partner_name || "Partner Org Name",
+
     Proposals: [
       {
         Submission: true,
@@ -53,5 +74,8 @@ export const showAdminDashboard = async (req, res) => {
         PartnerOrg: "AORG",
       },
     ],
+
+    // Dynamic from DynamoDB
+    Application: applicants,
   });
 };

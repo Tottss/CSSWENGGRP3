@@ -56,16 +56,19 @@
             </div>
             <div class="Application-list">
                 {{#each Application}}
-                        <div class="Application-box">
-                            <div class="Proposal-content">
-                                <div class="Proposal-desc-container">
-                                    <div class="Proposal-desc">
-                                        {{PartnerOrg}}
-                                    </div>
-                                </div>
-                                <button class="Prop-btn" data-id="ViewProposal" onclick="window.location.href='{{href}}'">View Application</button>
+                <div class="Application-box">
+                    <div class="Proposal-content">
+                        <div class="Proposal-desc-container">
+                            <div class="Proposal-desc">
+                                {{PartnerOrg}}
                             </div>
                         </div>
+                        <button class="Prop-btn"
+                                onclick="window.location.href='/adminapplication/{{applicant_id}}'">
+                            View Application
+                        </button>
+                    </div>
+                </div>
                 {{/each}}
             </div>
         </div>
