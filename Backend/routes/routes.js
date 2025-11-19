@@ -93,50 +93,34 @@ router.get("/profileview", showViewProfile);
 // new
 router.get("/viewProject", showViewProject);
 
-router.get("/adminapplication", (req, res) => {
-  res.render("adminapplication", {
-    orgname: "Aaaa",
-    contactname: "john",
-    contactposition: "Leader",
-    contactnumber: "091284834",
-    email: "jlawliong@gmail.com",
-    address: "Quezon city",
-    province: "Quezon City",
-    municipality: "asdsd",
-    barangay: "Igiveup",
-    partnertype: "Church",
-    advocacy: "poverty",
-  });
-});
-
 //NEW - Hardcoded data only
-router.get('/communityproject', (req, res) => {
-    res.render('communityProject', {
-        projtitle: "Project Title Here",
-        projectID: 1,
-        orgName: "Bakhita Cannossa",
-        ProjectDesc: "This is a test description.",
-        projimage: "/ASSETS/project-photo1.jpg",
-        Advocacyarea: "Education",
-        SDG_alignment: "Quality Education",
-        communitylocation: "Laguna, Philippines",
-        nBeneficiaries: 30000,
-        Timeline: "Jan 2025 - March 2026",
-        Budget: "₱100,000",
-        Proposal: "/ASSETS/project.pdf",
-        lastUpdate: "2025-02-10",
-        actualValue: 20000,
-        targetValue: 30000,
-        totalBudget: 50000,
-        expenses: 20000,
-        progress: 40,
-        narrativeUpdate: "This is just a test narrative.",
-        galleryImages: [
-            "/ASSETS/project-photo1.jpg",
-            "/ASSETS/project-photo2.jpg",
-            "/ASSETS/project-photo1.jpg"
-        ],
-    });
+router.get("/communityproject", (req, res) => {
+  res.render("communityProject", {
+    projtitle: "Project Title Here",
+    projectID: 1,
+    orgName: "Bakhita Cannossa",
+    ProjectDesc: "This is a test description.",
+    projimage: "/ASSETS/project-photo1.jpg",
+    Advocacyarea: "Education",
+    SDG_alignment: "Quality Education",
+    communitylocation: "Laguna, Philippines",
+    nBeneficiaries: 30000,
+    Timeline: "Jan 2025 - March 2026",
+    Budget: "₱100,000",
+    Proposal: "/ASSETS/project.pdf",
+    lastUpdate: "2025-02-10",
+    actualValue: 20000,
+    targetValue: 30000,
+    totalBudget: 50000,
+    expenses: 20000,
+    progress: 40,
+    narrativeUpdate: "This is just a test narrative.",
+    galleryImages: [
+      "/ASSETS/project-photo1.jpg",
+      "/ASSETS/project-photo2.jpg",
+      "/ASSETS/project-photo1.jpg",
+    ],
+  });
 });
 
 router.get("/editpassword", (req, res) => {

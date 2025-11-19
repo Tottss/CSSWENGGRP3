@@ -1,22 +1,18 @@
 import asyncHandler from "express-async-handler";
 import bcrypt from "bcrypt";
 import { docClient } from "../config/dynamodb.js";
-import {
-  GetCommand,
-  PutCommand,
-  QueryCommand,
-  ScanCommand,
-} from "@aws-sdk/lib-dynamodb";
+import { GetCommand } from "@aws-sdk/lib-dynamodb";
 
-// change USERS_TABLE from 'Users' to 'Login Credentials'
+// put table string in .env later
 const CREDENTIALS_TABLE = "LoginCredentials";
 
 export const userLogIn = asyncHandler(async (req, res) => {
-  console.log("Received login request: ", req.body); // remove before deployment
+  // remove before deployment
+  console.log("Received login request: ", req.body);
 
   const { user_email, user_password } = req.body;
 
-  // Validate inputs
+  // validate inputs
   if (!user_email || !user_password) {
     res.status(400).json({ message: "All fields must be filled." });
     throw new Error("Missing login fields");
@@ -59,10 +55,12 @@ export const userLogIn = asyncHandler(async (req, res) => {
         console.log("Session saved successfully.");
       }
 
+      // remove before deployment
       console.log("New session:", req.session);
       console.log("New sessionID:", req.sessionID);
 
       // send response (inside save callback!)
+      // remove sensitive info from user object before sending
       res.status(200).json({
         message: "Login successful",
         user: {
