@@ -115,7 +115,115 @@ router.post("/editpassword", changePassword);
 
 router.use("/adminproposal", adminProposalRouter);
 
+// new - Hardcoded data only
+router.get('/viewProject', (req, res) => {
+    res.render('viewProject', {
+        projtitle: "Test Project",
+        orgName: "Bakhita Cannossa",
+        ProjectDesc: "This is a test description.",
+        projimage: "/ASSETS/project-photo1.jpg",
+        Advocacyarea: "Education",
+        SDG_alignment: "Quality Education",
+        communitylocation: "Laguna, Philippines",
+        nBeneficiaries: 30000,
+        Timeline: "Jan 2025 - March 2026",
+        Budget: "₱100,000",
+        Proposal: "/ASSETS/project.pdf",
+        lastUpdate: "2025-02-10",
+        actualValue: 20000,
+        targetValue: 30000,
+        totalBudget: 50000,
+        expenses: 20000,
+        progress: 40,
+        narrativeUpdate: "This is just a test narrative.",
+        AdditionalImages: [
+            "/ASSETS/project-photo1.jpg",
+            "/ASSETS/project-photo2.jpg",
+            "/ASSETS/project-photo1.jpg"
+        ]
+    });
+});
+
+// new - Hardcoded data only
+router.get('/myproject', (req, res) => {
+    res.render('myproject', {
+        projtitle: "Project Title Here",
+        projectID: 1,
+        orgName: "Bakhita Cannossa",
+        ProjectDesc: "This is a test description.",
+        projimage: "/ASSETS/project-photo1.jpg",
+        Advocacyarea: "Education",
+        SDG_alignment: "Quality Education",
+        communitylocation: "Laguna, Philippines",
+        nBeneficiaries: 30000,
+        Timeline: "Jan 2025 - March 2026",
+        Budget: "₱100,000",
+        Proposal: "/ASSETS/project.pdf",
+        lastUpdate: "2025-02-10",
+        actualValue: 20000,
+        targetValue: 30000,
+        totalBudget: 50000,
+        expenses: 20000,
+        progress: 40,
+        narrativeUpdate: "This is just a test narrative.",
+        AdditionalImages: [
+            "/ASSETS/project-photo1.jpg",
+            "/ASSETS/project-photo2.jpg",
+            "/ASSETS/project-photo1.jpg"
+        ]
+    });
+});
+
+// NEW
+router.get('/editproject', (req, res) => {
+    res.render('editproject', {
+        projtitle: "Project Title Here",
+        projectID: 1,
+        orgName: "Bakhita Cannossa",
+        ProjectDesc: "This is a test description.",
+        projimage: "/ASSETS/project-photo1.jpg",
+        Advocacyarea: "Education",
+        SDG_alignment: "Quality Education",
+        communitylocation: "Laguna, Philippines",
+        nBeneficiaries: 30000,
+        Timeline: "Jan 2025 - March 2026",
+        Budget: "₱100,000",
+        Proposal: "/ASSETS/project.pdf",
+        lastUpdate: "2025-02-10",
+        actualValue: 20000,
+        targetValue: 30000,
+        totalBudget: 50000,
+        expenses: 20000,
+        progress: 40,
+        narrativeUpdate: "This is just a test narrative.",
+        AdditionalImages: [
+            "/ASSETS/project-photo1.jpg",
+            "/ASSETS/project-photo2.jpg",
+            "/ASSETS/project-photo1.jpg"
+        ]
+    });
+});
+
+//New - Account Creation Route
+router.get("/accountCreation", (req, res) => {
+  res.render("accountcreation", {
+    orgname: "Sample Org Name",
+    contactName: "John Dave",
+    contactPosition: "Director",
+    contactNumber: "09123456789",
+    email: "johndave@gmail.com",
+    province: "Quezon City",
+    municipality: "Quezon City",
+    barangay: "Bagong Silang",
+    partnerType: "School",
+    advocacy: "Zero Hunger",
+    temporaryPassword: "hello123",
+  });
+});
+
 // impact tracker routes
 router.use("/", impactTrackerRouter);
+
+
 
 export default router;
