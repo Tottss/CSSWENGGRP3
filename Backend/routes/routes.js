@@ -115,53 +115,6 @@ router.get("/editpassword", (req, res) => {
 router.post("/editpassword", changePassword);
 
 router.use("/", viewProposalsRouter);
-// router.get("/viewproposal-list", (req, res) =>{
-//   res.render("viewproposal-list", {
-//     Proposals: [{
-//       ProjectName: "This is an example project",
-//       Date: "11-16-2024"
-//     },
-//     {
-//       ProjectName: "This is an example project",
-//       Date: "11-16-2024"
-//     },
-//     {
-//       ProjectName: "This is an example project",
-//       Date: "11-16-2024"
-//     },
-//     {
-//       ProjectName: "This is an example project",
-//       Date: "11-16-2024"
-//     },
-//   ]
-//   });
-// });
-
-// router.get("/viewproposal", (req, res) => {
-//     res.render("viewproposal", {
-//         projTitle: "Community Clean-Up Drive",
-//         projSummary: "A project aiming to clean and beautify the local barangay area.",
-//         targetValue: "Local Residents",
-//         advoacyArea: "Environment",
-//         SDG: "SDG 11: Sustainable Cities and Communities",
-//         startDate: "2025-01-10",
-//         endDate: "2025-03-20",
-//         proposedBudget: "₱50,000",
-//         detailedProposal: "Full proposal PDF or text will be displayed here.",
-
-//         comments: [
-//             {
-//                 date: "2025-11-18 10:32 AM",
-//                 text: "This project looks promising!"
-//             },
-//             {
-//                 date: "2025-11-18 11:00 AM",
-//                 text: "Please add more details about the suppliers."
-//             }
-//         ]
-//     });
-// });
-
 
 router.use("/adminproposal", adminProposalRouter);
 
