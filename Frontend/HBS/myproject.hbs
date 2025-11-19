@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{title}}</title>
+
+  <link rel="stylesheet" href="../CSS/global.css" />
+  <link rel="stylesheet" href="../CSS/myproject.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  {{> navbar}}
+  <!-- Sidebar -->
+  {{> sidebar}}
+
+  <!-- Main Content -->
+  <main class="main-content" class="alert-box">
+    <div class="myproject-wrapper">
+      <div class="myproject-card">
+        <div class="project-header-container">
+          <h2 class="myproject-header">{{projtitle}}</h2>
+          <button class="edit-btn" onclick="location.href='/editproject'">
+            Edit Project
+          </button>
+        </div>
+        <p>by: {{orgName}}</p>
+
+        <!-- Project Image-->
+        <img src="{{projimage}}" alt="Project Image" class="project-image"/>
+
+        <!-- Project Description -->
+        <div class="project-desc">
+          {{ProjectDesc}}
+        </div>
+        
+        <div class="boldtext">Target Beneficiaries:</div>{{nBeneficiaries}}
+        <div class="boldtext">Advocacy Area:</div>{{Advocacyarea}}
+        <div class="boldtext">SDG Alignment:</div>{{SDG_alignment}}
+        <div class="boldtext">Timeline:</div>{{Timeline}}
+        <div class="boldtext">Project Amount (Budget):</div>{{Budget}}
+        <div class="boldtext">Detailed Proposal:</div>
+        {{#if Proposal}}
+          <div class="form-group">
+            <div class="pdf-preview" style="margin-top:12px;">
+              <iframe src="{{Proposal}}" width="100%" height="200" style="border:1px solid #e6e6e6; border-radius:8px;"></iframe>
+            </div>
+          </div>
+          <a href="{{Proposal}}" target="_blank" class="download-btn" download>Download (PDF)</a>
+        {{else}}
+          <div>No proposal file available.</div>
+        {{/if}}
+        <br/>
+
+        <p>Last Update Period: {{lastUpdate}}</p>
+
+        <!-- Beneficiary Stats Section -->
+        <section class="beneficiary-stats">
+            <h2>Beneficiaries Served</h2>
+            <table class="beneficiary-table">
+                <tr>
+                    <td>Actual Beneficiaries Served</td>
+                    <td><span class="value">{{actualValue}}</span></td>
+                </tr>
+                <tr>
+                    <td>Target Beneficiaries</td>
+                    <td><span class="value">{{targetValue}}</span></td>
+                </tr>
+            </table>
+            </section>
+
+        <div class="bar-graph">
+            <div class="bar-row">
+            <span class="bar-label">Actual Beneficiaries Served</span>
+            <div class="bar-bg">
+                <div class="bar-fill actual" id="actualBar">0</div>
+            </div>
+            </div>
+
+            <div class="bar-row">
+            <span class="bar-label">Target Beneficiaries</span>
+            <div class="bar-bg">
+                <div class="bar-fill target" id="targetBar">0</div>
+            </div>
+            </div>
+        </div>
+        </section>
+
+
+        <!-- Budget Section -->
+        <section class="budget-section">
+            <table class="budget-table">
+                <thead>
+                <tr>
+                    <th>Project Amount (Budget)</th>
+                    <th>Expense to Date</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+                    <td>{{totalBudget}}</td>
+                    <td>{{expenses}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Progress Section -->
+        <div class="progress-section">
+          <h3>Progress Meter (%)</h3>
+          <div class="progress-meter">
+            <div class="progress-circle">
+              <svg viewBox="0 0 36 36">
+                <path class="bg" d="M18 2.0845a15.9155 15.9155 0 0 1 0 31.831a15.9155 15.9155 0 0 1 0-31.831" />
+              </svg>
+
+              <!-- HBS OUTPUT (default value) -->
+              <span id="progressText" class="progress-text">
+                {{#if progress}}
+                  {{progress}}%
+                {{else}}
+                  0%
+                {{/if}}
+              </span>
+            </div>
+
+            <!-- Replace BLANK with HBS output -->
+            <p id="progressLabel" class="progress-subtext">
+              {{#if progress}}
+                {{progress}}% Progress Reported
+              {{else}}
+                0% Progress Reported
+              {{/if}}
+            </p>
+          </div>
+        </div>
+
+        <!-- Auto-Filled Fields -->
+        <div class="form-group autofield">
+          <label>Advocacy Area</label>
+          <div class="auto-value">{{Advocacyarea}}</div>
+        </div>
+
+        <div class="form-group autofield">
+          <label>SDG Alignment</label>
+          <div class="auto-value">{{SDG_alignment}}</div>
+        </div>
+
+        <div class="form-group autofield">
+          <label>Community Partner Location</label>
+          <div class="auto-value">{{communitylocation}}</div>
+        </div>
+
+        <!-- Narrative Update -->
+        <div class="form-group autofield">
+          <label>Narrative Update (Progress, Challenges, Lessons)</label>
+          <div class="auto-value">{{narrativeUpdate}}</div>
+        </div>
+
+        <!-- Uploaded Photos-->
+        <div class="uploaded-photos">
+        <label>Uploaded Photos</label>
+
+        {{#if AdditionalImages}}
+          <div class="photo-grid">
+            {{#each AdditionalImages}}
+              <div class="photo-item">
+                <img src="{{this}}" alt="Uploaded photo">
+              </div>
+            {{/each}}
+          </div>
+        {{else}}
+          <p class="no-photos">No photos uploaded.</p>
+        {{/if}}
+      </div>
+
+      <!-- Progress Report Button -->
+      <button id="saveImpact" class="save-btn" type="button">Generate Progress Report</button>
+        
+      </div>
+    </div>
+  </main>
+

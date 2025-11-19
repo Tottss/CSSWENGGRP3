@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{title}}</title>
+
+  <link rel="stylesheet" href="../CSS/global.css" />
+  <link rel="stylesheet" href="../CSS/accountcreation.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  {{> navbar}}
+  <!-- Sidebar -->
+  {{> sidebar}}
+
+  <!-- Main Content-->
+  <main class="main-content" class="alert-box">
+    <div class="acountcreation-wrapper">
+        <div class="accountcreation-card">
+            <h2 class="accountcreation-header">Create New User</h2>
+
+            <!--Organization Name-->
+            <div class="form-group autofield">
+                <label>Organization Name</label>
+                <div class="auto-value">{{orgname}}</div>
+            </div>
+
+            <!--Contact Name-->
+            <div class="form-group autofield">
+                <label>Contact Name</label>
+                <div class="auto-value">{{contactName}}</div>
+            </div>
+
+            <!--Contact Position-->
+            <div class="form-group autofield">
+                <label>Contact Position</label>
+                <div class="auto-value">{{contactPosition}}</div>
+            </div>
+
+            <!--Contact Number-->
+            <div class="form-group autofield">
+                <label>Contact Number</label>
+                <div class="auto-value">{{contactNumber}}</div>
+            </div>
+
+            <!--Email-->
+            <div class="form-group autofield">
+                <label>Email</label>
+                <div class="auto-value">{{email}}</div>
+            </div>
+
+            <!--Province-->
+            <div class="form-group autofield">
+                <label>Province</label>
+                <div class="auto-value">{{province}}</div>
+            </div>
+
+            <!--Municipality-->
+            <div class="form-group autofield">
+                <label>Municipality</label>
+                <div class="auto-value">{{municipality}}</div>
+            </div>
+
+            <!--Barangay-->
+            <div class="form-group autofield">
+                <label>Barangay</label>
+                <div class="auto-value">{{barangay}}</div>
+            </div>
+
+            <!--Partner Type-->
+            <div class="form-group autofield">
+                <label>Partner Type</label>
+                <div class="auto-value">{{partnerType}}</div>
+            </div>
+
+            <!--Advocacy-->
+            <div class="form-group autofield">
+                <label>Advocacy</label>
+                <div class="auto-value">{{advocacy}}</div>
+            </div>
+
+            <!--Login Credentials-->
+            <section class="login-credentials">
+                <table class="logincredentials-table">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Temporary Password</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>{{email}}</td>
+                            <td>{{temporaryPassword}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!--Add copy button to copy login credentials in text format like this:
+
+            Email: {{email}}
+            Temporary Password: {{temporaryPassword}}
+            -->
+
+            <!--Add a Create Account buton which will automatically add the user and at the same time will send an email to the applying organization their login credentials-->
+
+            <!-- Copy Credentials Button -->
+            <div class="button-row">
+                <button id="copyBtn" class="copy-btn">Copy Login Credentials</button>
+
+                <!-- Create Account Button -->
+                <form action="/admin/createAccount" method="POST" class="create-form">
+                    <input type="hidden" name="email" value="{{email}}">
+                    <input type="hidden" name="temporaryPassword" value="{{temporaryPassword}}">
+                    
+                    <!-- Include all auto-filled fields so admin does not manually re-encode -->
+                    <input type="hidden" name="orgname" value="{{orgname}}">
+                    <input type="hidden" name="contactName" value="{{contactName}}">
+                    <input type="hidden" name="contactPosition" value="{{contactPosition}}">
+                    <input type="hidden" name="contactNumber" value="{{contactNumber}}">
+                    <input type="hidden" name="province" value="{{province}}">
+                    <input type="hidden" name="municipality" value="{{municipality}}">
+                    <input type="hidden" name="barangay" value="{{barangay}}">
+                    <input type="hidden" name="partnerType" value="{{partnerType}}">
+                    <input type="hidden" name="advocacy" value="{{advocacy}}">
+
+                    <button type="submit" class="save-btn">
+                        Create Account
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../JAVASCRIPT/accountCreation.js"></script>
+  </main>
