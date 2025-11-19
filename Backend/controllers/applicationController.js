@@ -8,6 +8,28 @@ import { sendEmail } from "../services/applicationmail.js";
 
 const APPLICANTS_TABLE = "Applicants";
 
+const approvalMessage = (email, tempPassword) => `
+Your application has been approved.
+
+Here are your login details:
+Email: ${email}
+Temporary Password: ${tempPassword}
+
+For security purposes, please change your password after logging in.
+To do this, go to: Profile → Edit Profile → Change Password.
+`;
+
+const rejectionMessage = (email) => `
+Good day, ${email}.
+
+Your application has been declined.
+
+We appreciate your interest and encourage you to apply again in the future.
+
+If you have any questions about this decision or believe it may have been made in error, 
+please feel free to contact us at 09123456 or email us at bakhitarep@gmail.com.
+`;
+
 export const showApplication = async (req, res) => {
   const applicantId = Number(req.params.applicant_id);
 
@@ -142,7 +164,7 @@ export const approveApplication = async (req, res) => {
     await sendEmail(
       a.partner_email,
       "Application Approved",
-      `Your application has been approved.\n\nHere are your login details:\nEmail: ${a.partner_email}\nPassword: ${generatedPassword}`
+      approvalMessage(a.partner_email, generatedPassword)
     );
 
     // Redirect to admin dashboard
@@ -182,7 +204,7 @@ export const declineApplication = async (req, res) => {
       })
     );
 
-    // (Optional) send rejection email
+    // for testing
     console.log(
       `Rejection email sent to ${a.partner_email}: "Your application has been declined."`
     );
@@ -190,7 +212,7 @@ export const declineApplication = async (req, res) => {
     await sendEmail(
       a.partner_email,
       "Application Declined",
-      "We regret to inform you that your application has been declined."
+      rejectionMessage(a.partner_email)
     );
 
     // return res.status(200).send("Application declined and applicant removed");
