@@ -8,6 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const progressRange = document.getElementById("progressRange");
     const progressText = document.getElementById("progressText");
     const progressLabel = document.getElementById("progressLabel");
+    const advocacyArea = document.getElementById("advocacyArea");
+    const sdgAlignment = document.getElementById("sdgAlignment");
     const communityLocation = document.getElementById("communityLocation");
     const narrativeField = document.getElementById("narrativeField");
     const uploadFilesInput = document.querySelector('input[name="uploads"]');
@@ -86,6 +88,8 @@ document.addEventListener("DOMContentLoaded", () => {
             if (progressLabel) progressLabel.textContent = `${t.progress_percent || 0}% Progress Reported`;
 
             // other fields
+            if (advocacyArea) advocacyArea.value = t.advocacyArea || "";
+            if (sdgAlignment) sdgAlignment.value = t.sdgAlignment || "";
             if (communityLocation) communityLocation.value = t.location || "";
             if (narrativeField) narrativeField.value = t.narrative || "";
 
