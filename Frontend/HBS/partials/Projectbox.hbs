@@ -7,7 +7,9 @@
             <div class="Project-box">
                 <div class="project-item">
                     <div class="project-image" style="background-image: url('{{this.ProjectImageURL}}');">
-                        <input type="button" class="project-btn" value="{{../ButtonName}}">
+                        <input type="button" class="project-btn" 
+                        value="{{../ButtonName}}"
+                        onclick="window.location.href='/viewcommunityproject/{{this.ProjectID}}'">
                     </div>
                 </div>
             <p class="project-name">{{this.ProjectName}}</p>

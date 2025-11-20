@@ -1,4 +1,4 @@
-import { GetCommand } from "@aws-sdk/lib-dynamodb";
+import { GetCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
 
 const PROJECTS_TABLE = "Projects";
@@ -65,6 +65,7 @@ export const showCommunityProject = async (req, res) => {
 
       // Gallery images (from uploads array)
       galleryImages: [
+        // project.imageURL,
         "/ASSETS/project-photo1.jpg",
         "/ASSETS/project-photo2.jpg",
         "/ASSETS/project-photo1.jpg",
@@ -76,22 +77,7 @@ export const showCommunityProject = async (req, res) => {
   }
 };
 
-export const showViewProject = async (req, res) => {
-  res.render("viewProject", {
-    projtitle: "Project Title Here",
-    ImageURL: "/ASSETS/border-design.png",
-    ProjectDesc: "This is a project to help the project is a project to help",
-    totalBudget: "1298127",
-    expenses: "19021829",
-    actualValue: "0",
-    targetValue: "200",
-    advocacyarea: "Poverty",
-    sdgalignment: "1,2,3",
-    communitylocation: "12281",
-  });
-};
-
-export const showCommunityProjects = async (req, res) => {
+export const listCommunityProjects = async (req, res) => {
   try {
     // Fetch ALL accepted projects from the Projects table
     const data = await docClient.send(
@@ -102,12 +88,15 @@ export const showCommunityProjects = async (req, res) => {
 
     const projects = data.Items || [];
 
+    console.log("Project ID: ", projects);
+
     res.render("projects", {
       Title: "Community Projects",
       BtnName: "View Project",
       Projects: projects.map((p) => ({
         ProjectImageURL: p.project_imageURL || "/ASSETS/border-design.png",
         ProjectName: p.project_name,
+        ProjectID: p.project_id || 0,
       })),
     });
   } catch (err) {

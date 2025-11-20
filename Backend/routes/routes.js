@@ -26,9 +26,8 @@ import {
   updateProfile,
 } from "../controllers/profileController.js";
 import {
+  listCommunityProjects,
   showCommunityProject,
-  showCommunityProjects,
-  showViewProject,
 } from "../controllers/projectController.js";
 import { userDashboard } from "../controllers/dashboardController.js";
 import { showProposal } from "../controllers/proposalController.js";
@@ -79,7 +78,7 @@ router.get("/Yourprojects", getUserProjects);
 router.use("/proposal", proposalRouter);
 
 //community projects route
-router.get("/Communityprojects", showCommunityProjects);
+router.get("/Communityprojects", listCommunityProjects);
 
 router.get("/editprofile", showEditProfile);
 
@@ -88,9 +87,6 @@ router.post("/editprofile/save", upload.single("profileImage"), updateProfile);
 
 // new
 router.get("/profileview", showViewProfile);
-
-// new
-router.get("/viewProject", showViewProject);
 
 // new - made a function for this route
 router.get("/viewcommunityproject/:project_id", showCommunityProject);
