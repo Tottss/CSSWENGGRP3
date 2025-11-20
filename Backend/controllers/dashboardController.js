@@ -1,9 +1,4 @@
-import {
-  UpdateCommand,
-  PutCommand,
-  GetCommand,
-  ScanCommand,
-} from "@aws-sdk/lib-dynamodb";
+import { ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
 
 export const userDashboard = async (req, res) => {
@@ -63,12 +58,14 @@ export const userDashboard = async (req, res) => {
       CommunityProjects: communityProjects.map((p) => ({
         ProjectImageURL: p.project_imageURL || "/ASSETS/border-design.png",
         ProjectName: p.project_name,
+        ProjectID: p.project_id,
       })),
 
       // Your Projects
       YourProjects: yourProjects.map((p) => ({
         ProjectImageURL: p.project_imageURL || "/ASSETS/border-design.png",
         ProjectName: p.project_name,
+        ProjectID: p.project_id,
       })),
     });
   } catch (err) {
