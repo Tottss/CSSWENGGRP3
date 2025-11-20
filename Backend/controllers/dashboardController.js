@@ -7,6 +7,11 @@ import {
 import { docClient } from "../config/dynamodb.js";
 
 export const userDashboard = async (req, res) => {
+  // this is for testing admin redirect
+  if (req.session.is_admin) {
+    return res.redirect("/admindashboard");
+  }
+
   try {
     const userId = req.session.partner_id;
 
