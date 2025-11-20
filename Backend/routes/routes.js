@@ -94,7 +94,7 @@ router.get("/profileview", showViewProfile);
 router.get("/viewProject", showViewProject);
 
 //NEW - Hardcoded data only
-router.get("/communityproject", (req, res) => {
+router.get("/viewcommunityproject", (req, res) => {
   res.render("communityProject", {
     projtitle: "Project Title Here",
     projectID: 1,

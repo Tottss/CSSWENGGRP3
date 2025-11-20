@@ -3,8 +3,10 @@ import { docClient } from "../config/dynamodb.js";
 
 export const showAdminDashboard = async (req, res) => {
   const APPLICANTS_TABLE = "Applicants";
+  const PROPOSALS_TABLE = "Proposals";
 
   let applicants = [];
+  let proposalNotifications = [];
 
   try {
     // Fetch all applicants
@@ -24,58 +26,36 @@ export const showAdminDashboard = async (req, res) => {
     console.error("Error fetching applicants:", err);
   }
 
+  try {
+    // Fetch all proposals
+    const proposalResult = await docClient.send(
+      new ScanCommand({
+        TableName: PROPOSALS_TABLE,
+      })
+    );
+
+    // test console log
+    console.log("Proposals: ", proposalResult.Items);
+
+    proposalNotifications = proposalResult.Items.map((item) => ({
+      Submission: true,
+      ProjectName: item.ProjTitle,
+      Date: item.CreatedAt.split("T")[0], // extract YYYY-MM-DD
+      PartnerOrg: item.partner_org,
+      href: "/adminproposal/" + item.proposal_id,
+    }));
+  } catch (err) {
+    console.error("Error fetching proposals:", err);
+  }
+
   // Render admin dashboard
   res.render("admindashboard", {
     title: "Admin Dashboard",
-    PartnerOrg: req.session.partner_name || "Partner Org Name",
+    PartnerOrg: req.session.partner_name || "{Partner Org Name Holder}",
 
-    Proposals: [
-      {
-        Submission: true,
-        ProjectName: "Project Name",
-        Date: "2024-06-01",
-        PartnerOrg: "EXAMPLE ORG",
-        href: "/linktoProp",
-      },
-      {
-        Update: true,
-        ProjectName: "Example Project2",
-        Date: "2024-08-21",
-        PartnerOrg: "EORG",
-      },
-      {
-        Submission: true,
-        ProjectName: "Example Project3",
-        Date: "2024-11-21",
-        PartnerOrg: "AORG",
-      },
-      {
-        Submission: true,
-        ProjectName: "Example Project3",
-        Date: "2024-11-21",
-        PartnerOrg: "AORG",
-      },
-      {
-        Submission: true,
-        ProjectName: "Example Project3",
-        Date: "2024-11-21",
-        PartnerOrg: "AORG",
-      },
-      {
-        Submission: true,
-        ProjectName: "Example Project3",
-        Date: "2024-11-21",
-        PartnerOrg: "AORG",
-      },
-      {
-        Submission: true,
-        ProjectName: "Example Project3",
-        Date: "2024-11-21",
-        PartnerOrg: "AORG",
-      },
-    ],
+    // add project updates later
+    Proposals: proposalNotifications,
 
-    // Dynamic from DynamoDB
     Application: applicants,
   });
 };
