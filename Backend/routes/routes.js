@@ -47,13 +47,11 @@ router.get("/test", function (req, res) {
   res.status(200).json("Hello, world!");
 });
 
-// application route
-// show, approve and decline application
+// admin application routes
 router.get("/adminapplication/:applicant_id", showApplication);
 router.post("/adminapplication/:applicant_id/approve", approveApplication);
 router.post("/adminapplication/:applicant_id/decline", declineApplication);
 
-// admin
 router.get("/admindashboard", showAdminDashboard);
 
 // implement other routes here

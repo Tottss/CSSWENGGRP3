@@ -1,12 +1,12 @@
-import {
-  UpdateCommand,
-  PutCommand,
-  GetCommand,
-  ScanCommand,
-} from "@aws-sdk/lib-dynamodb";
+import { UpdateCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
 
 export const showEditProfile = async (req, res) => {
+  // Admin view of edit profile to be implemented later
+  if (req.session.is_admin) {
+    return res.status(403).send("Admin Edit Profile To Be Implemented Soon.");
+  }
+
   res.render("profiledit", {
     // ImageURL: req.session.ImageURL,
     isRequired: false,
@@ -15,6 +15,11 @@ export const showEditProfile = async (req, res) => {
 };
 
 export const showViewProfile = async (req, res) => {
+  // Admin view of profile to be implemented later
+  if (req.session.is_admin) {
+    return res.status(403).send("Admin Profile View To Be Implemented Soon.");
+  }
+
   const partner_id = req.session.partner_id;
 
   if (!partner_id) return res.redirect("/login"); // avoid fallback in production

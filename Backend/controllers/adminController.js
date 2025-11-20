@@ -2,6 +2,11 @@ import { ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
 
 export const showAdminDashboard = async (req, res) => {
+  // for admin only
+  if (!req.session.is_admin) {
+    return res.status(403).send("Access denied. This is an admin only page.");
+  }
+
   const APPLICANTS_TABLE = "Applicants";
   const PROPOSALS_TABLE = "Proposals";
 

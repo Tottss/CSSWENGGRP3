@@ -31,6 +31,10 @@ please feel free to contact us at 09123456 or email us at bakhitarep@gmail.com.
 `;
 
 export const showApplication = async (req, res) => {
+  if (!req.session.is_admin) {
+    return res.status(403).send("Access denied. This is an admin only page.");
+  }
+
   const applicantId = Number(req.params.applicant_id);
 
   console.log("Applicant ID; ", applicantId); // remove this after all is working
@@ -76,7 +80,6 @@ export const showApplication = async (req, res) => {
   }
 };
 
-// for testing
 export const approveApplication = async (req, res) => {
   const applicantId = Number(req.params.applicant_id);
 
@@ -175,7 +178,6 @@ export const approveApplication = async (req, res) => {
   }
 };
 
-// already working
 export const declineApplication = async (req, res) => {
   const applicantId = Number(req.params.applicant_id);
 
