@@ -10,7 +10,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 router.get("/tracker", async (req, res) => {
   try {
-    const user_id = req.session.user_id;
+    const user_id = req.session.partner_id;
     const project_id = req.query.project_id;
 
     // load user projects
