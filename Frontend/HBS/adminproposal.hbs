@@ -79,6 +79,7 @@
                 </div>
                 <br/>
                 <br/>
+                <!--Comment sending-->
                 <form action="/adminproposal/{{proposalId}}/comment" method="POST" class="comment-form">
                     <label for="comment">Comments</label>
                     <div class="comment-wrapper">
@@ -87,7 +88,26 @@
                         <button type="submit" class="submit-comment-btn">Send</button>
                     </div>
                 </form>
+                <!--Comment box-->
+                <div class="comments-section">
+                    <h3>Comments</h3>
 
+                    <div class="comments-box">
+                        {{#each comments}}
+                        <div class="comment-item">
+                            <div class="comment-meta">
+                                <span class="comment-author">{{this.admin}}</span>
+                                <span class="comment-date">{{this.timestamp}}</span>
+                            </div>
+                            <div class="comment-text">{{this.message}}</div>
+                        </div>
+                        {{/each}}
+                
+                        {{#unless comments.length}}
+                        <div class="no-comments">No comments yet.</div>
+                        {{/unless}}
+                    </div>
+                </div>
 
         </div>
     </div>
