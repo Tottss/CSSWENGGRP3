@@ -7,12 +7,13 @@ export const userDashboard = async (req, res) => {
     return res.redirect("/admindashboard");
   }
 
+  // avoid unauthorized access
+  if (!req.session.partner_id) {
+    return res.redirect("/login");
+  }
+
   try {
     const userId = req.session.partner_id;
-
-    if (!userId) {
-      throw alert("UserId uninitialized");
-    }
 
     console.log("Session id (for debugging): ", req.session.id); // remove after testing
     console.log("Session User Id:", req.session.partner_id); // remove after testing

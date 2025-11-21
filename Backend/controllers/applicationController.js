@@ -27,7 +27,7 @@ Your application has been declined.
 We appreciate your interest and encourage you to apply again in the future.
 
 If you have any questions about this decision or believe it may have been made in error, 
-please feel free to contact us at 09123456 or email us at bakhitarep@gmail.com.
+please feel free to contact us at 09123456 or email us at ${process.env.EMAIL_USER}.
 `;
 
 export const showApplication = async (req, res) => {

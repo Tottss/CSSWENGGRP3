@@ -41,16 +41,34 @@ export const showCommunityProject = async (req, res) => {
 
     const partner = partnerResult.Item || {};
 
+    const locationResult = await docClient.send(
+      new GetCommand({
+        TableName: "Location",
+        Key: { location_id: Number(project.user_id) },
+      })
+    );
+
+    const location = locationResult.Item || {};
+
+    const formattedLocation = [
+      location.full_address,
+      location.barangay,
+      location.municipality,
+      location.province,
+    ]
+      .filter(Boolean)
+      .join(", ");
+
     res.render("communityProject", {
       // From Projects table
-      projtitle: project.project_name,
-      projectID: project.project_id,
-      orgName: partner.partner_name || "No Org Found",
-      ProjectDesc: project.project_summary,
-      projimage: project.project_imageURL,
-      Advocacyarea: project.advocacyArea,
-      SDG_alignment: project.sdgAlignment,
-      communitylocation: project.location || "Not specified",
+      projtitle: project.project_name || "Not specified",
+      projectID: project.project_id || "Not specified",
+      orgName: partner.partner_name || "Not specified",
+      ProjectDesc: project.project_summary || "Not specified",
+      projimage: project.project_imageURL || "Not specified",
+      Advocacyarea: project.advocacyArea || "Not specified",
+      SDG_alignment: project.sdgAlignment || "Not specified",
+      communitylocation: formattedLocation || "Not specified",
       Proposal:
         "https://proposals-storage.s3.ap-southeast-1.amazonaws.com/proposals/08150a89-14ab-4dcc-949f-eab757dd1ccf-Test+Proposal.pdf", // change to project.url
 
@@ -62,6 +80,9 @@ export const showCommunityProject = async (req, res) => {
       progress: tracker.progress_percent || 0,
       lastUpdate: tracker.lastUpdate || "N/A",
       narrativeUpdate: tracker.narrative || "No narrative provided",
+
+      Timeline: project.Timeline || "Month Day, Year - Month Day, Year", // to be added in Projects table
+      Budget: tracker.budget,
 
       // Gallery images (from uploads array)
       galleryImages: [
