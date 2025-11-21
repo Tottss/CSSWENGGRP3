@@ -1,13 +1,10 @@
 import {
     GetCommand,
     PutCommand,
-    UpdateCommand,
     ScanCommand,
+    UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../../config/dynamodb.js";
-
-const PROJECTS_TABLE = "Projects";
-const PROPOSALS_TABLE = "Proposals";
 
 export const approveProposal = async (req, res) => {
     try {
@@ -16,7 +13,7 @@ export const approveProposal = async (req, res) => {
         // load proposal details
         const proposalData = await docClient.send(
             new GetCommand({
-                TableName: PROPOSALS_TABLE,
+                TableName: "Proposals",
                 Key: { proposal_id: proposalId },
             })
         );
@@ -25,53 +22,62 @@ export const approveProposal = async (req, res) => {
             return res.status(404).json({ message: "Proposal not found" });
         }
 
-        const p = proposalData.Item;
+        const proposal = proposalData.Item;
 
         // automatically generate next project_id (increments)
         const scanData = await docClient.send(
             new ScanCommand({
-                TableName: PROJECTS_TABLE,
+                TableName: "Projects",
                 ProjectionExpression: "project_id",
             })
         );
 
-        const ids = scanData.Items.map(i => Number(i.project_id));
+        const ids = scanData.Items.map((i) => Number(i.project_id));
         const nextId = ids.length ? Math.max(...ids) + 1 : 1;
 
-        // inserts to projects table
+        // insert merged project entry
         const projectEntry = {
             project_id: nextId,
-            partner_id: p.partner_id,
-            project_title: p.proposal_title,
-            project_summary: p.proposal_summary,
-            project_advocacy_area: p.proposal_advocacy_area,
-            project_sdg_alignment: p.proposal_sdg_alignment,
+            user_id: proposal.partner_id,
 
-            // tracking fields
+            // from proposal
+            project_name: proposal.proposal_title,
+            project_summary: proposal.proposal_summary,
+            advocacyArea: proposal.proposal_advocacy_area,
+            sdgAlignment: proposal.proposal_sdg_alignment,
+            start_date: proposal.start_date,
+            end_date: proposal.end_date,
+            budget: Number(proposal.proposed_budget) || 0,
+
+            // display photo default
+            project_imageURL: "/ASSETS/default_project.jpg",
+
+            // merged impact tracker defaults
             actual_beneficiaries: 0,
-            target_beneficiaries: Number(p.num_beneficiaries) || 0,
-            project_budget: Number(p.proposed_budget) || 0,
+            target_beneficiaries: Number(proposal.num_beneficiaries) || 0,
             expenses_to_date: 0,
+            progress_percent: 0,
+            location: "",
+            narrative: "",
+            uploads: [],
+            lastUpdate: "N/A",
 
-            // project metadata
-            project_status: "active",
-            start_date: p.start_date,
-            end_date: p.end_date,
-            project_imageURL: p.project_imageURL || "/ASSETS/border-design.png",
-            created_at: new Date().toISOString(),
+            // from old projects
+            status: "active",
+            date_created: new Date().toISOString(),
         };
 
         await docClient.send(
             new PutCommand({
-                TableName: PROJECTS_TABLE,
+                TableName: "Projects",
                 Item: projectEntry,
             })
         );
 
-        // update proposal status to approved
+        // update proposal status
         await docClient.send(
             new UpdateCommand({
-                TableName: PROPOSALS_TABLE,
+                TableName: "Proposals",
                 Key: { proposal_id: proposalId },
                 UpdateExpression: "SET #s = :approved",
                 ExpressionAttributeNames: { "#s": "status" },
@@ -80,10 +86,9 @@ export const approveProposal = async (req, res) => {
         );
 
         res.redirect("/admindashboard");
-
     } catch (err) {
         console.error("Error approving proposal:", err);
-        return res.status(500).json({
+        res.status(500).json({
             message: "Internal server error",
             error: err.message,
         });

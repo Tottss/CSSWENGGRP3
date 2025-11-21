@@ -2,18 +2,17 @@ import express from "express";
 import { ScanCommand, UpdateCommand, GetCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
 import multer from "multer";
-import s3Client from "../config/s3Client.js";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
+import s3Client from "../config/s3Client.js";
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
+// load tracker view
 router.get("/tracker", async (req, res) => {
   try {
     const user_id = req.session.partner_id;
-    const project_id = req.query.project_id;
 
-    // load user projects
     const data = await docClient.send(
       new ScanCommand({
         TableName: "Projects",
@@ -22,54 +21,42 @@ router.get("/tracker", async (req, res) => {
         ExpressionAttributeValues: { ":uid": user_id },
       })
     );
+
     const projects = data.Items || [];
 
-    // load existing tracker data if project_id is provided
+    let project_id = req.query.project_id;
     let trackerData = {};
+
     if (project_id) {
-      const trackerResp = await docClient.send(
+      const resp = await docClient.send(
         new GetCommand({
-          TableName: "ImpactTracker",
+          TableName: "Projects",
           Key: { project_id: Number(project_id) },
         })
       );
-      trackerData = trackerResp.Item || {};
-    }
-
-    // calculate progress percent if budget and expenses are present
-    let calculatedProgress = 0;
-    const budget = Number(trackerData.budget || 0);
-    const expense = Number(trackerData.expenses_to_date || 0);
-
-    if (budget > 0) {
-      calculatedProgress = Math.round((expense / budget) * 100);
-      if (calculatedProgress > 100) calculatedProgress = 100;
-      if (calculatedProgress < 0) calculatedProgress = 0;
+      trackerData = resp.Item || {};
     }
 
     res.render("tracker", {
       title: "Impact Tracker",
       projects,
-      project_id: project_id || "",
-      tracker: {
-        actual_beneficiaries: trackerData.actual_beneficiaries || 0,
-        target_beneficiaries: trackerData.target_beneficiaries || 0,
-        budget: trackerData.budget || 0,
-        expenses_to_date: trackerData.expenses_to_date || 0,
-        progress_percent: calculatedProgress || 0,
-        location: trackerData.location || "",
-        narrative: trackerData.narrative || "",
-        uploads: trackerData.uploads || [],
-        lastUpdate: trackerData.lastUpdate || "N/A",
-      },
+      lastUpdate: trackerData.lastUpdate || "N/A",
+
+      // auto-fill fields
+      actual_beneficiaries: trackerData.actual_beneficiaries || 0,
+      target_beneficiaries: trackerData.target_beneficiaries || 0,
+
+      budget: trackerData.budget || 0,
+      expense: trackerData.expenses_to_date || 0,
+
+      progress: trackerData.progress_percent || 0,
       advocacyArea: trackerData.advocacyArea || "",
       sdgAlignment: trackerData.sdgAlignment || "",
-      projectImage: null,
-      error: null
-    });
+      communityLocation: trackerData.location || "",
+      narrative: trackerData.narrative || "",
 
-    console.log("Loaded Projects:", projects);
-    console.log("Loaded Tracker Data:", trackerData);
+      uploads: trackerData.uploads || [],
+    });
   } catch (err) {
     console.error("Error loading tracker:", err);
     res.render("tracker", {
@@ -80,71 +67,48 @@ router.get("/tracker", async (req, res) => {
   }
 });
 
-// API to get tracker data for a project
+// fetch project + tracker data
 router.get("/tracker/get/:project_id", async (req, res) => {
   try {
     const project_id = Number(req.params.project_id);
 
-    // get tracker entry
-    const trackerResult = await docClient.send(
-      new ScanCommand({
-        TableName: "ImpactTracker",
-        FilterExpression: "#pid = :pid",
-        ExpressionAttributeNames: { "#pid": "project_id" },
-        ExpressionAttributeValues: { ":pid": project_id },
-      })
-    );
-
-    const tracker = trackerResult.Items?.[0] || {};
-
-    // get project entry
-    const projectResult = await docClient.send(
-      new ScanCommand({
+    const projectResp = await docClient.send(
+      new GetCommand({
         TableName: "Projects",
-        FilterExpression: "#pid = :pid",
-        ExpressionAttributeNames: { "#pid": "project_id" },
-        ExpressionAttributeValues: { ":pid": project_id },
+        Key: { project_id },
       })
     );
 
-    const project = projectResult.Items?.[0] || {};
+    const project = projectResp.Item || {};
 
-    // combine and return
     return res.json({
-      tracker,
-      project: {
-        ...project,
-        displayPhoto: project.project_imageURL
-      }
+      tracker: project,
+      project,
     });
-
   } catch (err) {
-    console.error("Error loading tracker + project data:", err);
+    console.error("Error loading tracker data:", err);
     return res.json({ tracker: {}, project: {} });
   }
 });
 
 // for normal uploads and display photo
 const uploadTracker = upload.fields([
-  { name: "uploads", maxCount: 10 },        // regular evidence/upload files
-  { name: "display_photo", maxCount: 1 }    // new display photo
+  { name: "uploads", maxCount: 10 },
+  { name: "display_photo", maxCount: 1 },
 ]);
 
-// API to save tracker data (partial update - Option B)
+// save tracker data into Projects
 router.post("/tracker/save", uploadTracker, async (req, res) => {
   try {
-    const fields = req.body || {};
-    const files = req.files || {};
+    const fields = req.body;
+    const files = req.files;
 
     const projectId = Number(fields.project_id);
-    if (!projectId) {
-      return res.status(400).json({ success: false, message: "Missing project_id" });
-    }
 
-    // handle file uploads to S3
     let uploadedFiles = [];
 
-    if (files.uploads && files.uploads.length > 0) {
+    // upload evidence
+    if (files.uploads) {
       for (const file of files.uploads) {
         const key = `tracker/${Date.now()}-${file.originalname}`;
 
@@ -157,17 +121,18 @@ router.post("/tracker/save", uploadTracker, async (req, res) => {
           })
         );
 
-        uploadedFiles.push(`https://impacttracker-uploads.s3.amazonaws.com/${key}`);
+        uploadedFiles.push(
+          `https://impacttracker-uploads.s3.amazonaws.com/${key}`
+        );
       }
     }
 
-    // handle display photo upload separately
+    // upload display photo
     let projectImageURL = null;
-    if (files.display_photo && files.display_photo.length > 0) {
+    if (files.display_photo) {
       const file = files.display_photo[0];
       const key = `images/${Date.now()}-${file.originalname}`;
 
-      // upload to S3
       await s3Client.send(
         new PutObjectCommand({
           Bucket: "proposals-storage",
@@ -178,109 +143,61 @@ router.post("/tracker/save", uploadTracker, async (req, res) => {
       );
 
       projectImageURL = `https://proposals-storage.s3.amazonaws.com/${key}`;
-
-      // update only project_imageURL on Projects
-      await docClient.send(
-        new UpdateCommand({
-          TableName: "Projects",
-          Key: { project_id: projectId },
-          UpdateExpression: "SET #img = :img",
-          ExpressionAttributeNames: { "#img": "project_imageURL" },
-          ExpressionAttributeValues: { ":img": projectImageURL },
-          ReturnValues: "UPDATED_NEW",
-        })
-      );
     }
 
-    // fetch existing tracker to merge uploads
-    const existingTrackerResp = await docClient.send(
-      new ScanCommand({
-        TableName: "ImpactTracker",
-        FilterExpression: "#pid = :pid",
-        ExpressionAttributeNames: { "#pid": "project_id" },
-        ExpressionAttributeValues: { ":pid": projectId },
+    // load existing uploads
+    const current = await docClient.send(
+      new GetCommand({
+        TableName: "Projects",
+        Key: { project_id: projectId },
       })
     );
-    const existingTracker = existingTrackerResp.Items?.[0] || {};
 
-    // merge uploads (append new ones to existing array)
-    const mergedUploads = Array.isArray(existingTracker.uploads)
-      ? existingTracker.uploads.concat(uploadedFiles)
-      : uploadedFiles;
+    const prev = current.Item || {};
+    const mergedUploads = (prev.uploads || []).concat(uploadedFiles);
 
-    // update tracker entry
-    // only update fields that are provided (non-empty)
-    const updateParts = [];
-    const exprNames = {};
-    const exprValues = {};
+    // compute progress percent
+    const budget = Number(fields.budget || prev.budget || 0);
+    const expense = Number(fields.expenses_to_date || prev.expenses_to_date || 0);
 
-    function addUpdate(name, attrName, value, asNumber = false) {
-      if (value === undefined || value === null || value === "") return;
-      const placeholder = `:${name}`;
-      const pname = `#${name}`;
-      exprNames[pname] = attrName;
-      exprValues[placeholder] = asNumber ? Number(value) : value;
-      updateParts.push(`${pname} = ${placeholder}`);
+    let computedProgress = 0;
+    if (budget > 0) {
+      computedProgress = Math.min(100, Math.max(0, Math.round((expense / budget) * 100)));
     }
 
-    addUpdate("actual", "actual_beneficiaries", fields.actual_beneficiaries, true);
-    addUpdate("target", "target_beneficiaries", fields.target_beneficiaries, true);
-    addUpdate("budget", "budget", fields.budget, true);
-    addUpdate("expenses", "expenses_to_date", fields.expenses_to_date, true);
-    // compute progress_percent if budget or expenses changed
-    if (fields.budget !== undefined || fields.expenses_to_date !== undefined) {
-      const b = Number(fields.budget || existingTracker.budget || 0);
-      const e = Number(fields.expires_to_date || fields.expenses_to_date || existingTracker.expenses_to_date || 0);
-      let computedProgress = 0;
-      if (b > 0) {
-        computedProgress = Math.round((e / b) * 100);
-        if (computedProgress < 0) computedProgress = 0;
-        if (computedProgress > 100) computedProgress = 100;
-      }
-      exprNames["#progress_percent"] = "progress_percent";
-      exprValues[":progress_percent"] = computedProgress;
-      updateParts.push(`#progress_percent = :progress_percent`);
-    }
-
-    addUpdate("location", "location", fields.location, false);
-    addUpdate("narrative", "narrative", fields.narrative, false);
-
-    // always update uploads (even if empty array) to reflect mergedUploads if there are any new uploads
-    if (mergedUploads.length > 0) {
-      exprNames["#uploads"] = "uploads";
-      exprValues[":uploadsVal"] = mergedUploads;
-      updateParts.push(`#uploads = :uploadsVal`);
-    }
-
-    // always update lastUpdate
-    exprNames["#lastUpdate"] = "lastUpdate";
-    exprValues[":lastUpdateVal"] = new Date().toISOString();
-    updateParts.push(`#lastUpdate = :lastUpdateVal`);
-
-    // If no update parts (user sent nothing meaningful), respond success (no-op)
-    if (updateParts.length === 0) {
-      return res.json({ success: true, project_imageURL });
-    }
-
-    const updateExpression = "SET " + updateParts.join(", ");
-
-    // execute the update for ImpactTracker
+    // update Projects
     await docClient.send(
       new UpdateCommand({
-        TableName: "ImpactTracker",
+        TableName: "Projects",
         Key: { project_id: projectId },
-        UpdateExpression: updateExpression,
-        ExpressionAttributeNames: exprNames,
-        ExpressionAttributeValues: exprValues,
-        ReturnValues: "UPDATED_NEW",
+        UpdateExpression: `
+          SET actual_beneficiaries = :actual,
+              target_beneficiaries = :target,
+              budget = :budget,
+              expenses_to_date = :exp,
+              progress_percent = :prog,
+              location = :loc,
+              narrative = :nar,
+              uploads = :uploads,
+              lastUpdate = :lu
+              ${projectImageURL ? ", project_imageURL = :img" : ""}
+        `,
+        ExpressionAttributeValues: {
+          ":actual": Number(fields.actual_beneficiaries) || 0,
+          ":target": Number(fields.target_beneficiaries) || 0,
+          ":budget": budget,
+          ":exp": expense,
+          ":prog": computedProgress,
+          ":loc": fields.location || "",
+          ":nar": fields.narrative || "",
+          ":uploads": mergedUploads,
+          ":lu": new Date().toISOString(),
+          ...(projectImageURL ? { ":img": projectImageURL } : {}),
+        },
       })
     );
 
-    return res.json({
-      success: true,
-      project_imageURL: projectImageURL,
-    });
-
+    res.json({ success: true, project_imageURL: projectImageURL || undefined });
   } catch (err) {
     console.error("Error saving tracker:", err);
     return res.status(500).json({ success: false });
