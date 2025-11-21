@@ -5,15 +5,17 @@
             <h1 class="dashboard-title">Hi, {{PartnerOrg}}!</h1>
             <div class="notification-header">
                 <i class="bi bi-bell-fill"></i>
+                <!--Black Notifications-->
                 <h2 class="Notif">Notifications</h2>
             </div>
-
+            <!--Green Notifications-->
             <div class="Green-header">
                 <img src="../ASSETS/Vector.png"></img>
                 <h2 class="Notif-white">{{nNotif}} new notification!</h2> 
             </div>
             <br/>
             <br/>
+            <!--Management tools buttons-->
             <div class="project-tools">
                 <img src="../ASSETS/toolbox.png"></img>
                 <h2 class="ProjManage">Project Management Tools</h2>
@@ -27,8 +29,10 @@
             </div>
             <br/>
             <br/>
+            <!-- Community Projects box list-->
             {{>Projectbox Projects=CommunityProjects title="Community Projects" ButtonName="View Project" href="/Communityprojects"}}
             <br/>
+            <!--Your Projects box list-->
             {{>Projectbox Projects=YourProjects title="Your Projects" ButtonName="Update Project" href="/Yourprojects"}}
             <br/>
         </div>

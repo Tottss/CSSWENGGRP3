@@ -12,6 +12,7 @@
             </div>
             <br/>
             <div class="Proposal-list">
+                <!-- View Proposals that are submitted --->
                 {{#each Proposals}}
                     {{#if Submission}}
                         <div class="Proposal-box">
@@ -28,7 +29,7 @@
                             </div>
                         </div>
                     {{/if}}
-
+                    <!-- View Proposals that were recently updated-->
                     {{#if Update}}
                         <div class="Proposal-box">
                             <div class="Proposal-content">
@@ -49,6 +50,7 @@
             </div>
         </div>
     </div>
+    <!-- Application list -->
     <div class="adminapp-container">
         <div class="dashboard-form-box">
             <div class="dashboard-header">
@@ -63,10 +65,7 @@
                                 {{PartnerOrg}}
                             </div>
                         </div>
-                        <button class="Prop-btn"
-                                onclick="window.location.href='/adminapplication/{{applicant_id}}'">
-                            View Application
-                        </button>
+                        <button class="Prop-btn" onclick="window.location.href='/adminapplication/{{applicant_id}}'">View Application</button>
                     </div>
                 </div>
                 {{/each}}
