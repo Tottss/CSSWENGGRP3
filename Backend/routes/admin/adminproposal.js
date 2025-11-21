@@ -3,9 +3,11 @@ import { docClient } from "../../config/dynamodb.js";
 import {
     ScanCommand,
     GetCommand,
+    DeleteCommand,
     UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { approveProposal } from "../admin/approveproposal.js";
+import nodemailer from "nodemailer";
 
 const router = express.Router();
 const TABLE_NAME = "Proposals";
@@ -84,13 +86,62 @@ router.post("/:id/approve", approveProposal);
 // decline a proposal
 router.post("/:id/decline", async (req, res) => {
     try {
-        await docClient.send(
-            new UpdateCommand({
+        const proposalId = req.params.id;
+
+        // load proposal
+        const propData = await docClient.send(
+            new GetCommand({
                 TableName: TABLE_NAME,
-                Key: { proposal_id: req.params.id },
-                UpdateExpression: "SET #st = :declined",
-                ExpressionAttributeNames: { "#st": "status" },
-                ExpressionAttributeValues: { ":declined": "declined" },
+                Key: { proposal_id: proposalId },
+            })
+        );
+
+        if (!propData.Item) {
+            return res.redirect("/admindashboard");
+        }
+
+        const proposal = propData.Item;
+
+        // fetch email from LoginCredentials
+        const credData = await docClient.send(
+            new ScanCommand({
+                TableName: "LoginCredentials",
+                FilterExpression: "partner_id = :pid",
+                ExpressionAttributeValues: { ":pid": proposal.partner_id },
+            })
+        );
+
+        const partnerEmail = credData.Items?.[0]?.user_email || null;
+
+        // send decline email
+        if (partnerEmail) {
+            const transporter = nodemailer.createTransport({
+                service: "gmail",
+                auth: {
+                    user: process.env.EMAIL_USER,
+                    pass: process.env.EMAIL_PASS,
+                },
+            });
+
+            await transporter.sendMail({
+                from: `"Admin" <${process.env.MAIL_USER}>`,
+                to: partnerEmail,
+                subject: "Your Project Proposal Has Been Declined",
+                html: `
+                    <h2>Proposal Declined</h2>
+                    <p>We regret to inform you that your proposal 
+                       <strong>${proposal.proposal_title}</strong> 
+                       has been declined.</p>
+                    <p>You may revise and resubmit a new proposal if you wish.</p>
+                `,
+            });
+        }
+
+        // delete proposal from table
+        await docClient.send(
+            new DeleteCommand({
+                TableName: TABLE_NAME,
+                Key: { proposal_id: proposalId },
             })
         );
 

@@ -2,9 +2,11 @@ import {
     GetCommand,
     PutCommand,
     ScanCommand,
-    UpdateCommand,
+    QueryCommand,
+    DeleteCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../../config/dynamodb.js";
+import nodemailer from "nodemailer";
 
 export const approveProposal = async (req, res) => {
     try {
@@ -23,6 +25,18 @@ export const approveProposal = async (req, res) => {
         }
 
         const proposal = proposalData.Item;
+
+        // get email from session-based directory table (LoginCredentials)
+        const partnerEmailData = await docClient.send(
+            new QueryCommand({
+                TableName: "LoginCredentials",
+                IndexName: "partner_id-index",
+                KeyConditionExpression: "partner_id = :pid",
+                ExpressionAttributeValues: { ":pid": proposal.partner_id }
+            })
+        );
+
+        const partnerEmail = partnerEmailData.Items?.[0]?.user_email;
 
         // automatically generate next project_id (increments)
         const scanData = await docClient.send(
@@ -49,10 +63,8 @@ export const approveProposal = async (req, res) => {
             end_date: proposal.end_date,
             budget: Number(proposal.proposed_budget) || 0,
 
-            // display photo default
             project_imageURL: "/ASSETS/default_project.jpg",
 
-            // merged impact tracker defaults
             actual_beneficiaries: 0,
             target_beneficiaries: Number(proposal.num_beneficiaries) || 0,
             expenses_to_date: 0,
@@ -62,7 +74,6 @@ export const approveProposal = async (req, res) => {
             uploads: [],
             lastUpdate: "N/A",
 
-            // from old projects
             status: "active",
             date_created: new Date().toISOString(),
         };
@@ -74,21 +85,40 @@ export const approveProposal = async (req, res) => {
             })
         );
 
-        // update proposal status
+        // send approval email
+        if (partnerEmail) {
+            const transporter = nodemailer.createTransport({
+                service: "gmail",
+                auth: {
+                    user: process.env.EMAIL_USER,
+                    pass: process.env.EMAIL_PASS,
+                },
+            });
+
+            await transporter.sendMail({
+                from: `"Admin" <${process.env.MAIL_USER}>`,
+                to: partnerEmail,
+                subject: "Your Project Proposal Has Been Approved",
+                html: `
+                    <h2>Congratulations!</h2>
+                    <p>Your proposal <strong>${proposal.proposal_title}</strong> has been approved.</p>
+                    <p>You may now begin updating your project in the Impact Tracker.</p>
+                `,
+            });
+        }
+
+        // Delete proposal after approval
         await docClient.send(
-            new UpdateCommand({
+            new DeleteCommand({
                 TableName: "Proposals",
                 Key: { proposal_id: proposalId },
-                UpdateExpression: "SET #s = :approved",
-                ExpressionAttributeNames: { "#s": "status" },
-                ExpressionAttributeValues: { ":approved": "approved" },
             })
         );
 
         res.redirect("/admindashboard");
     } catch (err) {
         console.error("Error approving proposal:", err);
-        res.status(500).json({
+        return res.status(500).json({
             message: "Internal server error",
             error: err.message,
         });
