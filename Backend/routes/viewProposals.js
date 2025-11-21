@@ -8,9 +8,9 @@ const TABLE = "Proposals";
 // render list of proposals (filters, only pending, proposals associated to current user)
 router.get("/viewproposal-list", async (req, res) => {
   try {
-    const userId = req.session.partner_id;
+    const partnerId = req.session.partner_id;
 
-    if (!userId) {
+    if (!partnerId) {
       return res.redirect("/login");
     }
 
@@ -18,14 +18,14 @@ router.get("/viewproposal-list", async (req, res) => {
     const result = await docClient.send(
       new QueryCommand({
         TableName: TABLE,
-        IndexName: "user_id-status-index",
-        KeyConditionExpression: "#uid = :uid AND #st = :pending",
+        IndexName: "partner_id-status-index",
+        KeyConditionExpression: "#pid = :pid AND #st = :pending",
         ExpressionAttributeNames: {
-          "#uid": "user_id",
+          "#pid": "partner_id",
           "#st": "status",
         },
         ExpressionAttributeValues: {
-          ":uid": userId,
+          ":pid": partnerId,
           ":pending": "pending",
         },
       })
@@ -33,12 +33,11 @@ router.get("/viewproposal-list", async (req, res) => {
 
     // map results to proposal list format
     const proposals = (result.Items || []).map((p) => ({
-      ProjectName: p.ProjTitle,
-      Date: p.CreatedAt ? p.CreatedAt.split("T")[0] : "",
-      href: `/viewproposal/${encodeURIComponent(p.proposal_id)}`,
+      ProjectName: p.proposal_title,
+      Date: p.created_at ? p.created_at.split("T")[0] : "",
+      href: `/viewproposal/${p.proposal_id}`,
       proposal_id: p.proposal_id,
-      partner_org: p.partner_org || p.user_id || "Unknown",
-      status: p.status || "unknown",
+      status: p.status,
     }));
 
     res.render("viewproposal-list", { Proposals: proposals });
@@ -51,34 +50,35 @@ router.get("/viewproposal-list", async (req, res) => {
 // show one proposal by id
 router.get("/viewproposal/:id", async (req, res) => {
   try {
-    const id = req.params.id;
+    const proposalId = req.params.id;
+
     const result = await docClient.send(
       new GetCommand({
         TableName: TABLE,
-        Key: { proposal_id: id },
+        Key: { proposal_id: proposalId },
       })
     );
 
-    if (!result.Item) return res.status(404).send("Proposal not found");
+    if (!result.Item) {
+      return res.status(404).send("Proposal not found");
+    }
 
     const p = result.Item;
 
-    const comments = Array.isArray(p.comments) ? p.comments : [];
-
     res.render("viewproposal", {
-      projTitle: p.ProjTitle,
-      projSummary: p.ProjSummary,
-      targetValue: p.TargetBeneficiaries,
-      advoacyArea: p.AdvocacyArea,
-      SDG: p.SDGAlignment || p.SDG || "",
-      startDate: p.timelineStart,
-      endDate: p.timelineEnd,
-      proposedBudget: p.ProposedBudget,
-      detailedProposal: p.ProposalFile,
       proposal_id: p.proposal_id,
-      partner_org: p.partner_org || p.user_id,
-      comments,
-      status: p.status || "pending",
+      partner_id: p.partner_id,
+      projTitle: p.proposal_title,
+      projSummary: p.proposal_summary,
+      targetValue: p.num_beneficiaries,
+      advocacyArea: p.proposal_advocacy_area,
+      SDG: p.proposal_sdg_alignment,
+      startDate: p.start_date,
+      endDate: p.end_date,
+      proposedBudget: p.proposed_budget,
+      detailedProposal: p.detailed_proposal,
+      comments: p.admin_comments || [],
+      status: p.status,
     });
   } catch (err) {
     console.error("Error loading proposal:", err);

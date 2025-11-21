@@ -17,12 +17,8 @@ router.get("/list", async (req, res) => {
             new ScanCommand({
                 TableName: TABLE_NAME,
                 FilterExpression: "#st = :pending",
-                ExpressionAttributeNames: {
-                    "#st": "status",
-                },
-                ExpressionAttributeValues: {
-                    ":pending": "pending",
-                },
+                ExpressionAttributeNames: { "#st": "status" },
+                ExpressionAttributeValues: { ":pending": "pending" },
             })
         );
 
@@ -30,9 +26,9 @@ router.get("/list", async (req, res) => {
 
         const formatted = proposals.map((p) => ({
             Submission: true,
-            ProjectName: p.ProjTitle,
-            Date: p.CreatedAt.split("T")[0],
-            PartnerOrg: p.partner_org,
+            ProjectName: p.proposal_title,
+            Date: p.created_at?.split("T")[0] || "",
+            PartnerOrg: p.partner_id,
             href: `/adminproposal/${p.proposal_id}`,
         }));
 
@@ -64,17 +60,17 @@ router.get("/:id", async (req, res) => {
 
         res.render("adminproposal", {
             proposalId: p.proposal_id,
-            orgname: p.partner_org,
-            projTitle: p.ProjTitle,
-            projectDesc: p.ProjSummary,
-            targetValue: p.TargetBeneficiaries,
-            advocacyArea: p.AdvocacyArea,
-            sdgAlignment: p.SDGAlignment,
-            startDate: p.timelineStart,
-            endDate: p.timelineEnd,
-            totalBudget: p.ProposedBudget,
-            Proposalpdf: p.ProposalFile,
-            comments: p.comments || [],
+            orgname: p.partner_id,
+            projTitle: p.proposal_title,
+            projectDesc: p.proposal_summary,
+            targetValue: p.num_beneficiaries,
+            advocacyArea: p.proposal_advocacy_area,
+            sdgAlignment: p.proposal_sdg_alignment,
+            startDate: p.start_date,
+            endDate: p.end_date,
+            totalBudget: p.proposed_budget,
+            Proposalpdf: p.detailed_proposal,
+            comments: p.admin_comments || [],
         });
     } catch (err) {
         console.error("Fetch error:", err);
@@ -118,7 +114,7 @@ router.post("/:id/comment", async (req, res) => {
                 TableName: TABLE_NAME,
                 Key: { proposal_id: req.params.id },
                 UpdateExpression:
-                    "SET comments = list_append(if_not_exists(comments, :emptyList), :newComment)",
+                    "SET admin_comments = list_append(if_not_exists(admin_comments, :empty), :newComment)",
                 ExpressionAttributeValues: {
                     ":newComment": [
                         {
@@ -127,7 +123,7 @@ router.post("/:id/comment", async (req, res) => {
                             timestamp: new Date().toISOString(),
                         }
                     ],
-                    ":emptyList": [],
+                    ":empty": [],
                 },
             })
         );

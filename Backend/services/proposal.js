@@ -23,13 +23,15 @@ export const createProposal = async (req, res) => {
     const file = req.file;
     if (!file) return res.status(400).json({ message: "No file uploaded" });
 
-    // Temporary hardcode until session integration
-    const user_id = req.session.user_id || 2; // temp fallback (user account)
-    const partner_org = "Partner_Account"; // reminder to fetch from session in future (user_name)
+    const partner_id = req.session.partner_id;
+
+    if (!partner_id) {
+      return res.status(401).json({ message: "User not logged in." });
+    }
 
     // Upload file to S3
-    const proposalId = uuidv4();
-    const fileKey = `proposals/${proposalId}-${file.originalname}`;
+    const proposal_id = uuidv4();
+    const fileKey = `proposals/${proposal_id}-${file.originalname}`;
 
     await s3Client.send(
       new PutObjectCommand({
@@ -42,21 +44,25 @@ export const createProposal = async (req, res) => {
 
     const fileUrl = `https://${BUCKET_NAME}.s3.amazonaws.com/${fileKey}`;
 
-    // Save metadata to DynamoDB
     const newProposal = {
-      proposal_id: proposalId,
-      user_id,
-      partner_org,
-      ProjTitle,
-      ProjSummary,
-      TargetBeneficiaries: Number(TargetBeneficiaries),
-      AdvocacyArea,
-      SDGAlignment,
-      timelineStart,
-      timelineEnd,
-      ProposedBudget: Number(ProposedBudget),
-      ProposalFile: fileUrl,
-      CreatedAt: new Date().toISOString(),
+      proposal_id,
+      partner_id,
+
+      proposal_title: ProjTitle,
+      proposal_summary: ProjSummary,
+      num_beneficiaries: Number(TargetBeneficiaries),
+      proposal_advocacy_area: AdvocacyArea,
+      proposal_sdg_alignment: SDGAlignment,
+
+      start_date: timelineStart,
+      end_date: timelineEnd,
+
+      proposed_budget: Number(ProposedBudget),
+      detailed_proposal: fileUrl,
+
+      admin_comments: [],
+
+      created_at: new Date().toISOString(),
       status: "pending",
     };
 
