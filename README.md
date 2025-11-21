@@ -5,7 +5,8 @@ This repository contains the fullstack code for Group 3's project.
 Techstack:
 
 - NodeJS
-- MongoDB
+- AWS DynamoDB
+- AWS S3
 - HTML
 - CSS
 - JavaScript
