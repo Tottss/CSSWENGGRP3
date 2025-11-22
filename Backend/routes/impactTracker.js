@@ -1,9 +1,10 @@
 import express from "express";
-import { ScanCommand, UpdateCommand, GetCommand } from "@aws-sdk/lib-dynamodb";
+import { ScanCommand, UpdateCommand, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
 import multer from "multer";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import s3Client from "../config/s3Client.js";
+import { getUpdatePeriod, sendTrackerUpdateEmail } from "../services/trackerupdate.js";
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -145,7 +146,7 @@ router.post("/tracker/save", uploadTracker, async (req, res) => {
       projectImageURL = `https://proposals-storage.s3.amazonaws.com/${key}`;
     }
 
-    // load existing uploads
+    // load existing project
     const current = await docClient.send(
       new GetCommand({
         TableName: "Projects",
@@ -165,23 +166,26 @@ router.post("/tracker/save", uploadTracker, async (req, res) => {
       computedProgress = Math.min(100, Math.max(0, Math.round((expense / budget) * 100)));
     }
 
-    // update Projects
+    // update project in DB
     await docClient.send(
       new UpdateCommand({
         TableName: "Projects",
         Key: { project_id: projectId },
         UpdateExpression: `
-          SET actual_beneficiaries = :actual,
-              target_beneficiaries = :target,
-              budget = :budget,
-              expenses_to_date = :exp,
-              progress_percent = :prog,
-              location = :loc,
-              narrative = :nar,
-              uploads = :uploads,
-              lastUpdate = :lu
-              ${projectImageURL ? ", project_imageURL = :img" : ""}
-        `,
+      SET actual_beneficiaries = :actual,
+          target_beneficiaries = :target,
+          budget = :budget,
+          expenses_to_date = :exp,
+          progress_percent = :prog,
+          #location = :loc,
+          narrative = :nar,
+          uploads = :uploads,
+          lastUpdate = :lu
+          ${projectImageURL ? ", project_imageURL = :img" : ""}
+    `,
+        ExpressionAttributeNames: {
+          "#location": "location"
+        },
         ExpressionAttributeValues: {
           ":actual": Number(fields.actual_beneficiaries) || 0,
           ":target": Number(fields.target_beneficiaries) || 0,
@@ -196,6 +200,34 @@ router.post("/tracker/save", uploadTracker, async (req, res) => {
         },
       })
     );
+
+    // send email notification to project owner
+    const updatePeriod = getUpdatePeriod();
+
+    // get project owner email
+    const credData = await docClient.send(
+      new QueryCommand({
+        TableName: "LoginCredentials",
+        IndexName: "partner_id-index",
+        KeyConditionExpression: "partner_id = :pid",
+        ExpressionAttributeValues: { ":pid": prev.user_id },
+      })
+    );
+
+    const partnerEmail = credData.Items?.[0]?.user_email;
+
+    if (partnerEmail) {
+      await sendTrackerUpdateEmail(partnerEmail, prev.project_name, {
+        updatePeriod,
+        actualBeneficiaries: Number(fields.actual_beneficiaries) || 0,
+        targetBeneficiaries: Number(fields.target_beneficiaries) || prev.target_beneficiaries,
+        budget,
+        expensesToDate: expense,
+        progressPercent: computedProgress,
+        location: fields.location || "",
+        narrative: fields.narrative || "",
+      });
+    }
 
     res.json({ success: true, project_imageURL: projectImageURL || undefined });
   } catch (err) {
