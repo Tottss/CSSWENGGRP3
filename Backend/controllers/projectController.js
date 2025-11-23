@@ -10,9 +10,6 @@ import Handlebars from "handlebars";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const PROJECTS_TABLE = "Projects";
-const PARTNERORG_TABLE = "PartnerOrg";
-
 export const showCommunityProject = async (req, res) => {
   const project_id = Number(req.params.project_id);
 
@@ -234,10 +231,7 @@ export const generateProgressReport = async (req, res) => {
     const browser = await puppeteer.launch({
       headless: true,
       executablePath: getChromePath(),
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-      ],
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
 
     const page = await browser.newPage();
