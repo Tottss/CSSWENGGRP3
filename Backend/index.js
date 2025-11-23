@@ -66,6 +66,5 @@ app.use("/", router);
 testDynamo();
 
 app.listen(PORT, function () {
-  console.log(process.env.PORT); // REMOVE AFTER TESTING
   console.log(`Server is running on PORT ${PORT}`);
 });
