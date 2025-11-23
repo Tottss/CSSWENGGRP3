@@ -10,6 +10,14 @@ import Handlebars from "handlebars";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+function getChromePath() {
+  try {
+    return execSync("which chromium-browser").toString().trim();
+  } catch {
+    return execSync("which chromium").toString().trim();
+  }
+}
+
 export const showCommunityProject = async (req, res) => {
   const project_id = Number(req.params.project_id);
 
