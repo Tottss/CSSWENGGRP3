@@ -2,7 +2,7 @@ import { ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
 
 export const userDashboard = async (req, res) => {
-  // this is for testing admin redirect
+  // if user is an admin
   if (req.session.is_admin) {
     return res.redirect("/admindashboard");
   }
@@ -15,18 +15,19 @@ export const userDashboard = async (req, res) => {
   try {
     const userId = req.session.partner_id;
 
-    console.log("Session id (for debugging): ", req.session.id); // remove after testing
-    console.log("Session User Id:", req.session.partner_id); // remove after testing
+    // remove after testing
+    console.log("Session id (for debugging): ", req.session.id);
+    console.log("Session User Id:", req.session.partner_id);
+    // remove after testing
 
-    // Fetch all projects (for Community Projects)
+    // fetch all projects of the community
     const allProjectsData = await docClient.send(
       new ScanCommand({
-        TableName: "Projects",
-        // Gets all projects from all users
+        TableName: process.env.PROJECTS_TABLE,
       })
     );
 
-    // Fetch partner’s own projects (currently logged in partner) **hardcoded user for now**
+    // fetch your own project
     const yourProjectsData = await docClient.send(
       new ScanCommand({
         TableName: "Projects",
@@ -40,7 +41,7 @@ export const userDashboard = async (req, res) => {
 
     const partnerData = await docClient.send(
       new ScanCommand({
-        TableName: "PartnerOrg",
+        TableName: process.env.PARTNER_ORG_TABLE,
         FilterExpression: "partner_id = :uid",
         ExpressionAttributeValues: { ":uid": Number(userId) },
       })

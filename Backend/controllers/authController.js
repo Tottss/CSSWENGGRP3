@@ -2,9 +2,10 @@
 export const showLogin = async (req, res) => {
   req.session.visited = true;
 
-  // Debug logs (remove in production)
+  // remove this before project turnover
   console.log(req.session);
   console.log(req.sessionID);
+  // remove this before project turnover
 
   res.render("login", {
     title: "Login Page",

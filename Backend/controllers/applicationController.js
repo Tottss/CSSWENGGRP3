@@ -6,8 +6,6 @@ import crypto from "crypto"; // for random password
 import bcrypt from "bcrypt";
 import { sendEmail } from "../services/applicationmail.js";
 
-const APPLICANTS_TABLE = "Applicants";
-
 const approvalMessage = (email, tempPassword) => `
 Your application has been approved.
 
@@ -43,7 +41,7 @@ export const showApplication = async (req, res) => {
     // Query the applicant record
     const result = await docClient.send(
       new GetCommand({
-        TableName: APPLICANTS_TABLE,
+        TableName: process.env.APPLICANTS_TABLE,
         Key: {
           applicant_id: applicantId, // must match your PK name
         },
@@ -87,7 +85,7 @@ export const approveApplication = async (req, res) => {
     // Fetch the applicant
     const result = await docClient.send(
       new GetCommand({
-        TableName: APPLICANTS_TABLE,
+        TableName: process.env.APPLICANTS_TABLE,
         Key: { applicant_id: applicantId },
       })
     );
@@ -139,29 +137,36 @@ export const approveApplication = async (req, res) => {
 
     // Store records in DynamoDB
     await docClient.send(
-      new PutCommand({ TableName: "LoginCredentials", Item: loginData })
+      new PutCommand({
+        TableName: process.env.LOGIN_CREDENTIALS_TABLE,
+        Item: loginData,
+      })
     );
     await docClient.send(
-      new PutCommand({ TableName: "PartnerOrg", Item: partnerData })
+      new PutCommand({
+        TableName: process.env.PARTNER_ORG_TABLE,
+        Item: partnerData,
+      })
     );
     await docClient.send(
-      new PutCommand({ TableName: "ContactPerson", Item: contactData })
+      new PutCommand({
+        TableName: process.env.CONTACT_PERSON_TABLE,
+        Item: contactData,
+      })
     );
     await docClient.send(
-      new PutCommand({ TableName: "Location", Item: locationData })
-    );
-
-    // Delete applicant afterwards
-    await docClient.send(
-      new DeleteCommand({
-        TableName: APPLICANTS_TABLE,
-        Key: { applicant_id: applicantId },
+      new PutCommand({
+        TableName: process.env.LOCATION_TABLE,
+        Item: locationData,
       })
     );
 
-    // Email placeholder
-    console.log(
-      `Login details sent to ${a.partner_email}: password=${generatedPassword}`
+    // delete applicant records after account approval
+    await docClient.send(
+      new DeleteCommand({
+        TableName: process.env.APPLICANTS_TABLE,
+        Key: { applicant_id: applicantId },
+      })
     );
 
     await sendEmail(
@@ -170,7 +175,7 @@ export const approveApplication = async (req, res) => {
       approvalMessage(a.partner_email, generatedPassword)
     );
 
-    // Redirect to admin dashboard
+    // redirect to admin dashboard
     return res.redirect("/adminDashboard");
   } catch (err) {
     console.error("Error approving application:", err);
@@ -181,13 +186,11 @@ export const approveApplication = async (req, res) => {
 export const declineApplication = async (req, res) => {
   const applicantId = Number(req.params.applicant_id);
 
-  const APPLICANTS_TABLE = "Applicants";
-
   try {
-    // Fetch applicant for email + details
+    // fetch applicant for email + details
     const result = await docClient.send(
       new GetCommand({
-        TableName: APPLICANTS_TABLE,
+        TableName: process.env.APPLICANTS_TABLE,
         Key: { applicant_id: applicantId },
       })
     );
@@ -198,17 +201,12 @@ export const declineApplication = async (req, res) => {
 
     const a = result.Item;
 
-    // Delete the applicant
+    // delete the applicant
     await docClient.send(
       new DeleteCommand({
-        TableName: APPLICANTS_TABLE,
+        TableName: process.env.APPLICANTS_TABLE,
         Key: { applicant_id: applicantId },
       })
-    );
-
-    // for testing
-    console.log(
-      `Rejection email sent to ${a.partner_email}: "Your application has been declined."`
     );
 
     await sendEmail(
@@ -217,8 +215,6 @@ export const declineApplication = async (req, res) => {
       rejectionMessage(a.partner_email)
     );
 
-    // return res.status(200).send("Application declined and applicant removed");
-    // Redirect to admin dashboard
     return res.redirect("/adminDashboard");
   } catch (err) {
     console.error("Error declining application:", err);

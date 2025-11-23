@@ -3,7 +3,6 @@ import { GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
 
 const router = express.Router();
-const TABLE = "Proposals";
 
 // render list of proposals (filters, only pending, proposals associated to current user)
 router.get("/viewproposal-list", async (req, res) => {
@@ -17,7 +16,7 @@ router.get("/viewproposal-list", async (req, res) => {
     // query only pending proposals for the user
     const result = await docClient.send(
       new QueryCommand({
-        TableName: TABLE,
+        TableName: process.env.PROPOSALS_TABLE,
         IndexName: "partner_id-status-index",
         KeyConditionExpression: "#pid = :pid AND #st = :pending",
         ExpressionAttributeNames: {
@@ -54,7 +53,7 @@ router.get("/viewproposal/:id", async (req, res) => {
 
     const result = await docClient.send(
       new GetCommand({
-        TableName: TABLE,
+        TableName: process.env.PROPOSALS_TABLE,
         Key: { proposal_id: proposalId },
       })
     );

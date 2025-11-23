@@ -2,8 +2,6 @@ import { PutCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
 import { sendEmail } from "../services/applicationmail.js";
 
-const APPLICANTS_TABLE = "Applicants";
-
 export const processApplication = async (req, res) => {
   try {
     const requiredFields = [
@@ -26,7 +24,7 @@ export const processApplication = async (req, res) => {
       }
     }
 
-    // Generate an auto-increment-like ID (timestamp-based)
+    // generate an auto-increment-like ID (timestamp-based)
     const applicantId = Date.now();
 
     const item = {
@@ -47,7 +45,7 @@ export const processApplication = async (req, res) => {
 
     await docClient.send(
       new PutCommand({
-        TableName: APPLICANTS_TABLE,
+        TableName: process.env.APPLICANTS_TABLE,
         Item: item,
       })
     );

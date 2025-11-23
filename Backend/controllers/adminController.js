@@ -7,9 +7,6 @@ export const showAdminDashboard = async (req, res) => {
     return res.status(403).send("Access denied. This is an admin only page.");
   }
 
-  const APPLICANTS_TABLE = "Applicants";
-  const PROPOSALS_TABLE = "Proposals";
-
   let applicants = [];
   let proposalNotifications = [];
 
@@ -17,11 +14,11 @@ export const showAdminDashboard = async (req, res) => {
     // Fetch all applicants
     const result = await docClient.send(
       new ScanCommand({
-        TableName: APPLICANTS_TABLE,
+        TableName: process.env.APPLICANTS_TABLE,
       })
     );
 
-    // Map to the format your Handlebars template expects
+    // map to the format our Handlebars template expects
     applicants = (result.Items || []).map((item) => ({
       PartnerOrg: item.partner_name,
       applicant_id: item.applicant_id,
@@ -34,7 +31,7 @@ export const showAdminDashboard = async (req, res) => {
     // Fetch all proposals
     const proposalResult = await docClient.send(
       new ScanCommand({
-        TableName: PROPOSALS_TABLE,
+        TableName: process.env.PROPOSALS_TABLE,
       })
     );
 

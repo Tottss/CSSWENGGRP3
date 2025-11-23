@@ -2,20 +2,19 @@ import { UpdateCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
 
 export const showEditProfile = async (req, res) => {
-  // Admin view of edit profile to be implemented later
+  // admin view of edit profile to be implemented later
   if (req.session.is_admin) {
     return res.status(403).send("Admin Edit Profile To Be Implemented Soon.");
   }
 
   res.render("profiledit", {
-    // ImageURL: req.session.ImageURL,
     isRequired: false,
     user: req.session.user,
   });
 };
 
 export const showViewProfile = async (req, res) => {
-  // Admin view of profile to be implemented later
+  // admin view of profile to be implemented later
   if (req.session.is_admin) {
     return res.status(403).send("Admin Profile View To Be Implemented Soon.");
   }
@@ -28,21 +27,21 @@ export const showViewProfile = async (req, res) => {
     const [partnerScan, contactScan, locationScan] = await Promise.all([
       docClient.send(
         new ScanCommand({
-          TableName: "PartnerOrg",
+          TableName: process.env.PARTNER_ORG_TABLE,
           FilterExpression: "partner_id = :pid",
           ExpressionAttributeValues: { ":pid": partner_id },
         })
       ),
       docClient.send(
         new ScanCommand({
-          TableName: "ContactPerson",
+          TableName: process.env.CONTACT_PERSON_TABLE,
           FilterExpression: "contact_id = :pid",
           ExpressionAttributeValues: { ":pid": partner_id },
         })
       ),
       docClient.send(
         new ScanCommand({
-          TableName: "Location",
+          TableName: process.env.LOCATION_TABLE,
           FilterExpression: "location_id = :pid",
           ExpressionAttributeValues: { ":pid": partner_id },
         })
@@ -78,9 +77,9 @@ export const showViewProfile = async (req, res) => {
 };
 
 export const updateProfile = async (req, res) => {
+  // if (!user) return res.status(401).send("Unauthorized");
   try {
     const user = req.session.user;
-    // if (!user) return res.status(401).send("Unauthorized");
 
     const partner_id = req.session.partner_id;
 
@@ -103,7 +102,7 @@ export const updateProfile = async (req, res) => {
     await Promise.all([
       docClient.send(
         new UpdateCommand({
-          TableName: "PartnerOrg",
+          TableName: process.env.PARTNER_ORG_TABLE,
           Key: { partner_id },
           UpdateExpression: `SET partner_name = :name, partner_email = :email, partner_type = :ptype, advocacy_focus = :adv, profile_picture = :img`,
           ExpressionAttributeValues: {
@@ -117,7 +116,7 @@ export const updateProfile = async (req, res) => {
       ),
       docClient.send(
         new UpdateCommand({
-          TableName: "ContactPerson",
+          TableName: process.env.CONTACT_PERSON_TABLE,
           Key: { contact_id: partner_id },
           UpdateExpression: `SET contact_name = :cname, contact_position = :cpos, contact_number = :cnum`,
           ExpressionAttributeValues: {
@@ -129,7 +128,7 @@ export const updateProfile = async (req, res) => {
       ),
       docClient.send(
         new UpdateCommand({
-          TableName: "Location",
+          TableName: process.env.LOCATION_TABLE,
           Key: { location_id: partner_id },
           UpdateExpression: `SET full_address = :addr, province = :prov, municipality = :mun, barangay = :brgy`,
           ExpressionAttributeValues: {

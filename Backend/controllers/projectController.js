@@ -9,16 +9,13 @@ import Handlebars from "handlebars";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const PROJECTS_TABLE = "Projects";
-const PARTNERORG_TABLE = "PartnerOrg";
-
 export const showCommunityProject = async (req, res) => {
   const project_id = Number(req.params.project_id);
 
   try {
     const projectResult = await docClient.send(
       new GetCommand({
-        TableName: PROJECTS_TABLE,
+        TableName: process.env.PROJECTS_TABLE,
         Key: { project_id: project_id },
       })
     );
@@ -31,7 +28,7 @@ export const showCommunityProject = async (req, res) => {
 
     const partnerResult = await docClient.send(
       new GetCommand({
-        TableName: PARTNERORG_TABLE,
+        TableName: process.env.PARTNER_ORG_TABLE,
         Key: { partner_id: Number(project.user_id) },
       })
     );
@@ -40,7 +37,7 @@ export const showCommunityProject = async (req, res) => {
 
     const locationResult = await docClient.send(
       new GetCommand({
-        TableName: "Location",
+        TableName: process.env.LOCATION_TABLE,
         Key: { location_id: Number(project.user_id) },
       })
     );
@@ -65,10 +62,10 @@ export const showCommunityProject = async (req, res) => {
       project.uploads?.length > 0
         ? project.uploads
         : [
-          "/ASSETS/project-photo1.jpg",
-          "/ASSETS/project-photo2.jpg",
-          "/ASSETS/project-photo1.jpg",
-        ];
+            "/ASSETS/project-photo1.jpg",
+            "/ASSETS/project-photo2.jpg",
+            "/ASSETS/project-photo1.jpg",
+          ];
 
     res.render("communityProject", {
       // From Projects table
@@ -106,13 +103,15 @@ export const listCommunityProjects = async (req, res) => {
     // Fetch ALL accepted projects from the Projects table
     const data = await docClient.send(
       new ScanCommand({
-        TableName: "Projects",
+        TableName: process.env.PROJECTS_TABLE,
       })
     );
 
     const projects = data.Items || [];
 
+    // remove before deployment
     console.log("Project ID: ", projects);
+    // remove before deployment
 
     res.render("projects", {
       Title: "Community Projects",
@@ -138,7 +137,7 @@ export const generateProgressReport = async (req, res) => {
     // load project data
     const projectData = await docClient.send(
       new GetCommand({
-        TableName: PROJECTS_TABLE,
+        TableName: process.env.PROJECTS_TABLE,
         Key: { project_id },
       })
     );
@@ -152,7 +151,7 @@ export const generateProgressReport = async (req, res) => {
     // load partner organization data
     const partnerResult = await docClient.send(
       new GetCommand({
-        TableName: PARTNERORG_TABLE,
+        TableName: process.env.PARTNER_ORG_TABLE,
         Key: { partner_id: Number(project.user_id) },
       })
     );
@@ -162,7 +161,7 @@ export const generateProgressReport = async (req, res) => {
     // load location data
     const locationResult = await docClient.send(
       new GetCommand({
-        TableName: "Location",
+        TableName: process.env.LOCATION_TABLE,
         Key: { location_id: Number(project.user_id) },
       })
     );
@@ -178,29 +177,34 @@ export const generateProgressReport = async (req, res) => {
       .join(", ");
 
     // calculate additional metrics
-    const beneficiaryRate = project.target_beneficiaries > 0
-      ? Math.round((project.actual_beneficiaries / project.target_beneficiaries) * 100)
-      : 0;
+    const beneficiaryRate =
+      project.target_beneficiaries > 0
+        ? Math.round(
+            (project.actual_beneficiaries / project.target_beneficiaries) * 100
+          )
+        : 0;
 
-    const remainingBudget = (project.budget || 0) - (project.expenses_to_date || 0);
-    const budgetUtilization = project.budget > 0
-      ? Math.round((project.expenses_to_date / project.budget) * 100)
-      : 0;
+    const remainingBudget =
+      (project.budget || 0) - (project.expenses_to_date || 0);
+    const budgetUtilization =
+      project.budget > 0
+        ? Math.round((project.expenses_to_date / project.budget) * 100)
+        : 0;
 
     // prepare template data
     const templateData = {
       project_name: project.project_name || "Untitled Project",
       organization_name: partner.partner_name || "Unknown Organization",
-      report_date: new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
+      report_date: new Date().toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
       }),
       last_update: project.lastUpdate || "N/A",
       project_summary: project.project_summary || "No summary provided",
       advocacy_area: project.advocacyArea || "Not specified",
       sdg_alignment: project.sdgAlignment || "Not specified",
-      timeline: `${project.start_date || 'N/A'} - ${project.end_date || 'N/A'}`,
+      timeline: `${project.start_date || "N/A"} - ${project.end_date || "N/A"}`,
       location: formattedLocation || "Not specified",
       progress_percent: project.progress_percent || 0,
       actual_beneficiaries: project.actual_beneficiaries || 0,
@@ -214,7 +218,10 @@ export const generateProgressReport = async (req, res) => {
     };
 
     // read and compile the template
-    const templatePath = path.join(__dirname, "../templates/progressReport.hbs");
+    const templatePath = path.join(
+      __dirname,
+      "../templates/progressReport.hbs"
+    );
     const templateSource = fs.readFileSync(templatePath, "utf8");
     const template = Handlebars.compile(templateSource);
     const html = template(templateData);
@@ -245,7 +252,10 @@ export const generateProgressReport = async (req, res) => {
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader(
       "Content-Disposition",
-      `attachment; filename="ProgressReport_${project.project_name.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf"`
+      `attachment; filename="ProgressReport_${project.project_name.replace(
+        /\s+/g,
+        "_"
+      )}_${new Date().toISOString().split("T")[0]}.pdf"`
     );
 
     res.send(pdfBuffer);

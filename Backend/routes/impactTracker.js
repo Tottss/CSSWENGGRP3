@@ -1,10 +1,18 @@
 import express from "express";
-import { ScanCommand, UpdateCommand, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import {
+  ScanCommand,
+  UpdateCommand,
+  GetCommand,
+  QueryCommand,
+} from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
 import multer from "multer";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import s3Client from "../config/s3Client.js";
-import { getUpdatePeriod, sendTrackerUpdateEmail } from "../services/trackerupdate.js";
+import {
+  getUpdatePeriod,
+  sendTrackerUpdateEmail,
+} from "../services/trackerupdate.js";
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -16,7 +24,7 @@ router.get("/tracker", async (req, res) => {
 
     const data = await docClient.send(
       new ScanCommand({
-        TableName: "Projects",
+        TableName: process.env.PROJECTS_TABLE,
         FilterExpression: "#uid = :uid",
         ExpressionAttributeNames: { "#uid": "user_id" },
         ExpressionAttributeValues: { ":uid": user_id },
@@ -31,7 +39,7 @@ router.get("/tracker", async (req, res) => {
     if (project_id) {
       const resp = await docClient.send(
         new GetCommand({
-          TableName: "Projects",
+          TableName: process.env.PROJECTS_TABLE,
           Key: { project_id: Number(project_id) },
         })
       );
@@ -75,7 +83,7 @@ router.get("/tracker/get/:project_id", async (req, res) => {
 
     const projectResp = await docClient.send(
       new GetCommand({
-        TableName: "Projects",
+        TableName: process.env.PROJECTS_TABLE,
         Key: { project_id },
       })
     );
@@ -159,17 +167,22 @@ router.post("/tracker/save", uploadTracker, async (req, res) => {
 
     // compute progress percent
     const budget = Number(fields.budget || prev.budget || 0);
-    const expense = Number(fields.expenses_to_date || prev.expenses_to_date || 0);
+    const expense = Number(
+      fields.expenses_to_date || prev.expenses_to_date || 0
+    );
 
     let computedProgress = 0;
     if (budget > 0) {
-      computedProgress = Math.min(100, Math.max(0, Math.round((expense / budget) * 100)));
+      computedProgress = Math.min(
+        100,
+        Math.max(0, Math.round((expense / budget) * 100))
+      );
     }
 
     // update project in DB
     await docClient.send(
       new UpdateCommand({
-        TableName: "Projects",
+        TableName: process.env.PROJECTS_TABLE,
         Key: { project_id: projectId },
         UpdateExpression: `
       SET actual_beneficiaries = :actual,
@@ -184,7 +197,7 @@ router.post("/tracker/save", uploadTracker, async (req, res) => {
           ${projectImageURL ? ", project_imageURL = :img" : ""}
     `,
         ExpressionAttributeNames: {
-          "#location": "location"
+          "#location": "location",
         },
         ExpressionAttributeValues: {
           ":actual": Number(fields.actual_beneficiaries) || 0,
@@ -207,7 +220,7 @@ router.post("/tracker/save", uploadTracker, async (req, res) => {
     // get project owner email
     const credData = await docClient.send(
       new QueryCommand({
-        TableName: "LoginCredentials",
+        TableName: process.env.LOGIN_CREDENTIALS_TABLE,
         IndexName: "partner_id-index",
         KeyConditionExpression: "partner_id = :pid",
         ExpressionAttributeValues: { ":pid": prev.user_id },
@@ -220,7 +233,8 @@ router.post("/tracker/save", uploadTracker, async (req, res) => {
       await sendTrackerUpdateEmail(partnerEmail, prev.project_name, {
         updatePeriod,
         actualBeneficiaries: Number(fields.actual_beneficiaries) || 0,
-        targetBeneficiaries: Number(fields.target_beneficiaries) || prev.target_beneficiaries,
+        targetBeneficiaries:
+          Number(fields.target_beneficiaries) || prev.target_beneficiaries,
         budget,
         expensesToDate: expense,
         progressPercent: computedProgress,
