@@ -35,11 +35,14 @@ export const showAdminDashboard = async (req, res) => {
       })
     );
 
+    // for testing
+    console.log("Test Log:", proposalResult.Items);
+
     proposalNotifications = (proposalResult.Items || []).map((item) => ({
       Submission: true,
       ProjectName: item.proposal_title,
       Date: item.created_at ? item.created_at.split("T")[0] : "N/A", // extract YYYY-MM-DD
-      PartnerOrg: item.partner_id,
+      PartnerOrg: item.partner_org || "{PARTNER_NAME HOLDER}",
       href: "/adminproposal/" + item.proposal_id,
     }));
   } catch (err) {

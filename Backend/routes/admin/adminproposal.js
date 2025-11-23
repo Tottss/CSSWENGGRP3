@@ -61,7 +61,7 @@ router.get("/:id", async (req, res) => {
 
     res.render("adminproposal", {
       proposalId: p.proposal_id,
-      orgname: p.partner_id,
+      orgname: p.partner_org || "{PARTNER_NAME HOLDER}",
       projTitle: p.proposal_title,
       projectDesc: p.proposal_summary,
       targetValue: p.num_beneficiaries,
