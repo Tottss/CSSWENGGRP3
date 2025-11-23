@@ -1,6 +1,7 @@
 import { GetCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-core";
+import { execSync } from "child_process";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -11,6 +12,14 @@ const __dirname = path.dirname(__filename);
 
 const PROJECTS_TABLE = "Projects";
 const PARTNERORG_TABLE = "PartnerOrg";
+
+function getChromePath() {
+  try {
+    return execSync("which chromium-browser").toString().trim();
+  } catch {
+    return execSync("which chromium").toString().trim();
+  }
+}
 
 export const showCommunityProject = async (req, res) => {
   const project_id = Number(req.params.project_id);
@@ -221,8 +230,12 @@ export const generateProgressReport = async (req, res) => {
 
     // launch puppeteer to generate PDF
     const browser = await puppeteer.launch({
-      headless: "new",
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      headless: true,
+      executablePath: getChromePath(),
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+      ],
     });
 
     const page = await browser.newPage();
