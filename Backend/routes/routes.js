@@ -28,6 +28,7 @@ import {
 import {
   listCommunityProjects,
   showCommunityProject,
+  generateProgressReport,
 } from "../controllers/projectController.js";
 import { userDashboard } from "../controllers/dashboardController.js";
 import { showProposal } from "../controllers/proposalController.js";
@@ -90,6 +91,7 @@ router.get("/profileview", showViewProfile);
 
 // new - made a function for this route
 router.get("/viewcommunityproject/:project_id", showCommunityProject);
+router.get("/viewcommunityproject/:project_id/generate", generateProgressReport);
 
 router.get("/editpassword", (req, res) => {
   res.render("editpassword", {});

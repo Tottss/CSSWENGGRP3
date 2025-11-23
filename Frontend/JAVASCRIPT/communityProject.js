@@ -15,3 +15,10 @@ function changeSlide(direction) {
 }
 
 window.onload = loadGalleryImage;
+
+document.getElementById("saveImpact").addEventListener("click", () => {
+    const projectId = document.getElementById("saveImpact").dataset.projectId;
+
+    // trigger backend PDF route
+    window.location.href = `/viewcommunityproject/${projectId}/generate`;
+});

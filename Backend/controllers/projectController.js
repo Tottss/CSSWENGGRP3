@@ -1,8 +1,15 @@
 import { GetCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
+import puppeteer from "puppeteer";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import Handlebars from "handlebars";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const PROJECTS_TABLE = "Projects";
-const IMPACTTRACKER_TABLE = "ImpactTracker";
 const PARTNERORG_TABLE = "PartnerOrg";
 
 export const showCommunityProject = async (req, res) => {
@@ -21,16 +28,6 @@ export const showCommunityProject = async (req, res) => {
     }
 
     const project = projectResult.Item;
-    console.log("Project Test Log: ", project);
-
-    const trackerResult = await docClient.send(
-      new GetCommand({
-        TableName: IMPACTTRACKER_TABLE,
-        Key: { project_id: project_id },
-      })
-    );
-
-    const tracker = trackerResult.Item || {};
 
     const partnerResult = await docClient.send(
       new GetCommand({
@@ -59,38 +56,44 @@ export const showCommunityProject = async (req, res) => {
       .filter(Boolean)
       .join(", ");
 
+    const proposalURL =
+      project.proposalURL ||
+      "https://proposals-storage.s3.ap-southeast-1.amazonaws.com/proposals/08150a89-14ab-4dcc-949f-eab757dd1ccf-Test+Proposal.pdf";
+
+    // Gallery images (from uploads array)
+    const galleryImages =
+      project.uploads?.length > 0
+        ? project.uploads
+        : [
+          "/ASSETS/project-photo1.jpg",
+          "/ASSETS/project-photo2.jpg",
+          "/ASSETS/project-photo1.jpg",
+        ];
+
     res.render("communityProject", {
       // From Projects table
       projtitle: project.project_name || "Not specified",
       projectID: project.project_id || "Not specified",
       orgName: partner.partner_name || "Not specified",
       ProjectDesc: project.project_summary || "Not specified",
-      projimage: project.project_imageURL || "Not specified",
       Advocacyarea: project.advocacyArea || "Not specified",
       SDG_alignment: project.sdgAlignment || "Not specified",
       communitylocation: formattedLocation || "Not specified",
-      Proposal:
-        "https://proposals-storage.s3.ap-southeast-1.amazonaws.com/proposals/08150a89-14ab-4dcc-949f-eab757dd1ccf-Test+Proposal.pdf", // change to project.url
+      Proposal: proposalURL,
 
-      // From ImpactTracker table
-      nBeneficiaries: tracker.target_beneficiaries || 0,
-      actualValue: tracker.actual_beneficiaries || 0,
-      targetValue: tracker.target_beneficiaries || 0,
-      expenses: tracker.expenses_to_date || 0,
-      progress: tracker.progress_percent || 0,
-      lastUpdate: tracker.lastUpdate || "N/A",
-      narrativeUpdate: tracker.narrative || "No narrative provided",
+      nBeneficiaries: project.target_beneficiaries || 0,
+      actualValue: project.actual_beneficiaries || 0,
+      targetValue: project.target_beneficiaries || 0,
+      expenses: project.expenses_to_date || 0,
+      progress: project.progress_percent || 0,
 
-      Timeline: project.Timeline || "Month Day, Year - Month Day, Year", // to be added in Projects table
-      Budget: tracker.budget,
+      lastUpdate: project.lastUpdate || "N/A",
+      narrativeUpdate: project.narrative || "No narrative provided",
 
-      // Gallery images (from uploads array)
-      galleryImages: [
-        // project.imageURL,
-        "/ASSETS/project-photo1.jpg",
-        "/ASSETS/project-photo2.jpg",
-        "/ASSETS/project-photo1.jpg",
-      ],
+      Timeline: `${project.start_date} - ${project.end_date}`,
+      Budget: project.budget,
+
+      galleryImages,
     });
   } catch (error) {
     console.error(error);
@@ -125,5 +128,129 @@ export const listCommunityProjects = async (req, res) => {
     res.status(500).render("error", {
       message: "Failed to load community projects.",
     });
+  }
+};
+
+export const generateProgressReport = async (req, res) => {
+  const project_id = Number(req.params.project_id);
+
+  try {
+    // load project data
+    const projectData = await docClient.send(
+      new GetCommand({
+        TableName: PROJECTS_TABLE,
+        Key: { project_id },
+      })
+    );
+
+    if (!projectData.Item) {
+      return res.status(404).send("Project not found");
+    }
+
+    const project = projectData.Item;
+
+    // load partner organization data
+    const partnerResult = await docClient.send(
+      new GetCommand({
+        TableName: PARTNERORG_TABLE,
+        Key: { partner_id: Number(project.user_id) },
+      })
+    );
+
+    const partner = partnerResult.Item || {};
+
+    // load location data
+    const locationResult = await docClient.send(
+      new GetCommand({
+        TableName: "Location",
+        Key: { location_id: Number(project.user_id) },
+      })
+    );
+
+    const location = locationResult.Item || {};
+    const formattedLocation = [
+      location.full_address,
+      location.barangay,
+      location.municipality,
+      location.province,
+    ]
+      .filter(Boolean)
+      .join(", ");
+
+    // calculate additional metrics
+    const beneficiaryRate = project.target_beneficiaries > 0
+      ? Math.round((project.actual_beneficiaries / project.target_beneficiaries) * 100)
+      : 0;
+
+    const remainingBudget = (project.budget || 0) - (project.expenses_to_date || 0);
+    const budgetUtilization = project.budget > 0
+      ? Math.round((project.expenses_to_date / project.budget) * 100)
+      : 0;
+
+    // prepare template data
+    const templateData = {
+      project_name: project.project_name || "Untitled Project",
+      organization_name: partner.partner_name || "Unknown Organization",
+      report_date: new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }),
+      last_update: project.lastUpdate || "N/A",
+      project_summary: project.project_summary || "No summary provided",
+      advocacy_area: project.advocacyArea || "Not specified",
+      sdg_alignment: project.sdgAlignment || "Not specified",
+      timeline: `${project.start_date || 'N/A'} - ${project.end_date || 'N/A'}`,
+      location: formattedLocation || "Not specified",
+      progress_percent: project.progress_percent || 0,
+      actual_beneficiaries: project.actual_beneficiaries || 0,
+      target_beneficiaries: project.target_beneficiaries || 0,
+      beneficiary_rate: beneficiaryRate,
+      budget: (project.budget || 0).toLocaleString(),
+      expenses_to_date: (project.expenses_to_date || 0).toLocaleString(),
+      remaining_budget: remainingBudget.toLocaleString(),
+      budget_utilization: budgetUtilization,
+      narrative: project.narrative || "No narrative update provided.",
+    };
+
+    // read and compile the template
+    const templatePath = path.join(__dirname, "../templates/progressReport.hbs");
+    const templateSource = fs.readFileSync(templatePath, "utf8");
+    const template = Handlebars.compile(templateSource);
+    const html = template(templateData);
+
+    // launch puppeteer to generate PDF
+    const browser = await puppeteer.launch({
+      headless: "new",
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
+
+    const page = await browser.newPage();
+    await page.setContent(html, { waitUntil: "networkidle0" });
+
+    const pdfBuffer = await page.pdf({
+      format: "A4",
+      printBackground: true,
+      margin: {
+        top: "20mm",
+        right: "15mm",
+        bottom: "20mm",
+        left: "15mm",
+      },
+    });
+
+    await browser.close();
+
+    // return PDF download
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="ProgressReport_${project.project_name.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf"`
+    );
+
+    res.send(pdfBuffer);
+  } catch (err) {
+    console.error("PDF Generation Error:", err);
+    res.status(500).send("Failed to generate report");
   }
 };
