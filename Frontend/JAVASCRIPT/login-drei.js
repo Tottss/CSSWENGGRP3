@@ -8,16 +8,15 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   const user_password = document.getElementById("password").value.trim();
 
   try {
-    // removed http://127.0.0.1:3000 in path
     const response = await fetch("/user/login", {
       method: "POST",
-      credentials: "include", // testing
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ user_email, user_password }),
     });
 
     const data = await response.json();
-    console.log(data);
+    console.log("data: ", data);
 
     if (response.ok) {
       if (data.user.is_admin) {

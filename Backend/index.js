@@ -25,7 +25,7 @@ app.use(
     origin: [
       "http://127.0.0.1:3000",
       "http://localhost:3000",
-      "https://bcfcommunityportal.onrender.com",
+      // "https://bcfcommunityportal.onrender.com",
     ],
     methods: ["GET", "POST"],
     credentials: true,
@@ -58,8 +58,8 @@ app.use(
     cookie: {
       maxAge: 60000 * 60, // 1 hour
       sameSite: "lax",
-      secure: true, // set to true if already deployed
-      httpOnly: true, // set to true if already deployed
+      secure: false, // set to true if already deployed
+      httpOnly: false, // set to true if already deployed
     },
   })
 );
