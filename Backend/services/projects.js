@@ -1,8 +1,6 @@
 import { ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
 
-const TABLE_NAME = "Projects";
-
 // View all projects for a specific user (partner)
 export const getUserProjects = async (req, res) => {
   try {
@@ -11,7 +9,7 @@ export const getUserProjects = async (req, res) => {
     console.log(req.session);
     const data = await docClient.send(
       new ScanCommand({
-        TableName: TABLE_NAME,
+        TableName: process.env.PROJECTS_TABLE,
         FilterExpression: "user_id = :uid",
         ExpressionAttributeValues: {
           ":uid": userId,

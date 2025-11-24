@@ -20,17 +20,19 @@ export const userDashboard = async (req, res) => {
     console.log("Session User Id:", req.session.partner_id);
     // remove after testing
 
-    // fetch all projects of the community
+    // fetch all community project except your own
     const allProjectsData = await docClient.send(
       new ScanCommand({
         TableName: process.env.PROJECTS_TABLE,
+        FilterExpression: "user_id <> :uid",
+        ExpressionAttributeValues: { ":uid": userId },
       })
     );
 
     // fetch your own project
     const yourProjectsData = await docClient.send(
       new ScanCommand({
-        TableName: "Projects",
+        TableName: process.env.PROJECTS_TABLE,
         FilterExpression: "user_id = :uid",
         ExpressionAttributeValues: { ":uid": userId },
       })
