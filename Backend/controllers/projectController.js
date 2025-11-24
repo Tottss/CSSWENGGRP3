@@ -1,11 +1,11 @@
 import { GetCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
-import puppeteer from "puppeteer";
+import puppeteer from 'puppeteer-core';
+import chromium from '@sparticuz/chromium';
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import Handlebars from "handlebars";
-import { executablePath } from "puppeteer";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -233,13 +233,10 @@ export const generateProgressReport = async (req, res) => {
 
     // launch puppeteer to generate PDF
     const browser = await puppeteer.launch({
-      headless: true,
-      executablePath: executablePath(),
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage'
-      ],
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await executablePath(),
+      headless: chromium.headless,
     });
 
     const page = await browser.newPage();
