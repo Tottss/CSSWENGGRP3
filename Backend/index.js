@@ -17,15 +17,13 @@ const app = express();
 
 const PORT = process.env.PORT;
 
-// change this one later with the deployment url
-// use .env for allowed origins
-// deployed website: https://bcfcommunityportal.onrender.com/
+// for testing, move values to .env
 app.use(
   cors({
     origin: [
-      "http://127.0.0.1:3000",
-      "http://localhost:3000",
-      // "https://bcfcommunityportal.onrender.com",
+      process.env.LOCAL_HOST_1,
+      process.env.LOCAL_HOST_2,
+      process.env.LOCAL_WEBSITE_URL,
     ],
     methods: ["GET", "POST"],
     credentials: true,
@@ -49,17 +47,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // sessions
-// move secret to .env before deployment
+/*
+  secure: true and httponly: true causes error
+*/
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "cssweng-bakhita",
+    secret: process.env.SESSION_SECRET,
     saveUninitialized: false,
     resave: false,
     cookie: {
       maxAge: 60000 * 60, // 1 hour
       sameSite: "lax",
-      secure: false, // set to true if already deployed
-      httpOnly: false, // set to true if already deployed
+      secure: false,
+      httpOnly: false,
     },
   })
 );
@@ -67,7 +67,6 @@ app.use(
 // delete after
 console.log("Secret: ", process.env.SESSION_SECRET);
 
-// app.options("*", cors());
 app.use("/", router);
 
 // log tables for testing
