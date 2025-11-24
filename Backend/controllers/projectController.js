@@ -1,14 +1,7 @@
 import { GetCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
-import puppeteer from 'puppeteer-core';
-import chromium from '@sparticuz/chromium';
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-import Handlebars from "handlebars";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import PDFDocument from "pdfkit";
+import { generateProgressReportPDF } from '../templates/progressReportLayout.js';
 
 export const showCommunityProject = async (req, res) => {
   const project_id = Number(req.params.project_id);
@@ -222,38 +215,7 @@ export const generateProgressReport = async (req, res) => {
       narrative: project.narrative || "No narrative update provided.",
     };
 
-    // read and compile the template
-    const templatePath = path.join(
-      __dirname,
-      "../templates/progressReport.hbs"
-    );
-    const templateSource = fs.readFileSync(templatePath, "utf8");
-    const template = Handlebars.compile(templateSource);
-    const html = template(templateData);
-
-    // launch puppeteer to generate PDF
-    const browser = await puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await executablePath(),
-      headless: chromium.headless,
-    });
-
-    const page = await browser.newPage();
-    await page.setContent(html, { waitUntil: "networkidle0" });
-
-    const pdfBuffer = await page.pdf({
-      format: "A4",
-      printBackground: true,
-      margin: {
-        top: "20mm",
-        right: "15mm",
-        bottom: "20mm",
-        left: "15mm",
-      },
-    });
-
-    await browser.close();
+    const doc = new PDFDocument({ size: "A4", margin: 50 });
 
     // return PDF download
     res.setHeader("Content-Type", "application/pdf");
@@ -265,7 +227,12 @@ export const generateProgressReport = async (req, res) => {
       )}_${new Date().toISOString().split("T")[0]}.pdf"`
     );
 
-    res.send(pdfBuffer);
+    doc.pipe(res);
+
+    generateProgressReportPDF(doc, templateData);
+
+    doc.end();
+
   } catch (err) {
     console.error("PDF Generation Error:", err);
     res.status(500).send("Failed to generate report");
