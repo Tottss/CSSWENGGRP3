@@ -37,6 +37,7 @@ import {
   declineApplication,
   showApplication,
 } from "../controllers/applicationController.js";
+import { showGenProg } from "../controllers/generateProgress.js";
 
 /*
   Note: Only routes should be here
@@ -106,24 +107,7 @@ router.use("/", viewProposalsRouter);
 router.use("/adminproposal", adminProposalRouter);
 
 // to be implemented
-router.get("/progress", (req, res) => {
-  res.render("generateProgress", {
-    projects: [
-      {
-        project_id: 1,
-        project_name: "Community Garden Project",
-      },
-      {
-        project_id: 2,
-        project_name: "Beach Cleanup Initiative",
-      },
-      {
-        project_id: 3,
-        project_name: "Tree Planting Program",
-      },
-    ],
-  });
-});
+router.get("/progress", showGenProg);
 
 // impact tracker routes
 router.use("/", impactTrackerRouter);
