@@ -102,6 +102,25 @@ router.use("/", viewProposalsRouter);
 
 router.use("/adminproposal", adminProposalRouter);
 
+router.get("/progress", (req, res) => {
+  res.render("generateProgress", {
+    projects: [
+      {
+        project_id: 1,
+        project_name: "Community Garden Project"
+      },
+      {
+        project_id: 2,
+        project_name: "Beach Cleanup Initiative"
+      },
+      {
+        project_id: 3,
+        project_name: "Tree Planting Program"
+      }
+    ]
+  });
+});
+
 // impact tracker routes
 router.use("/", impactTrackerRouter);
 
