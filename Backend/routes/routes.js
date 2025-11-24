@@ -91,7 +91,10 @@ router.get("/profileview", showViewProfile);
 
 // new - made a function for this route
 router.get("/viewcommunityproject/:project_id", showCommunityProject);
-router.get("/viewcommunityproject/:project_id/generate", generateProgressReport);
+router.get(
+  "/viewcommunityproject/:project_id/generate",
+  generateProgressReport
+);
 
 router.get("/editpassword", (req, res) => {
   res.render("editpassword", {});
@@ -102,22 +105,23 @@ router.use("/", viewProposalsRouter);
 
 router.use("/adminproposal", adminProposalRouter);
 
+// to be implemented
 router.get("/progress", (req, res) => {
   res.render("generateProgress", {
     projects: [
       {
         project_id: 1,
-        project_name: "Community Garden Project"
+        project_name: "Community Garden Project",
       },
       {
         project_id: 2,
-        project_name: "Beach Cleanup Initiative"
+        project_name: "Beach Cleanup Initiative",
       },
       {
         project_id: 3,
-        project_name: "Tree Planting Program"
-      }
-    ]
+        project_name: "Tree Planting Program",
+      },
+    ],
   });
 });
 

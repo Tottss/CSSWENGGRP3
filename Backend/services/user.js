@@ -3,9 +3,6 @@ import bcrypt from "bcrypt";
 import { docClient } from "../config/dynamodb.js";
 import { GetCommand } from "@aws-sdk/lib-dynamodb";
 
-// put table string in .env later
-const CREDENTIALS_TABLE = "LoginCredentials";
-
 export const userLogIn = asyncHandler(async (req, res) => {
   // remove before deployment
   console.log("Received login request: ", req.body);
@@ -21,7 +18,7 @@ export const userLogIn = asyncHandler(async (req, res) => {
   // Fetch user by email
   const result = await docClient.send(
     new GetCommand({
-      TableName: CREDENTIALS_TABLE,
+      TableName: process.env.LOGIN_CREDENTIALS_TABLE,
       Key: { user_email },
     })
   );
