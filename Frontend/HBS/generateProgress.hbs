@@ -1,0 +1,36 @@
+{{#> main}}
+<!-- Main Content -->
+  <main class="main-content" class="alert-box">
+    <div class="tracker-wrapper">
+      <div class="tracker-card">
+        <h2 class="tracker-header">Generate Progress Report</h2>
+
+        <!-- Project Dropdown -->
+        <div class="form-group">
+          <label for="projectSelect">Project</label>
+          <select id="projectSelect">
+              <option value="">Select Project</option>
+              {{#each projects}}
+                  <option value="{{this.project_id}}">{{this.project_name}}</option>
+              {{/each}}
+          </select>
+        </div>
+
+        <!-- Generate Progress Report Button -->
+        <button id="generate" class="progress-btn" type="button">Generate Progress Report</button>
+      </div>
+    </div>
+    <!-- Script for showing button when theres a selection-->
+    <script>
+        const projectSelect = document.getElementById("projectSelect");
+        const generateBtn = document.getElementById("generate");
+
+        projectSelect.addEventListener("change", function () {
+        if (this.value) {
+            generateBtn.style.display = "block";
+        } else {
+            generateBtn.style.display = "none";
+        }
+        });
+    </script>
+{{/main}}
