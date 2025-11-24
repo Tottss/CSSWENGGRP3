@@ -99,11 +99,15 @@ export const showCommunityProject = async (req, res) => {
 };
 
 export const listCommunityProjects = async (req, res) => {
+  const userId = req.session.partner_id;
+
   try {
-    // Fetch ALL accepted projects from the Projects table
+    // fetch all community project except your own
     const data = await docClient.send(
       new ScanCommand({
         TableName: process.env.PROJECTS_TABLE,
+        FilterExpression: "user_id <> :uid",
+        ExpressionAttributeValues: { ":uid": userId },
       })
     );
 
