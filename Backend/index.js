@@ -52,7 +52,7 @@ app.use(express.urlencoded({ extended: true }));
 // move secret to .env before deployment
 app.use(
   session({
-    secret: "cssweng-bakhita",
+    secret: process.env.SESSION_SECRET || "cssweng-bakhita",
     saveUninitialized: false,
     resave: false,
     cookie: {
@@ -63,6 +63,9 @@ app.use(
     },
   })
 );
+
+// delete after
+console.log("Secret: ", process.env.SESSION_SECRET);
 
 // app.options("*", cors());
 app.use("/", router);
