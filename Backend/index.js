@@ -19,9 +19,14 @@ const PORT = process.env.PORT;
 
 // change this one later with the deployment url
 // use .env for allowed origins
+// deployed website: https://bcfcommunityportal.onrender.com/
 app.use(
   cors({
-    origin: ["http://127.0.0.1:3000", "http://localhost:3000"],
+    origin: [
+      "http://127.0.0.1:3000",
+      "http://localhost:3000",
+      "https://bcfcommunityportal.onrender.com",
+    ],
     methods: ["GET", "POST"],
     credentials: true,
   })
@@ -53,8 +58,8 @@ app.use(
     cookie: {
       maxAge: 60000 * 60, // 1 hour
       sameSite: "lax",
-      secure: false, // set to true if using https
-      httpOnly: false, // try changing to true later
+      secure: true, // set to true if already deployed
+      httpOnly: true, // set to true if already deployed
     },
   })
 );
