@@ -85,35 +85,41 @@ export const approveProposal = async (req, res) => {
       })
     );
 
-    // send approval email
-    if (partnerEmail) {
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS,
-        },
-      });
-
-      await transporter.sendMail({
-        from: `"Admin" <${process.env.MAIL_USER}>`,
-        to: partnerEmail,
-        subject: "Your Project Proposal Has Been Approved",
-        html: `
-                    <h2>Congratulations!</h2>
-                    <p>Your proposal <strong>${proposal.proposal_title}</strong> has been approved.</p>
-                    <p>You may now begin updating your project in the Impact Tracker.</p>
-                `,
-      });
-    }
-
-    // Delete proposal after approval
+    // delete proposal before sending email
     await docClient.send(
       new DeleteCommand({
         TableName: process.env.PROPOSALS_TABLE,
         Key: { proposal_id: proposalId },
       })
     );
+
+    // send approval email
+    if (partnerEmail) {
+      try {
+        const transporter = nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
+          },
+        });
+
+        await transporter.sendMail({
+          from: `"Admin" <${process.env.EMAIL_USER}>`,
+          to: partnerEmail,
+          subject: "Your Project Proposal Has Been Approved",
+          html: `
+            <h2>Congratulations!</h2>
+            <p>Your proposal <strong>${proposal.proposal_title}</strong> has been approved.</p>
+            <p>You may now begin updating your project in the Impact Tracker.</p>
+          `,
+        });
+        console.log(`Approval email sent to ${partnerEmail}`);
+      } catch (emailError) {
+        // log error
+        console.error("Failed to send approval email (non-critical):", emailError);
+      }
+    }
 
     res.redirect("/admindashboard");
   } catch (err) {

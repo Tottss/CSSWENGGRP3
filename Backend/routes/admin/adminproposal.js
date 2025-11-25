@@ -112,37 +112,43 @@ router.post("/:id/decline", async (req, res) => {
 
     const partnerEmail = credData.Items?.[0]?.user_email || null;
 
-    // send decline email
-    if (partnerEmail) {
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS,
-        },
-      });
-
-      await transporter.sendMail({
-        from: `"Admin" <${process.env.MAIL_USER}>`,
-        to: partnerEmail,
-        subject: "Your Project Proposal Has Been Declined",
-        html: `
-                    <h2>Proposal Declined</h2>
-                    <p>We regret to inform you that your proposal 
-                       <strong>${proposal.proposal_title}</strong> 
-                       has been declined.</p>
-                    <p>You may revise and resubmit a new proposal if you wish.</p>
-                `,
-      });
-    }
-
-    // delete proposal from table
+    // delete proposal from table before sending email
     await docClient.send(
       new DeleteCommand({
         TableName: process.env.PROPOSALS_TABLE,
         Key: { proposal_id: proposalId },
       })
     );
+
+    // send decline email
+    if (partnerEmail) {
+      try {
+        const transporter = nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
+          },
+        });
+
+        await transporter.sendMail({
+          from: `"Admin" <${process.env.EMAIL_USER}>`,
+          to: partnerEmail,
+          subject: "Your Project Proposal Has Been Declined",
+          html: `
+            <h2>Proposal Declined</h2>
+            <p>We regret to inform you that your proposal 
+               <strong>${proposal.proposal_title}</strong> 
+               has been declined.</p>
+            <p>You may revise and resubmit a new proposal if you wish.</p>
+          `,
+        });
+        console.log(`Decline email sent to ${partnerEmail}`);
+      } catch (emailError) {
+        // log error
+        console.error("Failed to send decline email (non-critical):", emailError);
+      }
+    }
 
     res.redirect("/admindashboard");
   } catch (err) {
