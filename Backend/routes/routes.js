@@ -106,8 +106,9 @@ router.use("/", viewProposalsRouter);
 
 router.use("/adminproposal", adminProposalRouter);
 
-// to be implemented
+// generate progress report route
 router.get("/progress", showGenProg);
+router.get("/progress/:project_id/generate", generateProgressReport);
 
 // impact tracker routes
 router.use("/", impactTrackerRouter);

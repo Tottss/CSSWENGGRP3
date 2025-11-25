@@ -22,15 +22,19 @@
     </div>
     <!-- Script for showing button when theres a selection-->
     <script>
-        const projectSelect = document.getElementById("projectSelect");
-        const generateBtn = document.getElementById("generate");
+      const projectSelect = document.getElementById("projectSelect");
+      const generateBtn = document.getElementById("generate");
 
-        projectSelect.addEventListener("change", function () {
-        if (this.value) {
-            generateBtn.style.display = "block";
-        } else {
-            generateBtn.style.display = "none";
-        }
-        });
+      projectSelect.addEventListener("change", function () {
+        generateBtn.style.display = this.value ? "block" : "none";
+      });
+
+      generateBtn.addEventListener("click", () => {
+        const id = projectSelect.value;
+        if (!id) return;
+
+        // direct to generate progress report page
+        window.location.href = `/progress/${id}/generate`;
+      });
     </script>
 {{/main}}
