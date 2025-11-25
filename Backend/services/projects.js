@@ -23,10 +23,11 @@ export const getUserProjects = async (req, res) => {
 
     res.render("projects", {
       Title: "Your Projects",
-      BtnName: "Update Project",
+      BtnName: "View Project",
       Projects: projects.map((proj) => ({
         ProjectImageURL: proj.project_imageURL || "/ASSETS/border-design.png",
         ProjectName: proj.project_name,
+        ProjectID: proj.project_id,
       })),
     });
   } catch (err) {
