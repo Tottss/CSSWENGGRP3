@@ -4,7 +4,7 @@ import { docClient } from "../config/dynamodb.js";
 // View all projects for a specific user (partner)
 export const getUserProjects = async (req, res) => {
   try {
-    const userId = req.session.user_id;
+    const userId = req.session.partner_id; // fixed
     console.log(req.session);
     const data = await docClient.send(
       new ScanCommand({
@@ -17,8 +17,6 @@ export const getUserProjects = async (req, res) => {
     );
 
     const projects = data.Items || [];
-
-    console.log("Fetched projects:", projects); // log in backend not in conse
 
     res.render("projects", {
       Title: "Your Projects",
