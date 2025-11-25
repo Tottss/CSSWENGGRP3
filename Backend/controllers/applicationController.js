@@ -5,9 +5,6 @@ import { docClient } from "../config/dynamodb.js";
 import crypto from "crypto"; // for random password
 import bcrypt from "bcrypt";
 
-// delete this nodemailer if the new mailer works
-import { sendEmail } from "../services/applicationmail.js";
-
 // new resend api - for testing
 import { resendEmail } from "../services/resendEmail.js";
 
