@@ -4,28 +4,33 @@ import { GetCommand, PutCommand, DeleteCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
 import crypto from "crypto"; // for random password
 import bcrypt from "bcrypt";
+
+// delete this nodemailer if the new mailer works
 import { sendEmail } from "../services/applicationmail.js";
 
+// new resend api - for testing
+import { resendEmail } from "../services/resendEmail.js";
+
 const approvalMessage = (email, tempPassword) => `
-Your application has been approved.
-
-Here are your login details:
-Email: ${email}
-Temporary Password: ${tempPassword}
-
-For security purposes, please change your password after logging in.
-To do this, go to: Profile → Edit Profile → Change Password.
+<div style="font-family: Arial, sans-serif; line-height: 1.5;">
+  Your application has been approved.<br><br>
+  Here are your login details:<br>
+  Email: ${email}<br>
+  Temporary Password: ${tempPassword}<br><br>
+  For security purposes, please change your password after logging in.<br>
+  To do this, go to: Profile → Edit Profile → Change Password.
+</div>
 `;
 
 const rejectionMessage = (email) => `
-Good day, ${email}.
+<p>Good day, ${email}.</p>
 
-Your application has been declined.
+<p>Your application has been declined.</p>
 
-We appreciate your interest and encourage you to apply again in the future.
+<p>We appreciate your interest and encourage you to apply again in the future.</p>
 
-If you have any questions about this decision or believe it may have been made in error, 
-please feel free to contact us at 09123456 or email us at ${process.env.EMAIL_USER}.
+<p>If you have any questions about this decision or believe it may have been made in error, 
+please feel free to contact us at 09123456 or email us at ${process.env.EMAIL_USER}.</p>
 `;
 
 export const showApplication = async (req, res) => {
@@ -169,11 +174,18 @@ export const approveApplication = async (req, res) => {
       })
     );
 
+    /* DELETE IF RESEND IS ALREADY WORKING
     await sendEmail(
       a.partner_email,
       "Application Approved",
       approvalMessage(a.partner_email, generatedPassword)
     );
+    */
+    await resendEmail({
+      to: a.partner_email,
+      subject: "Application Approved",
+      html: approvalMessage(a.partner_email, generatedPassword),
+    });
 
     // redirect to admin dashboard
     return res.redirect("/adminDashboard");
@@ -209,15 +221,22 @@ export const declineApplication = async (req, res) => {
       })
     );
 
+    /* DELETE IF RESEND IS ALREADY WORKING
     await sendEmail(
       a.partner_email,
       "Application Declined",
       rejectionMessage(a.partner_email)
     );
+    */
+    await resendEmail({
+      to: a.partner_email,
+      subject: "Application Declined",
+      html: rejectionMessage(a.partner_email),
+    });
 
     return res.redirect("/adminDashboard");
   } catch (err) {
     console.error("Error declining application:", err);
     return res.status(500).send("Server Error");
   }
-};
+}; // THIS IS /controllers/applicationController.js
