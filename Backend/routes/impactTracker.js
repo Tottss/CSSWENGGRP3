@@ -10,10 +10,6 @@ import { docClient } from "../config/dynamodb.js";
 import multer from "multer";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import s3Client from "../config/s3Client.js";
-import {
-  getUpdatePeriod,
-  sendTrackerUpdateEmail,
-} from "../services/trackerupdate.js";
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -214,35 +210,6 @@ router.post("/tracker/save", uploadTracker, async (req, res) => {
         },
       })
     );
-
-    // send email notification to project owner
-    const updatePeriod = getUpdatePeriod();
-
-    // get project owner email
-    const credData = await docClient.send(
-      new QueryCommand({
-        TableName: process.env.LOGIN_CREDENTIALS_TABLE,
-        IndexName: "partner_id-index",
-        KeyConditionExpression: "partner_id = :pid",
-        ExpressionAttributeValues: { ":pid": prev.user_id },
-      })
-    );
-
-    const partnerEmail = credData.Items?.[0]?.user_email;
-
-    if (partnerEmail) {
-      await sendTrackerUpdateEmail(partnerEmail, prev.project_name, {
-        updatePeriod,
-        actualBeneficiaries: Number(fields.actual_beneficiaries) || 0,
-        targetBeneficiaries:
-          Number(fields.target_beneficiaries) || prev.target_beneficiaries,
-        budget,
-        expensesToDate: expense,
-        progressPercent: computedProgress,
-        location: fields.location || "",
-        narrative: fields.narrative || "",
-      });
-    }
 
     // START TEST - NEW
     const partnerOrg = await docClient.send(
