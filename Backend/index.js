@@ -17,7 +17,6 @@ const app = express();
 
 const PORT = process.env.PORT;
 
-// for testing, move values to .env
 app.use(
   cors({
     origin: [
@@ -63,9 +62,6 @@ app.use(
     },
   })
 );
-
-// delete after
-console.log("Secret: ", process.env.SESSION_SECRET);
 
 app.use("/", router);
 
