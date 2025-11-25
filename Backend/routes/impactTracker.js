@@ -4,6 +4,7 @@ import {
   UpdateCommand,
   GetCommand,
   QueryCommand,
+  PutCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
 import multer from "multer";
@@ -157,7 +158,7 @@ router.post("/tracker/save", uploadTracker, async (req, res) => {
     // load existing project
     const current = await docClient.send(
       new GetCommand({
-        TableName: "Projects",
+        TableName: process.env.PROJECTS_TABLE,
         Key: { project_id: projectId },
       })
     );
@@ -242,6 +243,34 @@ router.post("/tracker/save", uploadTracker, async (req, res) => {
         narrative: fields.narrative || "",
       });
     }
+
+    // START TEST - NEW
+    const partnerOrg = await docClient.send(
+      new GetCommand({
+        TableName: process.env.PARTNER_ORG_TABLE,
+        Key: { partner_id: prev.user_id },
+      })
+    );
+
+    const partnerOwnerName = partnerOrg.Item?.partner_name || "Unknown Partner";
+
+    const sendUpdateToAdmin = await docClient.send(
+      new PutCommand({
+        TableName: process.env.UPDATE_NOTIFICATIONS_TABLE,
+        Item: {
+          notification_id: Date.now(), // unique ID
+          partner_name: partnerOwnerName, // name from partner org table
+          project_id: projectId, // current project
+          lastUpdate: new Date().toISOString(), // when tracker was updated
+          project_name: prev.project_name, // include project name
+        },
+      })
+    );
+
+    if (sendUpdateToAdmin) {
+      console.log("ADMIN NOTIFIED BY THE UPDATE!");
+    }
+    // END TEST - NEW
 
     res.json({ success: true, project_imageURL: projectImageURL || undefined });
   } catch (err) {

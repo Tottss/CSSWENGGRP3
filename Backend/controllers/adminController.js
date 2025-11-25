@@ -9,6 +9,8 @@ export const showAdminDashboard = async (req, res) => {
 
   let applicants = [];
   let proposalNotifications = [];
+  let updateNotifications = [];
+  let combinedNotifications = [];
 
   try {
     // Fetch all applicants
@@ -35,9 +37,15 @@ export const showAdminDashboard = async (req, res) => {
       })
     );
 
-    // for testing
-    console.log("Test Log:", proposalResult.Items);
+    // Fetch all project updates
+    // Table contents: notification_id, lastUpdate, partner_name, project_id, project_name
+    const updateResult = await docClient.send(
+      new ScanCommand({
+        TableName: process.env.UPDATE_NOTIFICATIONS_TABLE,
+      })
+    );
 
+    // map proposal notifications
     proposalNotifications = (proposalResult.Items || []).map((item) => ({
       Submission: true,
       ProjectName: item.proposal_title,
@@ -45,6 +53,20 @@ export const showAdminDashboard = async (req, res) => {
       PartnerOrg: item.partner_org || "{PARTNER_NAME HOLDER}",
       href: "/adminproposal/" + item.proposal_id,
     }));
+
+    // map update notifications
+    updateNotifications = (updateResult.Items || []).map((item) => ({
+      Update: true,
+      ProjectName: item.project_name,
+      Date: item.lastUpdate?.split("T")[0] || "N/A",
+      PartnerOrg: item.partner_name || "Unknown Partner",
+      href: "/viewcommunityproject/" + item.project_id,
+    }));
+
+    combinedNotifications = [
+      ...proposalNotifications,
+      ...updateNotifications,
+    ].sort((a, b) => new Date(b.Date) - new Date(a.Date));
   } catch (err) {
     console.error("Error fetching proposals:", err);
   }
@@ -53,10 +75,7 @@ export const showAdminDashboard = async (req, res) => {
   res.render("admindashboard", {
     title: "Admin Dashboard",
     PartnerOrg: req.session.partner_name || "{Partner Org Name Holder}",
-
-    // add project updates later
-    Proposals: proposalNotifications,
-
+    Proposals: combinedNotifications, // change with combined notification
     Application: applicants,
   });
 };

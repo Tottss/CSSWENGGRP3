@@ -4,8 +4,7 @@ import { docClient } from "../config/dynamodb.js";
 // View all projects for a specific user (partner)
 export const getUserProjects = async (req, res) => {
   try {
-    // TODO: replace this later with req.session.user.user_id
-    const userId = req.session.user_id || 2; // temporary fallback
+    const userId = req.session.user_id;
     console.log(req.session);
     const data = await docClient.send(
       new ScanCommand({
