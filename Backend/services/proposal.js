@@ -1,4 +1,4 @@
-import { PutCommand } from "@aws-sdk/lib-dynamodb";
+import { GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { docClient } from "../config/dynamodb.js";
 import s3Client from "../config/s3Client.js";
@@ -44,6 +44,19 @@ export const createProposal = async (req, res) => {
 
     const fileUrl = `https://${BUCKET_NAME}.s3.amazonaws.com/${fileKey}`;
 
+    // partner_name, partner_type, partner_email
+    const getPartnerDetails = await docClient.send(
+      new GetCommand({
+        TableName: process.env.PARTNER_ORG_TABLE,
+        Key: {
+          partner_id: Number(partner_id),
+        },
+      })
+    );
+
+    const partnerName =
+      getPartnerDetails.Item.partner_name || "NO PARTNER_NAME SPECIFIED";
+
     const newProposal = {
       proposal_id,
       partner_id,
@@ -59,7 +72,7 @@ export const createProposal = async (req, res) => {
 
       proposed_budget: Number(ProposedBudget),
       detailed_proposal: fileUrl,
-
+      partner_org: partnerName,
       admin_comments: [],
 
       created_at: new Date().toISOString(),
