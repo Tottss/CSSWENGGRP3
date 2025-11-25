@@ -6,7 +6,7 @@ import {
   DeleteCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../../config/dynamodb.js";
-import nodemailer from "nodemailer";
+import { resendEmail } from "../../services/resendEmail.js";
 
 export const approveProposal = async (req, res) => {
   try {
@@ -96,16 +96,7 @@ export const approveProposal = async (req, res) => {
     // send approval email
     if (partnerEmail) {
       try {
-        const transporter = nodemailer.createTransport({
-          service: "gmail",
-          auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS,
-          },
-        });
-
-        await transporter.sendMail({
-          from: `"Admin" <${process.env.EMAIL_USER}>`,
+        await resendEmail({
           to: partnerEmail,
           subject: "Your Project Proposal Has Been Approved",
           html: `

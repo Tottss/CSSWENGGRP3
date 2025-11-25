@@ -7,10 +7,9 @@ import {
   UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { approveProposal } from "../admin/approveproposal.js";
-import nodemailer from "nodemailer";
+import { resendEmail } from "../../services/resendEmail.js";
 
 const router = express.Router();
-// const TABLE_NAME = "Proposals";
 
 // fetch and display all pending proposals
 router.get("/list", async (req, res) => {
@@ -123,16 +122,7 @@ router.post("/:id/decline", async (req, res) => {
     // send decline email
     if (partnerEmail) {
       try {
-        const transporter = nodemailer.createTransport({
-          service: "gmail",
-          auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS,
-          },
-        });
-
-        await transporter.sendMail({
-          from: `"Admin" <${process.env.EMAIL_USER}>`,
+        await resendEmail({
           to: partnerEmail,
           subject: "Your Project Proposal Has Been Declined",
           html: `
