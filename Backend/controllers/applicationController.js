@@ -174,13 +174,6 @@ export const approveApplication = async (req, res) => {
       })
     );
 
-    /* DELETE IF RESEND IS ALREADY WORKING
-    await sendEmail(
-      a.partner_email,
-      "Application Approved",
-      approvalMessage(a.partner_email, generatedPassword)
-    );
-    */
     await resendEmail({
       to: a.partner_email,
       subject: "Application Approved",
@@ -221,13 +214,6 @@ export const declineApplication = async (req, res) => {
       })
     );
 
-    /* DELETE IF RESEND IS ALREADY WORKING
-    await sendEmail(
-      a.partner_email,
-      "Application Declined",
-      rejectionMessage(a.partner_email)
-    );
-    */
     await resendEmail({
       to: a.partner_email,
       subject: "Application Declined",
