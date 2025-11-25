@@ -187,8 +187,8 @@
   position: relative;
   justify-content: center;
   align-items: flex-start;
+  width: 100%;
   max-width: 100%;
-  margin-left: 10%;
   max-height: calc(100vh - 90px - 40px);
 
   overflow-y: auto;

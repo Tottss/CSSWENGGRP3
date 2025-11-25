@@ -1,10 +1,9 @@
 .projects-container {
-  margin-left: 14%;
   margin-top: 90px;
   position: relative;
   justify-content: center;
   align-items: flex-start;
-  max-width: 76%;
+  max-width: 100%;
   max-height: calc(100vh - 90px - 40px);
 
   overflow-y: auto;
@@ -83,8 +82,7 @@
 }
 
 .viewProject-container {
-  margin-top: 13%;
-  margin-left: auto;
+  margin-top: 75px;
   display: block;
   position: relative;
   justify-content: center;
