@@ -8,8 +8,6 @@ export const showGenProg = async (req, res) => {
     const data = await docClient.send(
       new ScanCommand({
         TableName: process.env.PROJECTS_TABLE,
-        FilterExpression: "user_id = :uid",
-        ExpressionAttributeValues: { ":uid": userId },
       })
     );
 
