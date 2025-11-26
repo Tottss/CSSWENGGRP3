@@ -56,7 +56,7 @@ export const showViewProfile = async (req, res) => {
     const location = locationScan.Items?.[0] || {};
 
     const user = {
-      ImageURL: partner.profile_picture,
+      imageURL: partner.profile_picture,
       orgname: partner.partner_name,
       email: partner.partner_email,
       partnertype: partner.partner_type,

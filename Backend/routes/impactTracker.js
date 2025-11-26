@@ -11,7 +11,7 @@ import multer from "multer";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import s3Client from "../config/s3Client.js";
 
-const router = express.Router();
+const router = express.Router(); 
 const upload = multer({ storage: multer.memoryStorage() });
 
 // load tracker view
