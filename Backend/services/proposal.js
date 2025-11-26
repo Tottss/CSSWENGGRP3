@@ -7,11 +7,43 @@ import { v4 as uuidv4 } from "uuid";
 const TABLE_NAME = "Proposals";
 const BUCKET_NAME = "proposals-storage";
 
-export const updateProposal = async (req, res) => {
+export const showUpdateProposal = async (req, res) => {
   try {
     const proposal_id = req.session.current_proposal;
-    console.log("Proposal ID: ", proposal_id);
-  } catch (err) {}
+    console.log("Proposal ID: ", proposal_id); // remove after testing
+
+    // Fetch proposal from DynamoDB
+    const proposalData = await docClient.send(
+      new GetCommand({
+        TableName: process.env.PROPOSALS_TABLE,
+        Key: { proposal_id: proposal_id },
+      })
+    );
+
+    const proposal = proposalData.Item;
+
+    // Format date to YYYY-MM-DD
+    const formatDate = (dateValue) => {
+      if (!dateValue) return "";
+      const date = new Date(dateValue);
+      return date.toISOString().split("T")[0];
+    };
+
+    res.render("updateproposal", {
+      DetailedProposal: proposal?.detailed_proposal || "",
+      projTitle: proposal?.proposal_title || "",
+      ProjSummary: proposal?.proposal_summary || "",
+      TargetBeneficiaries: proposal?.num_beneficiaries || "",
+      startDate: formatDate(proposal?.start_date),
+      endDate: formatDate(proposal?.end_date),
+      ProposedBudget: proposal?.proposed_budget || "",
+
+      imageURL: req.session.imageURL,
+    });
+  } catch (err) {
+    console.error("Error loading proposal:", err);
+    res.status(500).send("Server error");
+  }
 };
 
 export const createProposal = async (req, res) => {

@@ -42,7 +42,8 @@
 
         </form>
         <br>
-        <button class="save-btn" type="button"onclick="window.location.href='/updateproposal/{{proposal_id}}'">Edit Proposal {{proposalId}}</button>
+        {{!-- remove proposal_id in display after testing --}}
+        <button class="save-btn" type="button"onclick="window.location.href='/updateproposal/{{proposal_id}}'">Edit Proposal {{proposal_id}}</button>
         <!--Comment sending-->
                 <form action="/viewproposal/{{proposal_id}}/comment" method="POST" class="comment-form">
                     <label for="comment">Comments</label>

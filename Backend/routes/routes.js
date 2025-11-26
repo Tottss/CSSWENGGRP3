@@ -38,6 +38,7 @@ import {
   showApplication,
 } from "../controllers/applicationController.js";
 import { showGenProg } from "../controllers/generateProgress.js";
+import { showUpdateProposal } from "../services/proposal.js";
 
 // admin application routes
 router.get("/adminapplication/:applicant_id", showApplication);
@@ -101,17 +102,7 @@ router.get("/progress", showGenProg);
 router.get("/progress/:project_id/generate", generateProgressReport);
 
 // Test Update Prop
-router.get("/updateProposal", (req, res) => {
-  res.render("updateproposal", {
-    DetailedProposal: "heeee",
-    projTitle: "yipee",
-    ProjSummary: "shdbsajdbs",
-    TargetBeneficiaries: "100000",
-    startDate: "2025-11-25",
-    endDate: "2025-09-25",
-    ProposedBudget: "12929",
-  });
-});
+router.get("/updateProposal/:proposal_id", showUpdateProposal);
 // impact tracker routes
 router.use("/", impactTrackerRouter);
 
