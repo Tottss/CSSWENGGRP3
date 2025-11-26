@@ -42,9 +42,9 @@
 
         </form>
         <br>
-        <button class="save-btn" type="button"onclick="window.location.href='/updateproposal/{{proposalId}}'">Edit Proposal {{proposalId}}</button>
+        <button class="save-btn" type="button"onclick="window.location.href='/updateproposal/{{proposal_id}}'">Edit Proposal {{proposalId}}</button>
         <!--Comment sending-->
-                <form action="/proposal/{{proposalId}}/comment" method="POST" class="comment-form">
+                <form action="/viewproposal/{{proposal_id}}/comment" method="POST" class="comment-form">
                     <label for="comment">Comments</label>
                     <div class="comment-wrapper">
                         <textarea id="comment" name="comment" class="comment-textarea"
@@ -60,7 +60,7 @@
                 {{#each comments}}
                 <div class="comment-item">
                     <div class="comment-meta">
-                        <span class="comment-author">{{this.admin}}</span>
+                        <span class="comment-author">{{this.admin}}</span> {{!-- can be admin or user --}}
                         <span class="comment-date">{{this.timestamp}}</span>
                     </div>
                     <div class="comment-text">{{this.message}}</div>

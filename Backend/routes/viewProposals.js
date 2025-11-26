@@ -1,8 +1,51 @@
 import express from "express";
-import { GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import { UpdateCommand, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
 
 const router = express.Router();
+
+router.post("/viewproposal/:proposal_id/comment", async (req, res) => {
+  try {
+    const { comment } = req.body;
+
+    if (!comment || comment.trim() === "")
+      return res.redirect(`/viewproposal/${req.params.proposal_id}`);
+
+    const proposalData = await docClient.send(
+      new GetCommand({
+        TableName: process.env.PROPOSALS_TABLE,
+        Key: { proposal_id: req.params.proposal_id },
+      })
+    );
+
+    const proposal = proposalData.Item;
+
+    const partnerOrg = proposal?.partner_org || "User";
+
+    await docClient.send(
+      new UpdateCommand({
+        TableName: process.env.PROPOSALS_TABLE,
+        Key: { proposal_id: req.params.proposal_id },
+        UpdateExpression:
+          "SET admin_comments = list_append(if_not_exists(admin_comments, :empty), :newComment)",
+        ExpressionAttributeValues: {
+          ":newComment": [
+            {
+              admin: partnerOrg,
+              message: comment,
+              timestamp: new Date().toISOString(),
+            },
+          ],
+          ":empty": [],
+        },
+      })
+    );
+    res.redirect(`/viewproposal/${req.params.proposal_id}`);
+  } catch (err) {
+    console.error("Comment error:", err);
+    res.status(500).send("Failed to submit comment");
+  }
+});
 
 // render list of proposals (filters, only pending, proposals associated to current user)
 router.get("/viewproposal-list", async (req, res) => {

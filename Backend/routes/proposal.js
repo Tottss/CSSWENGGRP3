@@ -1,3 +1,5 @@
+// create proposal
+
 import express from "express";
 import multer from "multer";
 import { createProposal } from "../services/proposal.js";
