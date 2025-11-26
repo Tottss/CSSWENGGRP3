@@ -39,16 +39,6 @@ import {
 } from "../controllers/applicationController.js";
 import { showGenProg } from "../controllers/generateProgress.js";
 
-/*
-  Note: Only routes should be here
-  Put logic either in services or controllers
-*/
-
-// this route is just for testing
-router.get("/test", function (req, res) {
-  res.status(200).json("Hello, world!");
-});
-
 // admin application routes
 router.get("/adminapplication/:applicant_id", showApplication);
 router.post("/adminapplication/:applicant_id/approve", approveApplication);
