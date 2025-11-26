@@ -10,7 +10,10 @@ export const showEditProfile = async (req, res) => {
     return res.status(403).send("Admin Edit Profile To Be Implemented Soon.");
   }
 
+  console.log("Session: ", req.session);
+
   res.render("profiledit", {
+    imageURL: req.session.user.imageURL,
     isRequired: false,
     user: req.session.user,
   });
@@ -80,7 +83,6 @@ export const showViewProfile = async (req, res) => {
 };
 
 export const updateProfile = async (req, res) => {
-  // if (!user) return res.status(401).send("Unauthorized");
   try {
     const user = req.session.user;
 
@@ -100,22 +102,26 @@ export const updateProfile = async (req, res) => {
       advocacy,
     } = req.body;
 
+    let fileUrl = user.imageURL; // keep old image if no new file
+
     const file = req.file;
 
     // upload image to s3
-    const BUCKET_NAME = "proposals-storage";
-    const fileKey = `images/${partner_id}-${Date.now()}-${file.originalname}`;
+    if (file) {
+      const BUCKET_NAME = "proposals-storage";
+      const fileKey = `images/${partner_id}-${Date.now()}-${file.originalname}`;
 
-    await s3Client.send(
-      new PutObjectCommand({
-        Bucket: BUCKET_NAME,
-        Key: fileKey,
-        Body: file.buffer,
-        ContentType: file.mimetype,
-      })
-    );
+      await s3Client.send(
+        new PutObjectCommand({
+          Bucket: BUCKET_NAME,
+          Key: fileKey,
+          Body: file.buffer,
+          ContentType: file.mimetype,
+        })
+      );
 
-    const fileUrl = `https://${BUCKET_NAME}.s3.amazonaws.com/${fileKey}`;
+      fileUrl = `https://${BUCKET_NAME}.s3.amazonaws.com/${fileKey}`;
+    }
 
     await Promise.all([
       docClient.send(
