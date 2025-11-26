@@ -119,7 +119,8 @@ export const approveApplication = async (req, res) => {
       location_id: applicantId,
       partner_type: a.partner_type,
       advocacy_focus: a.advocacy_focus,
-      profile_picture: null,
+      profile_picture:
+        "https://bcf-profile-pictures.s3.ap-southeast-1.amazonaws.com/DefaultProfile.jpg",
     };
 
     const contactData = {
