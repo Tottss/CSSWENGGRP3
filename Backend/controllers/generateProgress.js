@@ -18,6 +18,7 @@ export const showGenProg = async (req, res) => {
         project_id: p.project_id,
         project_name: p.project_name,
       })),
+      imageURL: req.session.imageURL,
     });
   } catch (err) {
     console.error("Error loading projects for progress generation:", err);

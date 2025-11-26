@@ -1,7 +1,7 @@
 import { GetCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
 import PDFDocument from "pdfkit";
-import { generateProgressReportPDF } from '../templates/progressReportLayout.js';
+import { generateProgressReportPDF } from "../templates/progressReportLayout.js";
 
 export const showCommunityProject = async (req, res) => {
   const project_id = Number(req.params.project_id);
@@ -85,6 +85,8 @@ export const showCommunityProject = async (req, res) => {
       Budget: project.budget,
 
       galleryImages,
+
+      imageURL: req.session.imageURL,
     });
   } catch (error) {
     console.error(error);
@@ -232,7 +234,6 @@ export const generateProgressReport = async (req, res) => {
     generateProgressReportPDF(doc, templateData);
 
     doc.end();
-
   } catch (err) {
     console.error("PDF Generation Error:", err);
     res.status(500).send("Failed to generate report");

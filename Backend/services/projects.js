@@ -18,6 +18,17 @@ export const getUserProjects = async (req, res) => {
 
     const projects = data.Items || [];
 
+    // remove when imageurl is consistent thru sessions
+    const partnerData = await docClient.send(
+      new ScanCommand({
+        TableName: process.env.PARTNER_ORG_TABLE,
+        FilterExpression: "partner_id = :uid",
+        ExpressionAttributeValues: { ":uid": Number(userId) },
+      })
+    );
+
+    const partner = partnerData.Items;
+
     res.render("projects", {
       Title: "Your Projects",
       BtnName: "View Project",
@@ -26,6 +37,9 @@ export const getUserProjects = async (req, res) => {
         ProjectName: proj.project_name,
         ProjectID: proj.project_id,
       })),
+      imageURL:
+        partner[0].profile_picture ||
+        "https://bcf-profile-pictures.s3.ap-southeast-1.amazonaws.com/DefaultProfile.jpg",
     });
   } catch (err) {
     console.error("Error fetching projects:", err);

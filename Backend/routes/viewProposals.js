@@ -1,6 +1,7 @@
 import express from "express";
 import { UpdateCommand, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
+import image from "pdfkit";
 
 const router = express.Router();
 
@@ -82,7 +83,10 @@ router.get("/viewproposal-list", async (req, res) => {
       status: p.status,
     }));
 
-    res.render("viewproposal-list", { Proposals: proposals });
+    res.render("viewproposal-list", {
+      Proposals: proposals,
+      imageURL: req.session.imageURL,
+    });
   } catch (err) {
     console.error("Error loading proposal list:", err);
     res.status(500).send("Failed to load proposals");
@@ -126,6 +130,7 @@ router.get("/viewproposal/:id", async (req, res) => {
       detailedProposal: p.detailed_proposal,
       comments: p.admin_comments || [],
       status: p.status,
+      imageURL: req.session.imageURL,
     });
   } catch (err) {
     console.error("Error loading proposal:", err);

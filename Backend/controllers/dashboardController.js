@@ -51,6 +51,8 @@ export const userDashboard = async (req, res) => {
 
     const data = partnerData.Items;
 
+    req.session.imageURL = data[0].profile_picture;
+
     res.render("dashboard", {
       title: "Dashboard",
       PartnerOrg: data[0].partner_name || "Partner Org Name",

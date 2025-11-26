@@ -115,29 +115,4 @@ router.get("/updateProposal", (req, res) => {
 // impact tracker routes
 router.use("/", impactTrackerRouter);
 
-// test email
-import { Resend } from "resend";
-import { updateProposal } from "../services/proposal.js";
-
-const resend = new Resend(process.env.RESEND_API);
-
-// Test route
-router.get("/testresend", async (req, res) => {
-  try {
-    const result = await resend.emails.send({
-      from: "onboarding@resend.dev",
-      to: "bakhitarep@gmail.com",
-      subject: "Hello World",
-      html: "<p>FROM DEPLOYED WEBSITE!Congrats on sending your <strong>first email</strong>!</p>",
-    });
-
-    console.log(result);
-
-    return res.send("Email sent!");
-  } catch (error) {
-    console.error(error);
-    return res.status(500).send("Failed to send email");
-  }
-});
-
 export default router;
