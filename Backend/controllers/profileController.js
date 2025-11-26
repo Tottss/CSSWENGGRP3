@@ -103,6 +103,12 @@ export const updateProfile = async (req, res) => {
     } = req.body;
 
     let fileUrl = user.imageURL; // keep old image if no new file
+    let partner_type = partnerType; // from req.body
+
+    // If partnerType wasn’t changed (or wasn't sent), keep the old one
+    if (!partnerType || partnerType === user.partnertype) {
+      partner_type = user.partnertype;
+    }
 
     const file = req.file;
 
@@ -132,7 +138,7 @@ export const updateProfile = async (req, res) => {
           ExpressionAttributeValues: {
             ":name": orgName,
             ":email": email,
-            ":ptype": partnerType,
+            ":ptype": partner_type,
             ":adv": advocacy,
             ":img": fileUrl,
           },
@@ -169,7 +175,7 @@ export const updateProfile = async (req, res) => {
       ...user,
       orgname: orgName,
       email,
-      partnertype: partnerType,
+      partnertype: partner_type,
       advocacy,
       contactname: contactName,
       contactposition: contactPosition,
