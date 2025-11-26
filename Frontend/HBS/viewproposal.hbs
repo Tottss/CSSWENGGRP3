@@ -38,11 +38,11 @@
 
             <!-- Detailed Proposal -->
             <label for="Proposal" style="font-weight: bold;">Detailed Proposal</label>
-            {{detailedProposal}}
+            <a href="{{detailedProposal}}" target="_blank">View Detailed Proposal</a>
 
         </form>
         <br>
-        <button class="save-btn" type="button"onclick="window.location.href='{{href}}'">Edit Proposal</button>
+        <button class="save-btn" type="button"onclick="window.location.href='/updateproposal/{{proposalId}}'">Edit Proposal {{proposalId}}</button>
         <!--Comment sending-->
                 <form action="/proposal/{{proposalId}}/comment" method="POST" class="comment-form">
                     <label for="comment">Comments</label>

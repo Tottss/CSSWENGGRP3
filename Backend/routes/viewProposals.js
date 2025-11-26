@@ -51,6 +51,11 @@ router.get("/viewproposal/:id", async (req, res) => {
   try {
     const proposalId = req.params.id;
 
+    // save current viewed proposal to sessions
+    req.session.current_proposal = req.params.id;
+
+    console.log("Saved PID: ", req.session.current_proposal);
+
     const result = await docClient.send(
       new GetCommand({
         TableName: process.env.PROPOSALS_TABLE,

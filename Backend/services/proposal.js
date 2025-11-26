@@ -7,6 +7,13 @@ import { v4 as uuidv4 } from "uuid";
 const TABLE_NAME = "Proposals";
 const BUCKET_NAME = "proposals-storage";
 
+export const updateProposal = async (req, res) => {
+  try {
+    const proposal_id = req.session.current_proposal;
+    console.log("Proposal ID: ", proposal_id);
+  } catch (err) {}
+};
+
 export const createProposal = async (req, res) => {
   try {
     const {

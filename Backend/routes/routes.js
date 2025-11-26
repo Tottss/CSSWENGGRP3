@@ -113,7 +113,7 @@ router.get("/progress/:project_id/generate", generateProgressReport);
 // Test Update Prop
 router.get("/updateProposal", (req, res) => {
   res.render("updateproposal", {
-    DetailedProposal:"heeee",
+    DetailedProposal: "heeee",
     projTitle: "yipee",
     ProjSummary: "shdbsajdbs",
     TargetBeneficiaries: "100000",
@@ -127,6 +127,7 @@ router.use("/", impactTrackerRouter);
 
 // test email
 import { Resend } from "resend";
+import { updateProposal } from "../services/proposal.js";
 
 const resend = new Resend(process.env.RESEND_API);
 
