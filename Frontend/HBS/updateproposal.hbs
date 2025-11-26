@@ -1,0 +1,82 @@
+{{#> main}}
+<!-- Main Content -->
+    <div class="proposal-container">
+        <div class="proposal-form-box">
+            <h1 class="apply-title">Project Proposal Edit</h1>
+            <p class="apply-subtitle">Please fill out the fields needed to be updated to update a project proposal.</p>
+
+            <form id="proposalForm" enctype="multipart/form-data">
+                <!-- Project Title -->
+                <label for="ProjTitle">Project Title</label>
+                <input type="text" id="ProjTitle" name="ProjTitle" placeholder="{{projTitle}}">
+
+                <!-- Project Summary -->
+                <label for="ProjSummary">Project Summary/Objectives</label>
+                <input type="text" id="ProjSummary" name="ProjSummary" placeholder="{{ProjSummary}}">
+
+                <!-- Target Beneficiaries -->
+                <label for="TargetBeneficiaries">Target Beneficiaries</label>
+                <input type="text" id="TargetBeneficiaries" name="TargetBeneficiaries" placeholder="{{TargetBeneficiaries}}">
+
+                <!-- Advocacy Area -->
+                <label for="AdvocacyArea">Advocacy Area</label>
+                <select id="AdvocacyArea" name="AdvocacyArea">
+                    <option value="">Select advocacy area</option>
+                    <option value="Religious Vocation">Religious Vocation</option>
+                    <option value="Youth">Youth</option>
+                    <option value="Infrastructure">Infrastructure</option>
+                    <option value="Disaster Response">Disaster Response</option>
+                </select>
+
+                <!-- SDG Alignment -->
+                <label for="SDGAlignment">SDG Alignment</label>
+                <select id="SDGAlignment" name="SDGAlignment">
+                    <option value="">Select SDG goal</option>
+                    <option value="No Poverty">No Poverty</option>
+                    <option value="Zero Hunger">Zero Hunger</option>
+                    <option value="Good Health and Well-being">Good Health and Well-being</option>
+                    <option value="Quality Education">Quality Education</option>
+                    <option value="Gender Equality">Gender Equality</option>
+                    <option value="Clean Water and Sanitation">Clean Water and Sanitation</option>
+                    <option value="Affordable and Clean Energy">Affordable and Clean Energy</option>
+                    <option value="Decent Work and Economic Growth">Decent Work and Economic Growth</option>
+                    <option value="Industry, Innovation and Infrastructure">Industry, Innovation and Infrastructure</option>
+                    <option value="Reduced Inequalities">Reduced Inequalities</option>
+                    <option value="Sustainable Cities and Communities">Sustainable Cities and Communities</option>
+                    <option value="Responsible Consumption and Production">Responsible Consumption and Production</option>
+                    <option value="Climate Action">Climate Action</option>
+                    <option value="Life Below Water">Life Below Water</option>
+                    <option value="Life on Land">Life on Land</option>
+                    <option value="Peace, Justice and Strong Institutions">Peace, Justice and Strong Institutions</option>
+                    <option value="Partnerships for the Goals">Partnerships for the Goals</option>
+                </select>
+
+                <!-- Project Timeline -->
+                    <label for="Timeline">Timeline</label>
+                    <div class="timeline-group">
+                        <label for="timelineStart">Start Date:</label>
+                        <input type="date" id="timelineStart" name="timelineStart" value="{{startDate}}">
+                        <label for="timelineEnd">End Date:</label>
+                        <input type="date" id="timelineEnd" name="timelineEnd" value="{{endDate}}">
+                    </div>
+
+                <!-- Proposed Budget -->
+                <label for="ProposedBudget">Proposed Budget</label>
+                <input type="number" id="ProposedBudget" name="ProposedBudget" placeholder="{{ProposedBudget}}">
+
+                <!-- Upload Detailed Proposal -->
+                <label for="Proposal">Upload Detailed Proposal</label>
+                <input type="file" id="Proposal" name="Proposal" accept=".pdf">
+
+
+                {{#if DetailedProposal}}
+                    <p>Current file: {{DetailedProposal}}</p>
+                {{/if}}
+
+                <!-- Submit Button -->
+                <button type="submit" class="apply-btn">Update Project Proposal</button>
+            </form>
+        </div>
+    </div>
+
+{{/main}}

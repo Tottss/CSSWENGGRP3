@@ -6,42 +6,52 @@
         <form id="profileForm" enctype="multipart/form-data">
 
             <!-- Project Title -->
-            <label for="orgName">Project Title</label>
+            <label for="orgName" style="font-weight: bold;">Project Title</label>
             {{projTitle}}
 
             <!-- Project Summary -->
-            <label for="ProjSummary">Project Summary/Objectives</label>
+            <label for="ProjSummary" style="font-weight: bold;">Project Summary/Objectives</label>
             {{projSummary}}
 
             <!-- Target Beneficiaries -->
-            <label for="TargetBeneficiaries">Target Beneficiaries</label>
+            <label for="TargetBeneficiaries" style="font-weight: bold;">Target Beneficiaries</label>
             {{targetValue}}
 
             <!-- Advocacy Area -->
-            <label for="AdvocacyArea">Advocacy Area</label>
+            <label for="AdvocacyArea" style="font-weight: bold;">Advocacy Area</label>
             {{advocacyArea}}
 
             <!-- SDG Alignment -->
-            <label for="SDGAlignment">SDG Alignment</label>
+            <label for="SDGAlignment" style="font-weight: bold;">SDG Alignment</label>
             {{SDG}}
 
             <!-- Timeline -->
-            <label for="timelineStart">Start Date:</label>
+            <label for="timelineStart" style="font-weight: bold;">Start Date</label>
             {{startDate}}
 
-            <label for="timelineEnd">End Date:</label>
+            <label for="timelineEnd" style="font-weight: bold;">End Date</label>
             {{endDate}}
 
             <!-- Proposed Budget -->
-            <label for="ProposedBudget">Proposed Budget</label>
+            <label for="ProposedBudget" style="font-weight: bold;">Proposed Budget</label>
             {{proposedBudget}}
 
             <!-- Detailed Proposal -->
-            <label for="Proposal">Detailed Proposal</label>
+            <label for="Proposal" style="font-weight: bold;">Detailed Proposal</label>
             {{detailedProposal}}
 
         </form>
-
+        <br>
+        <button class="save-btn" type="button"onclick="window.location.href='{{href}}'">Edit Proposal</button>
+        <!--Comment sending-->
+                <form action="/proposal/{{proposalId}}/comment" method="POST" class="comment-form">
+                    <label for="comment">Comments</label>
+                    <div class="comment-wrapper">
+                        <textarea id="comment" name="comment" class="comment-textarea"
+                            placeholder="Write your comment here..."></textarea>
+                        <button type="submit" class="submit-comment-btn">Send</button>
+                    </div>
+                </form>
         <!-- Comments Section -->
         <div class="comments-section">
             <h3>Comments</h3>
