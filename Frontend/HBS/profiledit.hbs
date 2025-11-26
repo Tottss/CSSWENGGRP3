@@ -16,12 +16,10 @@
             </div>
 
             <!-- IMAGE MODAL, new page when clicking image -->
+            <!-- IMAGE MODAL -->
             <div id="imageModal" class="image-modal">
                 <span class="close">&times;</span>
                 <img class="modal-content" id="modalImage">
-
-                <!-- Second file input INSIDE FORM but WITHOUT duplicate ID -->
-                <input type="file" name="profileImage" accept="image/*">
 
                 <button type="button" id="changeImageBtn" class="changeImageBtn">
                     Change Image
@@ -34,7 +32,8 @@
             <!-- Save Button -->
             <div class="dashboard-header">
               <button type="submit" class="apply-btn">Save Edits</button>
-              <button type="submit" class="apply-btn" onclick="window.location.href='/editpassword'">Change Password</button>
+              {{!-- from submit to button --}}
+              <button type="button" class="apply-btn" onclick="window.location.href='/editpassword'">Change Password</button>
             </div>
             
 

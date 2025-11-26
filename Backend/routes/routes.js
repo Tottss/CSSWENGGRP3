@@ -11,7 +11,7 @@ const router = express.Router();
 
 // remove after making it a function
 import multer from "multer";
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer();
 
 // controllers
 import { showLogin, logoutUser } from "../controllers/authController.js";

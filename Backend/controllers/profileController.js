@@ -1,6 +1,9 @@
 import { UpdateCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
 
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import s3Client from "../config/s3Client.js";
+
 export const showEditProfile = async (req, res) => {
   // admin view of edit profile to be implemented later
   if (req.session.is_admin) {
@@ -97,7 +100,22 @@ export const updateProfile = async (req, res) => {
       advocacy,
     } = req.body;
 
-    const imageURL = req.file ? `/uploads/${req.file.filename}` : user.ImageURL;
+    const file = req.file;
+
+    // upload image to s3
+    const BUCKET_NAME = "proposals-storage";
+    const fileKey = `images/${partner_id}-${Date.now()}-${file.originalname}`;
+
+    await s3Client.send(
+      new PutObjectCommand({
+        Bucket: BUCKET_NAME,
+        Key: fileKey,
+        Body: file.buffer,
+        ContentType: file.mimetype,
+      })
+    );
+
+    const fileUrl = `https://${BUCKET_NAME}.s3.amazonaws.com/${fileKey}`;
 
     await Promise.all([
       docClient.send(
@@ -110,7 +128,7 @@ export const updateProfile = async (req, res) => {
             ":email": email,
             ":ptype": partnerType,
             ":adv": advocacy,
-            ":img": imageURL,
+            ":img": fileUrl,
           },
         })
       ),
@@ -154,7 +172,7 @@ export const updateProfile = async (req, res) => {
       province,
       municipality,
       barangay,
-      ImageURL: imageURL,
+      ImageURL: fileUrl,
     };
 
     res.sendStatus(200);
