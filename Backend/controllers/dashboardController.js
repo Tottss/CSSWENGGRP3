@@ -57,10 +57,15 @@ export const userDashboard = async (req, res) => {
       nNotif: 1,
       showTools: true,
 
-      // test image urls
+      imageURL:
+        data[0].profile_picture ||
+        "https://bcf-profile-pictures.s3.ap-southeast-1.amazonaws.com/DefaultProfile.jpg",
+
       // Community Projects
       CommunityProjects: communityProjects.map((p) => ({
-        ProjectImageURL: p.project_imageURL || "/ASSETS/border-design.png",
+        ProjectImageURL:
+          p.project_imageURL ||
+          "https://bcf-profile-pictures.s3.ap-southeast-1.amazonaws.com/border-design.png",
         ProjectName: p.project_name,
         ProjectID: p.project_id,
       })),
