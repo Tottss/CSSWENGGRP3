@@ -1,0 +1,190 @@
+/* Global Text Styling */
+body {
+  color: #0d2b56;
+  font-family: 'Poppins', sans-serif;
+}
+
+p {
+  text-align: left;
+  color: #0d2b56;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+/* Main Content Layout */
+.main-content {
+  margin-left: 260px; /* More standard sidebar width */
+  padding: 50px 40px;
+  transition: margin-left 0.3s ease;
+}
+
+/* Centering Wrapper */
+.hub-wrapper {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+}
+
+/* Card Container */
+.hub-card {
+  width: 100%;
+  max-width: 900px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 40px 50px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+/* Header */
+.hub-header {
+  font-size: 30px;
+  font-weight: 600;
+  margin-bottom: 35px;
+  text-align: center;
+  color: #0d2b56;
+}
+
+/* Resource Item Container */
+.resource-item {
+  background: #f0f5ff;
+  padding: 18px 22px;
+  border-radius: 12px;
+  margin-bottom: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.25s ease;
+  border: 1px solid #d6e4ff;
+  gap: 10px;
+}
+
+/* Left Section (Title + Subtitle) */
+.resource-info {
+  display: flex;
+  flex-direction: column;
+  max-width: 70%;
+}
+
+/* Title */
+.resource-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0d2b56;
+  margin-bottom: 3px;
+}
+
+/* Subtitle */
+.resource-subtitle {
+  font-size: 14px;
+  font-weight: 400;
+  color: #4b5a72;
+  opacity: 0.85;
+}
+
+/* Main folder row */
+.folder {
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.folder-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.folder-toggle {
+  font-size: 18px;
+  color: #0d2b56;
+  cursor: pointer;
+}
+
+/* Main subfolder container */
+.subfolder-list {
+  display: none;
+  margin-left: 25px;
+  padding-left: 15px;
+  border-left: 2px solid #d6e4ff;
+  margin-bottom: 12px;
+}
+
+/* Subfolder items */
+.subfolder {
+  background: #eef3ff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+}
+
+/* Items inside subfolders */
+.sub-sub-item {
+  background: #f7f9ff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #0d2b56;
+}
+
+.sub-sub-item a.download-link {
+  padding: 6px 14px;
+  background: #E94E1B;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 14px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.sub-sub-item a.download-link:hover {
+  background: #ffb400;
+}
+
+
+/* Download Button */
+.download-link {
+  padding: 10px 18px;
+  background: #E94E1B;
+  color: white;
+  border-radius: 8px;
+  font-size: 14px;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.download-link:hover {
+  background: #ffb400;
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .main-content {
+    margin-left: 0;
+    padding: 20px;
+  }
+
+  .hub-card {
+    padding: 25px;
+  }
+
+  .resource-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .download-link {
+    align-self: flex-start;
+  }
+  .resource-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .resource-info {
+    max-width: 100%;
+  }
+}
