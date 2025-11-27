@@ -4,6 +4,10 @@ import { docClient } from "../config/dynamodb.js";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import s3Client from "../config/s3Client.js";
 
+export const showEditPassword = async (req, res) => {
+  res.render("editpassword", { imageURL: req.session.imageURL });
+};
+
 export const showEditProfile = async (req, res) => {
   // admin view of edit profile to be implemented later
   if (req.session.is_admin) {

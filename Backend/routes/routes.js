@@ -8,8 +8,6 @@ import { changePassword } from "../services/changepassword.js";
 import viewProposalsRouter from "./viewProposals.js";
 
 const router = express.Router();
-
-// remove after making it a function
 import multer from "multer";
 const upload = multer();
 
@@ -21,6 +19,7 @@ import {
 } from "../controllers/applyController.js";
 import { showAdminDashboard } from "../controllers/adminController.js";
 import {
+  showEditPassword,
   showEditProfile,
   showViewProfile,
   updateProfile,
@@ -44,68 +43,40 @@ import {
 } from "../services/proposal.js";
 import { showResourceHub } from "../controllers/resourceController.js";
 
-// admin application routes
+// ADMIN ROUTES
 router.get("/adminapplication/:applicant_id", showApplication);
 router.post("/adminapplication/:applicant_id/approve", approveApplication);
 router.post("/adminapplication/:applicant_id/decline", declineApplication);
-
 router.get("/admindashboard", showAdminDashboard);
+router.use("/adminproposal", adminProposalRouter);
 
-// implement other routes here
+// AUTH ROUTES
 router.post("/user/login", userLogIn);
 router.get("/", showLogin);
 router.get("/login", showLogin);
+router.get("/logout", logoutUser);
 
-// apply
+// APPLY ROUTES
 router.get("/partnerapplication", showApplyPage);
 router.post("/processapplication", upload.single("mou"), processApplication);
 
-// logout route
-router.get("/logout", logoutUser);
-
-//dashboard route
+// USER DASHBOARD ROUTE
 router.get("/dashboard", userDashboard);
 
-//project proposal route
-router.get("/proposal", showProposal);
-
-// your project route
+// PROJECT ROUTES
 router.get("/Yourprojects", getUserProjects);
-
-router.use("/proposal", proposalRouter);
-
-//community projects route
 router.get("/Communityprojects", listCommunityProjects);
-
-router.get("/editprofile", showEditProfile);
-
-// new
-router.post("/editprofile/save", upload.single("profileImage"), updateProfile);
-
-// new
-router.get("/profileview", showViewProfile);
-
-// new - made a function for this route
 router.get("/viewcommunityproject/:project_id", showCommunityProject);
 router.get(
   "/viewcommunityproject/:project_id/generate",
   generateProgressReport
 );
+router.use("/", impactTrackerRouter);
 
-router.get("/editpassword", (req, res) => {
-  res.render("editpassword", {});
-});
-router.post("/editpassword", changePassword);
-
+// PROPOSAL ROUTES
+router.use("/proposal", proposalRouter);
+router.get("/proposal", showProposal);
 router.use("/", viewProposalsRouter);
-
-router.use("/adminproposal", adminProposalRouter);
-
-// generate progress report route
-router.get("/progress", showGenProg);
-router.get("/progress/:project_id/generate", generateProgressReport);
-
-// Test Update Prop
 router.get("/updateProposal/:proposal_id", showUpdateProposal);
 router.post(
   "/updateproposal/:proposal_id/save",
@@ -113,10 +84,18 @@ router.post(
   saveupdateProposal
 );
 
-// impact tracker routes
-router.use("/", impactTrackerRouter);
+// PROFILE ROUTES
+router.get("/editprofile", showEditProfile);
+router.post("/editprofile/save", upload.single("profileImage"), updateProfile);
+router.get("/profileview", showViewProfile);
+router.get("/editpassword", showEditPassword);
+router.post("/editpassword", changePassword);
 
-// NEW Resource Hub Route - all documents stored in Resources Hub folder
+// PROGRESS ROUTES
+router.get("/progress", showGenProg);
+router.get("/progress/:project_id/generate", generateProgressReport);
+
+// RESOURCE ROUTE
 router.get("/resourcehub", showResourceHub);
 
 export default router;
