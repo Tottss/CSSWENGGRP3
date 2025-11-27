@@ -1,4 +1,4 @@
-import { GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
+import { GetCommand, PutCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { docClient } from "../config/dynamodb.js";
 import s3Client from "../config/s3Client.js";
@@ -6,6 +6,84 @@ import { v4 as uuidv4 } from "uuid";
 
 const TABLE_NAME = "Proposals";
 const BUCKET_NAME = "proposals-storage";
+
+export const saveupdateProposal = async (req, res) => {
+  try {
+    const proposal_id = req.session.current_proposal;
+
+    console.log("Updating Proposal ID: ", proposal_id); // remove after testing
+
+    const {
+      ProjTitle,
+      ProjSummary,
+      TargetBeneficiaries,
+      timelineStart,
+      timelineEnd,
+      AdvocacyArea,
+      SDGAlignment,
+      ProposedBudget,
+      DetailedProposal, // old file URL coming from hidden input
+    } = req.body;
+
+    let fileUrl = DetailedProposal; // keep old file if no new one
+
+    const file = req.file; // uploaded new file (PDF)
+
+    // upload new file if uploaded
+    if (file) {
+      const fileKey = `proposals/${proposal_id}-${Date.now()}-${
+        file.originalname
+      }`;
+
+      await s3Client.send(
+        new PutObjectCommand({
+          Bucket: BUCKET_NAME,
+          Key: fileKey,
+          Body: file.buffer,
+          ContentType: file.mimetype,
+        })
+      );
+
+      fileUrl = `https://${BUCKET_NAME}.s3.amazonaws.com/${fileKey}`;
+    }
+
+    // update item in DynamoDB
+    await docClient.send(
+      new UpdateCommand({
+        TableName: process.env.PROPOSALS_TABLE,
+        Key: { proposal_id: proposal_id },
+        UpdateExpression: `
+          SET 
+            proposal_title = :title,
+            proposal_summary = :summary,
+            num_beneficiaries = :beneficiaries,
+            start_date = :start,
+            end_date = :end,
+            Proposed_budget = :budget,
+            detailed_proposal = :fileUrl,
+            proposal_advocacy_area = :advocacy,
+            proposal_sdg_alignment = :sdg
+        `,
+        ExpressionAttributeValues: {
+          ":title": ProjTitle,
+          ":summary": ProjSummary,
+          ":beneficiaries": TargetBeneficiaries,
+          ":start": timelineStart,
+          ":end": timelineEnd,
+          ":budget": ProposedBudget ? Number(ProposedBudget) : 0,
+          ":fileUrl": fileUrl,
+          ":advocacy": AdvocacyArea,
+          ":sdg": SDGAlignment,
+        },
+      })
+    );
+    console.log("Proposal updated successfully"); // remove after testing
+    res.json({ redirectUrl: `/viewproposal/${proposal_id}` });
+  } catch (err) {
+    console.error("Error updating proposal:", err);
+    res.status(500).send("Failed to update proposal");
+  }
+};
 
 export const showUpdateProposal = async (req, res) => {
   try {
@@ -37,7 +115,7 @@ export const showUpdateProposal = async (req, res) => {
       startDate: formatDate(proposal?.start_date),
       endDate: formatDate(proposal?.end_date),
       ProposedBudget: proposal?.proposed_budget || "",
-
+      proposal_id: proposal_id,
       imageURL: req.session.imageURL,
     });
   } catch (err) {
