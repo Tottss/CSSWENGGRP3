@@ -87,7 +87,10 @@ router.post(
 // PROFILE ROUTES
 router.get("/editprofile", showEditProfile);
 router.post("/editprofile/save", upload.single("profileImage"), updateProfile);
-router.get("/profileview", showViewProfile);
+// NEW (for clickable profile)
+router.get("/profileview/:org_id", showOtherOrgProfile);
+router.get("/profileview", showViewProfile);      
+
 router.get("/editpassword", showEditPassword);
 router.post("/editpassword", changePassword);
 
