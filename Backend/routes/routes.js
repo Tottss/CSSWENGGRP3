@@ -38,7 +38,10 @@ import {
   showApplication,
 } from "../controllers/applicationController.js";
 import { showGenProg } from "../controllers/generateProgress.js";
-import { showUpdateProposal } from "../services/proposal.js";
+import {
+  saveupdateProposal,
+  showUpdateProposal,
+} from "../services/proposal.js";
 
 // admin application routes
 router.get("/adminapplication/:applicant_id", showApplication);
@@ -103,6 +106,12 @@ router.get("/progress/:project_id/generate", generateProgressReport);
 
 // Test Update Prop
 router.get("/updateProposal/:proposal_id", showUpdateProposal);
+router.post(
+  "/updateproposal/:proposal_id/save",
+  upload.single("Proposal"),
+  saveupdateProposal
+);
+
 // impact tracker routes
 router.use("/", impactTrackerRouter);
 

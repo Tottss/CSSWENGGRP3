@@ -6,17 +6,23 @@
             <p class="apply-subtitle">Please fill out the fields needed to be updated to update a project proposal.</p>
 
             <form id="proposalForm" enctype="multipart/form-data">
+
+                {{!-- hidden id --}}
+                <input type="hidden" id="proposal_id" value="{{proposal_id}}">
+                <input type="hidden" name="DetailedProposal" value="{{DetailedProposal}}">
+
+
                 <!-- Project Title -->
                 <label for="ProjTitle">Project Title</label>
-                <input type="text" id="ProjTitle" name="ProjTitle" placeholder="{{projTitle}}">
+                <input type="text" id="ProjTitle" name="ProjTitle" placeholder="{{projTitle}}" value="{{projTitle}}">
 
                 <!-- Project Summary -->
                 <label for="ProjSummary">Project Summary/Objectives</label>
-                <input type="text" id="ProjSummary" name="ProjSummary" placeholder="{{ProjSummary}}">
+                <input type="text" id="ProjSummary" name="ProjSummary" placeholder="{{ProjSummary}}" value="{{ProjSummary}}">
 
                 <!-- Target Beneficiaries -->
                 <label for="TargetBeneficiaries">Target Beneficiaries</label>
-                <input type="text" id="TargetBeneficiaries" name="TargetBeneficiaries" placeholder="{{TargetBeneficiaries}}">
+                <input type="text" id="TargetBeneficiaries" name="TargetBeneficiaries" placeholder="{{TargetBeneficiaries}}" value="{{TargetBeneficiaries}}">
 
                 <!-- Advocacy Area -->
                 <label for="AdvocacyArea">Advocacy Area</label>
@@ -62,10 +68,10 @@
 
                 <!-- Proposed Budget -->
                 <label for="ProposedBudget">Proposed Budget</label>
-                <input type="number" id="ProposedBudget" name="ProposedBudget" placeholder="{{ProposedBudget}}">
+                <input type="number" id="ProposedBudget" name="ProposedBudget" placeholder="{{ProposedBudget}}" value="{{ProposedBudget}}">
 
                 <!-- Upload Detailed Proposal -->
-                <label for="Proposal">Upload Detailed Proposal</label>
+                <label for="Proposal">Upload Detailed Proposal {{proposal_id}}</label>
                 <input type="file" id="Proposal" name="Proposal" accept=".pdf">
 
 
@@ -85,3 +91,5 @@
     </div>
 
 {{/main}}
+
+<script src="/JAVASCRIPT/editProposal.js"></script>
