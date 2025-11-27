@@ -86,6 +86,63 @@ export const showViewProfile = async (req, res) => {
   }
 };
 
+//NEW ADDED for clickable profile
+export const showOtherOrgProfile = async (req, res) => {
+  const org_id = Number(req.params.org_id);
+
+  try {
+    const [partnerScan, contactScan, locationScan] = await Promise.all([
+      docClient.send(
+        new ScanCommand({
+          TableName: process.env.PARTNER_ORG_TABLE,
+          FilterExpression: "partner_id = :pid",
+          ExpressionAttributeValues: { ":pid": org_id },
+        })
+      ),
+      docClient.send(
+        new ScanCommand({
+          TableName: process.env.CONTACT_PERSON_TABLE,
+          FilterExpression: "contact_id = :pid",
+          ExpressionAttributeValues: { ":pid": org_id },
+        })
+      ),
+      docClient.send(
+        new ScanCommand({
+          TableName: process.env.LOCATION_TABLE,
+          FilterExpression: "location_id = :pid",
+          ExpressionAttributeValues: { ":pid": org_id },
+        })
+      ),
+    ]);
+
+    const partner = partnerScan.Items?.[0] || {};
+    const contact = contactScan.Items?.[0] || {};
+    const location = locationScan.Items?.[0] || {};
+
+    const user = {
+      imageURL: partner.profile_picture,
+      orgname: partner.partner_name,
+      email: partner.partner_email,
+      partnertype: partner.partner_type,
+      advocacy: partner.advocacy_focus,
+      contactname: contact.contact_name,
+      contactposition: contact.contact_position,
+      contactnumber: contact.contact_number,
+      address: location.full_address,
+      province: location.province,
+      municipality: location.municipality,
+      barangay: location.barangay,
+    };
+
+    // NOTE: AccOwner is false because this is NOT the account owner viewing
+    res.render("profileview", { ...user, AccOwner: false });
+
+  } catch (err) {
+    console.error("Error fetching other org profile:", err);
+    res.status(500).send("Server error");
+  }
+};
+
 export const updateProfile = async (req, res) => {
   try {
     const user = req.session.user;
