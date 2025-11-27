@@ -53,7 +53,7 @@ export const showCommunityProject = async (req, res) => {
       Advocacyarea: project.advocacyArea || "Not specified",
       SDG_alignment: project.sdgAlignment || "Not specified",
       communitylocation: project.location || "Not specified",
-      Proposal: proposalURL,
+      Proposal: project.detailed_project || "No detailed proposal provided",
 
       nBeneficiaries: project.target_beneficiaries || 0,
       actualValue: project.actual_beneficiaries || 0,

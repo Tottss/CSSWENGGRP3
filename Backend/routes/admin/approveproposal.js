@@ -62,6 +62,7 @@ export const approveProposal = async (req, res) => {
       start_date: proposal.start_date,
       end_date: proposal.end_date,
       budget: Number(proposal.proposed_budget) || 0,
+      detailed_project: proposal.detailed_proposal,
 
       project_imageURL: "/ASSETS/default_project.jpg",
 
@@ -108,7 +109,10 @@ export const approveProposal = async (req, res) => {
         console.log(`Approval email sent to ${partnerEmail}`);
       } catch (emailError) {
         // log error
-        console.error("Failed to send approval email (non-critical):", emailError);
+        console.error(
+          "Failed to send approval email (non-critical):",
+          emailError
+        );
       }
     }
 
