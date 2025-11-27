@@ -70,6 +70,7 @@ export const showCommunityProject = async (req, res) => {
       galleryImages,
 
       imageURL: req.session.imageURL,
+      NotAdmin: req.session.is_admin ? 0 : 1,
     });
   } catch (error) {
     console.error(error);

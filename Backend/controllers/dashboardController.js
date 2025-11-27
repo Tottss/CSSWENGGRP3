@@ -58,6 +58,7 @@ export const userDashboard = async (req, res) => {
       PartnerOrg: data[0].partner_name || "Partner Org Name",
       nNotif: 1,
       showTools: true,
+      NotAdmin: req.session.is_admin ? 0 : 1,
 
       imageURL:
         data[0].profile_picture ||

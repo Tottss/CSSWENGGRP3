@@ -91,6 +91,7 @@ router.get("/viewproposal-list", async (req, res) => {
     res.render("viewproposal-list", {
       Proposals: proposals,
       imageURL: req.session.imageURL,
+      NotAdmin: req.session.is_admin ? 0 : 1,
     });
   } catch (err) {
     console.error("Error loading proposal list:", err);
@@ -136,6 +137,7 @@ router.get("/viewproposal/:id", async (req, res) => {
       comments: p.admin_comments || [],
       status: p.status,
       imageURL: req.session.imageURL,
+      NotAdmin: req.session.is_admin ? 0 : 1,
     });
   } catch (err) {
     console.error("Error loading proposal:", err);

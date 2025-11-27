@@ -37,6 +37,7 @@ export const getUserProjects = async (req, res) => {
         ProjectName: proj.project_name,
         ProjectID: proj.project_id,
       })),
+      NotAdmin: req.session.is_admin ? 0 : 1,
       imageURL:
         partner[0].profile_picture ||
         "https://bcf-profile-pictures.s3.ap-southeast-1.amazonaws.com/DefaultProfile.jpg",

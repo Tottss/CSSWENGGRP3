@@ -18,6 +18,7 @@ export const showEditProfile = async (req, res) => {
 
   res.render("profiledit", {
     imageURL: req.session.user.imageURL,
+    NotAdmin: req.session.is_admin ? 0 : 1,
     isRequired: false,
     user: req.session.user,
   });
@@ -64,6 +65,7 @@ export const showViewProfile = async (req, res) => {
 
     const user = {
       imageURL: partner.profile_picture,
+      NotAdmin: req.session.is_admin ? 0 : 1,
       orgname: partner.partner_name,
       email: partner.partner_email,
       partnertype: partner.partner_type,

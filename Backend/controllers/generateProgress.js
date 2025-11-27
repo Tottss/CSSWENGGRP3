@@ -19,6 +19,7 @@ export const showGenProg = async (req, res) => {
         project_name: p.project_name,
       })),
       imageURL: req.session.imageURL,
+      NotAdmin: req.session.is_admin ? 0 : 1,
     });
   } catch (err) {
     console.error("Error loading projects for progress generation:", err);

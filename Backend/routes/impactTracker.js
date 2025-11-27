@@ -68,6 +68,7 @@ router.get("/tracker", async (req, res) => {
 
       uploads: trackerData.uploads || [],
       imageURL: req.session.imageURL,
+      NotAdmin: req.session.is_admin ? 0 : 1,
     });
   } catch (err) {
     console.error("Error loading tracker:", err);

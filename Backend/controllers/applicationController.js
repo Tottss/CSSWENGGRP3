@@ -73,6 +73,7 @@ export const showApplication = async (req, res) => {
       barangay: a.partner_barangay,
       partnertype: a.partner_type,
       advocacy: a.advocacy_focus,
+      NotAdmin: req.session.is_admin ? 0 : 1,
     });
   } catch (err) {
     console.error("Error fetching applicant:", err);

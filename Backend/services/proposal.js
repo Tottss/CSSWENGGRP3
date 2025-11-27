@@ -117,6 +117,7 @@ export const showUpdateProposal = async (req, res) => {
       ProposedBudget: proposal?.proposed_budget || "",
       proposal_id: proposal_id,
       imageURL: req.session.imageURL,
+      NotAdmin: req.session.is_admin ? 0 : 1,
     });
   } catch (err) {
     console.error("Error loading proposal:", err);

@@ -37,6 +37,7 @@ router.get("/list", async (req, res) => {
       title: "Admin Dashboard",
       PartnerOrg: req.session.user_name || "Admin",
       Proposals: formatted,
+      NotAdmin: req.session.is_admin ? 0 : 1,
     });
   } catch (err) {
     console.error("Error loading proposals:", err);
@@ -71,6 +72,7 @@ router.get("/:id", async (req, res) => {
       totalBudget: p.proposed_budget,
       Proposalpdf: p.detailed_proposal,
       comments: p.admin_comments || [],
+      NotAdmin: req.session.is_admin ? 0 : 1,
     });
   } catch (err) {
     console.error("Fetch error:", err);
@@ -136,7 +138,10 @@ router.post("/:id/decline", async (req, res) => {
         console.log(`Decline email sent to ${partnerEmail}`);
       } catch (emailError) {
         // log error
-        console.error("Failed to send decline email (non-critical):", emailError);
+        console.error(
+          "Failed to send decline email (non-critical):",
+          emailError
+        );
       }
     }
 

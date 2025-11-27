@@ -77,5 +77,6 @@ export const showAdminDashboard = async (req, res) => {
     PartnerOrg: req.session.partner_name || "{Partner Org Name Holder}",
     Proposals: combinedNotifications, // change with combined notification
     Application: applicants,
+    NotAdmin: req.session.is_admin ? 0 : 1,
   });
 };
