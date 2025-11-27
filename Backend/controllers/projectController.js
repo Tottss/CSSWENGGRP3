@@ -29,29 +29,10 @@ export const showCommunityProject = async (req, res) => {
 
     const partner = partnerResult.Item || {};
 
-    const locationResult = await docClient.send(
-      new GetCommand({
-        TableName: process.env.LOCATION_TABLE,
-        Key: { location_id: Number(project.user_id) },
-      })
-    );
-
-    const location = locationResult.Item || {};
-
-    const formattedLocation = [
-      location.full_address,
-      location.barangay,
-      location.municipality,
-      location.province,
-    ]
-      .filter(Boolean)
-      .join(", ");
-
     const proposalURL =
       project.proposalURL ||
       "https://proposals-storage.s3.ap-southeast-1.amazonaws.com/proposals/08150a89-14ab-4dcc-949f-eab757dd1ccf-Test+Proposal.pdf";
 
-    // Gallery images (from uploads array)
     const galleryImages =
       project.uploads?.length > 0
         ? project.uploads
@@ -61,6 +42,8 @@ export const showCommunityProject = async (req, res) => {
             "/ASSETS/project-photo1.jpg",
           ];
 
+    console.log("Gallery Images: ", galleryImages);
+
     res.render("communityProject", {
       // From Projects table
       projtitle: project.project_name || "Not specified",
@@ -69,7 +52,7 @@ export const showCommunityProject = async (req, res) => {
       ProjectDesc: project.project_summary || "Not specified",
       Advocacyarea: project.advocacyArea || "Not specified",
       SDG_alignment: project.sdgAlignment || "Not specified",
-      communitylocation: formattedLocation || "Not specified",
+      communitylocation: project.location || "Not specified",
       Proposal: proposalURL,
 
       nBeneficiaries: project.target_beneficiaries || 0,
