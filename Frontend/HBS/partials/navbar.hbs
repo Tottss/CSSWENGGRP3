@@ -5,6 +5,7 @@
     <span class="nav-title">Community Partners Portal</span>
   </div>
   <div class="nav-right">
+    {{#if NotAdmin}}
     <div class="d-flex flex-grow-1 justify-content-center position-relative">
       <form
         class="d-flex search-form position-relative"
@@ -29,5 +30,6 @@
         <li><a href="/logout">Logout</a></li>
       </ul>
     </div>
+    {{/if}}
   </div>
 </nav>

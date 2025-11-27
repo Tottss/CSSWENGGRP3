@@ -1,0 +1,64 @@
+{{#> main}}
+<!-- Main Content -->
+  <main class="main-content" class="alert-box">
+    <div class="tracker-wrapper">
+      <div class="tracker-card">
+        <h2 class="tracker-header">Delete Project</h2>
+
+        <!-- Project Dropdown -->
+        <div class="form-group">
+          <label for="projectSelect">Project</label>
+          <select id="projectSelect">
+              <option value="">Select Project</option>
+              {{#each projects}}
+                  <option value="{{this.project_id}}">{{this.project_name}}</option>
+              {{/each}}
+          </select>
+        </div>
+
+        <!-- Delete Project Button -->
+        <button id="delete" class="progress-btn" type="button" style="display:none;">
+            Delete Project
+        </button>
+        <script>
+            const projectSelect = document.getElementById("projectSelect");
+            const generateBtn = document.getElementById("delete");
+
+            // Show button only when project is selected
+            projectSelect.addEventListener("change", function () {
+                generateBtn.style.display = this.value ? "block" : "none";
+            });
+
+            generateBtn.addEventListener("click", async () => {
+                const id = projectSelect.value;
+                if (!id) return;
+
+                // Ask for confirmation
+                const confirmDelete = confirm("Are you sure you want to delete this project? This action cannot be undone.");
+                if (!confirmDelete) return;
+
+                try {
+                // Send DELETE request to server
+                const response = await fetch(`/progress/${id}/delete`, {
+                    method: "DELETE",
+                });
+
+                if (response.ok) {
+                    alert("Project deleted successfully!");
+
+                    // Optional: remove the project from the dropdown
+                    projectSelect.querySelector(`option[value="${id}"]`).remove();
+
+                    // Hide button again
+                    generateBtn.style.display = "none";
+
+                } else {
+                    alert("Failed to delete project.");
+                }
+                } catch (err) {
+                console.error(err);
+                alert("An error occurred while deleting the project.");
+                }
+            });
+</script>
+{{/main}}
