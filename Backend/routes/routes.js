@@ -42,6 +42,7 @@ import {
   saveupdateProposal,
   showUpdateProposal,
 } from "../services/proposal.js";
+import { showResourceHub } from "../controllers/resourceController.js";
 
 // admin application routes
 router.get("/adminapplication/:applicant_id", showApplication);
@@ -116,10 +117,6 @@ router.post(
 router.use("/", impactTrackerRouter);
 
 // NEW Resource Hub Route - all documents stored in Resources Hub folder
-router.get("/resourcehub", (req, res) => {
-  res.render("resourcehub", { 
-    title: "Resource Hub"
-  });
-});
+router.get("/resourcehub", showResourceHub);
 
 export default router;
