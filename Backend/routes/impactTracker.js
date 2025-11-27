@@ -1,3 +1,8 @@
+/*
+  This should be in controllers
+  Move after presentation
+*/
+
 import express from "express";
 import {
   ScanCommand,
