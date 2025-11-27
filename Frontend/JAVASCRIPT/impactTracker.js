@@ -16,6 +16,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const displayPhotoInput = document.querySelector('input[name="display_photo"]');
     const saveBtn = document.querySelector(".save-btn");
 
+    if (actualValue) {
+        actualValue.addEventListener("input", updateBars);
+    }
+
+    if (targetValue) {
+        targetValue.addEventListener("input", updateBars);
+    }
+
     // --- helper to show alerts (uses customAlert if present, otherwise alert()) ---
     function showAlert(message, type = "success") {
         const alertBox = document.getElementById("customAlert");
@@ -26,6 +34,41 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             // fallback so user sees something when debugging
             alert(`${type.toUpperCase()}: ${message}`);
+        }
+    }
+
+    // --- helper to update actual/target bars ---
+    function updateBars() {
+        const actual = parseInt(actualValue?.value || 0);
+        const target = parseInt(targetValue?.value || 0);
+
+        const actualBar = document.getElementById("actualBar");
+        const targetBar = document.getElementById("targetBar");
+
+        if (actualBar && targetBar) {
+            // calculate percentages (use the larger value as 100%)
+            const maxValue = Math.max(actual, target, 1); // avoid division by zero
+
+            const actualPercent = (actual / maxValue) * 100;
+            const targetPercent = (target / maxValue) * 100;
+
+            // update bar widths
+            actualBar.style.width = `${actualPercent}%`;
+            actualBar.textContent = actual;
+
+            targetBar.style.width = `${targetPercent}%`;
+            targetBar.textContent = target;
+        }
+    }
+
+    // --- helper to update progress circle ---
+    function updateProgressCircle(percent) {
+        const circle = document.getElementById('progressCircle');
+        if (circle) {
+            const circumference = 100;
+            const offset = circumference - (percent / 100) * circumference;
+            circle.style.strokeDasharray = `${circumference}`;
+            circle.style.strokeDashoffset = `${offset}`;
         }
     }
 
@@ -92,6 +135,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (sdgAlignment) sdgAlignment.value = t.sdgAlignment || "";
                 if (communityLocation) communityLocation.value = t.location || "";
                 if (narrativeField) narrativeField.value = t.narrative || "";
+                
+                // update bars
+                updateBars();
+                updateProgressCircle(t.progress_percent || 0);
 
                 // display photo preview
                 const preview = document.getElementById("displayPhotoPreview");
