@@ -6,6 +6,7 @@ import adminProposalRouter from "./admin/adminproposal.js";
 import { getUserProjects } from "../services/projects.js";
 import { changePassword } from "../services/changepassword.js";
 import viewProposalsRouter from "./viewProposals.js";
+import deleteProjectsRouter from "./deleteprojects.js";
 
 const router = express.Router();
 import multer from "multer";
@@ -95,44 +96,8 @@ router.post("/editpassword", changePassword);
 router.get("/progress", showGenProg);
 router.get("/progress/:project_id/generate", generateProgressReport);
 
-router.delete("/progress/:id/delete", async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    await Project.deleteOne({ project_id: id });
-    res.sendStatus(200);
-  } catch (err) {
-    res.sendStatus(500);
-  }
-});
-
-router.get("/deleteprojects", async (req, res) => {
-  res.render("deleteprojects", {
-  projects: [
-    {
-      project_id: "P001",
-      project_name: "Community Feeding Program"
-    },
-    {
-      project_id: "P002",
-      project_name: "School Supplies Donation Drive"
-    },
-    {
-      project_id: "P003",
-      project_name: "Tree Planting Initiative"
-    },
-    {
-      project_id: "P004",
-      project_name: "Disaster Relief Operations"
-    },
-    {
-      project_id: "P005",
-      project_name: "Senior Citizen Outreach"
-    }
-  ]
-});
-
-});
+// DELETE PROJECT ROUTES
+router.use("/", deleteProjectsRouter);
 
 // RESOURCE ROUTE
 router.get("/resourcehub", showResourceHub);

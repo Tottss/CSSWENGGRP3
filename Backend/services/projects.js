@@ -4,6 +4,12 @@ import { docClient } from "../config/dynamodb.js";
 // View all projects for a specific user (partner)
 export const getUserProjects = async (req, res) => {
   try {
+
+    // check if user is admin, redirect to delete page
+    if (req.session.is_admin === true) {
+      return res.redirect("/deleteprojects");
+    }
+
     const userId = req.session.partner_id; // fixed
     console.log(req.session);
     const data = await docClient.send(
