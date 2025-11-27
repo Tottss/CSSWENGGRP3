@@ -115,4 +115,11 @@ router.post(
 // impact tracker routes
 router.use("/", impactTrackerRouter);
 
+// NEW Resource Hub Route - all documents stored in Resources Hub folder
+router.get("/resourcehub", (req, res) => {
+  res.render("resourcehub", { 
+    title: "Resource Hub"
+  });
+});
+
 export default router;
