@@ -67,6 +67,8 @@ export const showCommunityProject = async (req, res) => {
 
       galleryImages,
 
+      partner_id: project.user_id || 0, // still under testing
+
       imageURL: req.session.imageURL,
       NotAdmin: req.session.is_admin ? 0 : 1,
     });

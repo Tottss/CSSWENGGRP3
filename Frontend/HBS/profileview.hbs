@@ -3,7 +3,11 @@
         <div class="projects-form-box">
             <h1 class="profile-title">My Profile</h1>
                     <div class="image-upload-wrapper">
+                        {{#if AccOwner}}
                         <img src="{{imageURL}}" class="profile-image-preview" id="profileImage">
+                        {{else}}
+                        <img src="{{partnerImage}}" class="profile-image-preview" id="profileImage">
+                        {{/if}}
                     </div>
                 <form id="profileForm" enctype="multipart/form-data">
                     <!-- Organization Name -->

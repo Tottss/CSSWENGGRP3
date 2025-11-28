@@ -22,6 +22,7 @@ import { showAdminDashboard } from "../controllers/adminController.js";
 import {
   showEditPassword,
   showEditProfile,
+  showPartnerProfile,
   showViewProfile,
   updateProfile,
 } from "../controllers/profileController.js";
@@ -89,7 +90,7 @@ router.post(
 router.get("/editprofile", showEditProfile);
 router.post("/editprofile/save", upload.single("profileImage"), updateProfile);
 router.get("/profileview", showViewProfile); // view profile for owner
-// router.get("/profileview/:partner_id", showPartnerProfile); // view profile for others
+router.get("/profileview/:partner_id", showPartnerProfile); // view profile for others (still under testing)
 router.get("/editpassword", showEditPassword);
 router.post("/editpassword", changePassword);
 

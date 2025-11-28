@@ -27,6 +27,73 @@ export const showEditProfile = async (req, res) => {
   });
 };
 
+// for checking other partner profiles view
+// route: /profileview/:partner_id
+export const showPartnerProfile = async (req, res) => {
+  const partner_id = Number(req.params.partner_id);
+
+  console.log("Viewing partner profile for ID: ", partner_id);
+  // Viewing partner profile for ID:  1764249297084
+
+  try {
+    const [partnerScan, contactScan, locationScan] = await Promise.all([
+      docClient.send(
+        new ScanCommand({
+          TableName: process.env.PARTNER_ORG_TABLE,
+          FilterExpression: "partner_id = :pid",
+          ExpressionAttributeValues: { ":pid": partner_id },
+        })
+      ),
+      docClient.send(
+        new ScanCommand({
+          TableName: process.env.CONTACT_PERSON_TABLE,
+          FilterExpression: "contact_id = :pid",
+          ExpressionAttributeValues: { ":pid": partner_id },
+        })
+      ),
+      docClient.send(
+        new ScanCommand({
+          TableName: process.env.LOCATION_TABLE,
+          FilterExpression: "location_id = :pid",
+          ExpressionAttributeValues: { ":pid": partner_id },
+        })
+      ),
+    ]);
+
+    const partner = partnerScan.Items?.[0] || {};
+    const contact = contactScan.Items?.[0] || {};
+    const location = locationScan.Items?.[0] || {};
+
+    // delete after testing
+    console.log("Partner Data: ", partner);
+    console.log("Contact Data: ", contact);
+    console.log("Location Data: ", location);
+
+    res.render("profileview", {
+      imageURL: req.session.imageURL, // viewer profile image
+      partnerImage: partner.profile_picture,
+      partner_id: partner_id, // not sure if to add this here
+      AccOwner: false,
+      NotAdmin: req.session.is_admin ? 0 : 1,
+      orgname: partner.partner_name,
+      email: partner.partner_email,
+      partnertype: partner.partner_type,
+      advocacy: partner.advocacy_focus,
+      contactname: contact.contact_name,
+      contactposition: contact.contact_position,
+      contactnumber: contact.contact_number,
+      address: location.full_address,
+      province: location.province,
+      municipality: location.municipality,
+      barangay: location.barangay,
+    });
+  } catch (err) {
+    console.error("Error fetching partner profile data:", err);
+    return res.status(500).send("Server error");
+  }
+};
+
+// for owner view
 export const showViewProfile = async (req, res) => {
   // admin view of profile to be implemented later
   if (req.session.is_admin) {

@@ -3,14 +3,13 @@
   <ul>
     <li><a href="/dashboard"><i class="bi bi-house-door-fill"></i>
         Dashboard</a></li>
-    {{! if req.session.user.is_admin go to /admindashboard else /dashboard }}
     <li><a href="/Yourprojects"><i class="bi bi-kanban-fill"></i>
         Projects</a></li>
     {{#if NotAdmin}}
-    <li><a href="/viewproposal-list"><i class="bi bi-calendar-fill"></i>
-        Proposals</a></li>
-    <li><a href="/resourcehub"><i class="bi bi-folder-fill"></i>
-        Resource Hub</a></li>
+      <li><a href="/viewproposal-list"><i class="bi bi-calendar-fill"></i>
+          Proposals</a></li>
+      <li><a href="/resourcehub"><i class="bi bi-folder-fill"></i>
+          Resource Hub</a></li>
     {{/if}}
   </ul>
 </aside>
