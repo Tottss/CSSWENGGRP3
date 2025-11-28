@@ -49,6 +49,7 @@ export const showCommunityProject = async (req, res) => {
       projtitle: project.project_name || "Not specified",
       projectID: project.project_id || "Not specified",
       orgName: partner.partner_name || "Not specified",
+      orgId: partner.partner_id || "Not specified", //ADDED for clickable profile
       ProjectDesc: project.project_summary || "Not specified",
       Advocacyarea: project.advocacyArea || "Not specified",
       SDG_alignment: project.sdgAlignment || "Not specified",
