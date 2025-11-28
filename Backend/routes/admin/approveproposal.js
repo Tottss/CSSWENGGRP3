@@ -64,7 +64,7 @@ export const approveProposal = async (req, res) => {
       budget: Number(proposal.proposed_budget) || 0,
       detailed_project: proposal.detailed_proposal,
 
-      project_imageURL: "/ASSETS/default_project.jpg",
+      project_imageURL: "/ASSETS/border-design.png",
 
       actual_beneficiaries: 0,
       target_beneficiaries: Number(proposal.num_beneficiaries) || 0,

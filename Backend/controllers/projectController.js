@@ -29,10 +29,6 @@ export const showCommunityProject = async (req, res) => {
 
     const partner = partnerResult.Item || {};
 
-    const proposalURL =
-      project.proposalURL ||
-      "https://proposals-storage.s3.ap-southeast-1.amazonaws.com/proposals/08150a89-14ab-4dcc-949f-eab757dd1ccf-Test+Proposal.pdf";
-
     const galleryImages =
       project.uploads?.length > 0
         ? project.uploads
@@ -53,7 +49,9 @@ export const showCommunityProject = async (req, res) => {
       Advocacyarea: project.advocacyArea || "Not specified",
       SDG_alignment: project.sdgAlignment || "Not specified",
       communitylocation: project.location || "Not specified",
-      Proposal: project.detailed_project || "No detailed proposal provided",
+      Proposal:
+        project.detailed_project ||
+        "https://proposals-storage.s3.ap-southeast-1.amazonaws.com/proposals/08150a89-14ab-4dcc-949f-eab757dd1ccf-Test+Proposal.pdf",
 
       nBeneficiaries: project.target_beneficiaries || 0,
       actualValue: project.actual_beneficiaries || 0,
