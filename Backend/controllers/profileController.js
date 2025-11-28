@@ -5,7 +5,10 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import s3Client from "../config/s3Client.js";
 
 export const showEditPassword = async (req, res) => {
-  res.render("editpassword", { imageURL: req.session.imageURL });
+  res.render("editpassword", {
+    imageURL: req.session.imageURL,
+    NotAdmin: req.session.is_admin ? 0 : 1,
+  });
 };
 
 export const showEditProfile = async (req, res) => {

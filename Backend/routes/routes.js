@@ -88,7 +88,8 @@ router.post(
 // PROFILE ROUTES
 router.get("/editprofile", showEditProfile);
 router.post("/editprofile/save", upload.single("profileImage"), updateProfile);
-router.get("/profileview", showViewProfile);
+router.get("/profileview", showViewProfile); // view profile for owner
+// router.get("/profileview/:partner_id", showPartnerProfile); // view profile for others
 router.get("/editpassword", showEditPassword);
 router.post("/editpassword", changePassword);
 
