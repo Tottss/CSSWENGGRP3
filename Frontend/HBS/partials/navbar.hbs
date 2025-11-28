@@ -7,21 +7,21 @@
   <div class="nav-right">
     {{#if NotAdmin}}
       <div class="d-flex flex-grow-1 justify-content-center position-relative">
-        <form
+        {{!-- <form
           class="d-flex search-form position-relative"
-          action="/search"
+          {{! action="/search" }}
           method="GET"
         >
-          <input
+          {{! <input
             class="form-control"
             id="SearchInput"
             type="search"
             name="q"
             placeholder="Search Projects"
             autocomplete="off"
-          />
+          /> }}
           <i class="bi bi-search search-icon"></i>
-        </form>
+        </form> --}}
       </div>
       <div class="profile-menu">
         <img src="{{imageURL}}" alt="Profile" class="profile-pic" />
@@ -32,7 +32,9 @@
       </div>
     {{else}}
       <div class="profile-menu">
-        <div style="font-weight: bold; color: #0d2b56; font-size: 20px; cursor: default;">
+        <div
+          style="font-weight: bold; color: #0d2b56; font-size: 20px; cursor: default;"
+        >
           ADMIN
         </div>
         <ul class="dropdown">
