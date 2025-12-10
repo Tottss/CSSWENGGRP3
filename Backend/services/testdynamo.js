@@ -6,8 +6,8 @@ export const testDynamo = async () => {
       region: process.env.AWS_REGION,
     });
     const data = await client.send(new ListTablesCommand({}));
-    console.log(process.env.AWS_REGION);
-    console.log("Connected to DynamoDB. Tables:", data.TableNames);
+    // console.log(process.env.AWS_REGION);
+    // console.log("Connected to DynamoDB. Tables:", data.TableNames);
   } catch (err) {
     console.error("DynamoDB connection failed:", err);
   }

@@ -10,7 +10,6 @@ export const getUserProjects = async (req, res) => {
     }
 
     const userId = req.session.partner_id; // fixed
-    console.log(req.session);
     const data = await docClient.send(
       new ScanCommand({
         TableName: process.env.PROJECTS_TABLE,

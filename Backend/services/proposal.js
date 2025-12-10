@@ -11,7 +11,7 @@ export const saveupdateProposal = async (req, res) => {
   try {
     const proposal_id = req.session.current_proposal;
 
-    console.log("Updating Proposal ID: ", proposal_id); // remove after testing
+    // console.log("Updating Proposal ID: ", proposal_id); // remove after testing
 
     const {
       ProjTitle,
@@ -77,7 +77,6 @@ export const saveupdateProposal = async (req, res) => {
         },
       })
     );
-    console.log("Proposal updated successfully"); // remove after testing
     res.json({ redirectUrl: `/viewproposal/${proposal_id}` });
   } catch (err) {
     console.error("Error updating proposal:", err);

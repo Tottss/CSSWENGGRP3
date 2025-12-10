@@ -4,9 +4,6 @@ import { docClient } from "../config/dynamodb.js";
 import { GetCommand } from "@aws-sdk/lib-dynamodb";
 
 export const userLogIn = asyncHandler(async (req, res) => {
-  // remove before deployment
-  console.log("Received login request: ", req.body);
-
   const { user_email, user_password } = req.body;
 
   // validate inputs
@@ -52,12 +49,6 @@ export const userLogIn = asyncHandler(async (req, res) => {
         console.log("Session saved successfully.");
       }
 
-      // remove before deployment
-      console.log("New session:", req.session);
-      console.log("New sessionID:", req.sessionID);
-
-      // send response (inside save callback!)
-      // remove sensitive info from user object before sending
       res.status(200).json({
         message: "Login successful",
         user: {

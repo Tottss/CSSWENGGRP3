@@ -16,8 +16,8 @@ export const userDashboard = async (req, res) => {
     const userId = req.session.partner_id;
 
     // remove after testing
-    console.log("Session id (for debugging): ", req.session.id);
-    console.log("Session User Id:", req.session.partner_id);
+    // console.log("Session id (for debugging): ", req.session.id);
+    // console.log("Session User Id:", req.session.partner_id);
     // remove after testing
 
     // fetch all community project except your own

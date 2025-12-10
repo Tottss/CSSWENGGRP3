@@ -17,8 +17,6 @@ export const showEditProfile = async (req, res) => {
     return res.status(403).send("Admin Edit Profile To Be Implemented Soon.");
   }
 
-  console.log("Session: ", req.session);
-
   res.render("profiledit", {
     imageURL: req.session.user.imageURL,
     NotAdmin: req.session.is_admin ? 0 : 1,
@@ -32,8 +30,7 @@ export const showEditProfile = async (req, res) => {
 export const showPartnerProfile = async (req, res) => {
   const partner_id = Number(req.params.partner_id);
 
-  console.log("Viewing partner profile for ID: ", partner_id);
-  // Viewing partner profile for ID:  1764249297084
+  // console.log("Viewing partner profile for ID: ", partner_id);
 
   try {
     const [partnerScan, contactScan, locationScan] = await Promise.all([
@@ -65,9 +62,9 @@ export const showPartnerProfile = async (req, res) => {
     const location = locationScan.Items?.[0] || {};
 
     // delete after testing
-    console.log("Partner Data: ", partner);
-    console.log("Contact Data: ", contact);
-    console.log("Location Data: ", location);
+    // console.log("Partner Data: ", partner);
+    // console.log("Contact Data: ", contact);
+    // console.log("Location Data: ", location);
 
     res.render("profileview", {
       imageURL: req.session.imageURL, // viewer profile image

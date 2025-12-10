@@ -1,5 +1,82 @@
-import { ScanCommand } from "@aws-sdk/lib-dynamodb";
+import { GetCommand, PutCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb.js";
+import bcrypt from "bcrypt";
+
+import { resendEmail } from "../services/resendEmail.js";
+
+const adminCredentialMessage = (email, password) => `
+<p>Good day, ${email}.</p>
+
+<p>Here are your Login Credentials.</p>
+
+<p>Email: ${email}</p>
+<p>Password: ${password}</p>
+`;
+
+export const createAdminAccount = async (req, res) => {
+  const { adminEmail, adminPassword } = req.body;
+
+  if (!adminEmail || !adminPassword) {
+    return res.status(400).json({ message: "Missing email or password" });
+  }
+
+  try {
+    // Check if email already exists
+    const existingUser = await docClient.send(
+      new GetCommand({
+        TableName: process.env.LOGIN_CREDENTIALS_TABLE,
+        Key: { user_email: adminEmail },
+      })
+    );
+
+    if (existingUser.Item) {
+      return res.status(409).json({
+        message: "An account with this email already exists.",
+      });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(adminPassword, 12);
+
+    // Insert into DynamoDB
+    await docClient.send(
+      new PutCommand({
+        TableName: process.env.LOGIN_CREDENTIALS_TABLE,
+        Item: {
+          user_email: adminEmail,
+          hashed_password: hashedPassword,
+          is_admin: true,
+          partner_id: Date.now(),
+        },
+      })
+    );
+
+    // Send admin credentials email
+    await resendEmail({
+      to: adminEmail,
+      subject: "Admin Login Credentials",
+      html: adminCredentialMessage(adminEmail, adminPassword),
+    });
+
+    return res.status(200).json({
+      message: "Admin account created successfully",
+    });
+  } catch (err) {
+    console.error("Error creating admin:", err);
+    return res.status(500).json({
+      message: "Server error while creating admin",
+    });
+  }
+};
+
+export const showCreateAdminAccount = async (req, res) => {
+  // for admin only
+  if (!req.session.is_admin) {
+    return res.status(403).send("Access denied. This is an admin only page.");
+  }
+
+  res.render("adminCreation");
+};
 
 export const showAdminDashboard = async (req, res) => {
   // for admin only

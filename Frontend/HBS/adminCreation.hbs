@@ -1,0 +1,17 @@
+{{#> main}}
+    <div class="profileview-container">
+        <div class="projects-form-box">
+            <h1 class="profile-title">Create Admin Account</h1>
+            <!--- Email and Password forms--->
+                <form id="createAdminForm" enctype="multipart/form-data">
+                    Email: &nbsp&nbsp<input type="email" id="adminEmail" name="adminEmail" placeholder="Set Admin Email"required><br><br>
+                    Password: <input type="password" id="adminPassword" name="adminPassword" placeholder="Set Admin Password"required>
+                <!-- Edit Button -->
+                <button type="submit" class="apply-btn">Create Admin Account</button>
+                </form>
+        </div>
+    </div>
+    <script src="../JAVASCRIPT/createAdmin.js"></script>
+{{/main}}
+
+{{!-- adminCreation.hbs --}}

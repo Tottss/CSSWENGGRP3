@@ -18,7 +18,11 @@ import {
   processApplication,
   showApplyPage,
 } from "../controllers/applyController.js";
-import { showAdminDashboard } from "../controllers/adminController.js";
+import {
+  createAdminAccount,
+  showAdminDashboard,
+  showCreateAdminAccount,
+} from "../controllers/adminController.js";
 import {
   showEditPassword,
   showEditProfile,
@@ -51,6 +55,8 @@ router.post("/adminapplication/:applicant_id/approve", approveApplication);
 router.post("/adminapplication/:applicant_id/decline", declineApplication);
 router.get("/admindashboard", showAdminDashboard);
 router.use("/adminproposal", adminProposalRouter);
+router.get("/admindashboard/createadminaccount", showCreateAdminAccount); // to be implemented
+router.post("/admindashboard/createadminaccount/process", createAdminAccount); // to be implemented
 
 // AUTH ROUTES
 router.post("/user/login", userLogIn);

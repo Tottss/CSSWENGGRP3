@@ -38,8 +38,6 @@ export const showCommunityProject = async (req, res) => {
             "/ASSETS/project-photo1.jpg",
           ];
 
-    console.log("Gallery Images: ", galleryImages);
-
     res.render("communityProject", {
       // From Projects table
       projtitle: project.project_name || "Not specified",
